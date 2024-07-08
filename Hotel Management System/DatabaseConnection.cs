@@ -1,0 +1,54 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Hotel_Management_System
+{
+    internal class DatabaseConnection
+    {
+        public SqlConnection getConnection()
+        {
+            //String connectionString = "Data Source=localhost;Initial Catalog=HotelManagementSystem;Integrated Security=True";
+            //String connectionString = "Data Source = DESKTOP - 6L0I750\\SQLEXPRESS; Initial Catalog = HotelManagementSystem; Integrated Security = True";
+            //String connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["HotelManagementSystemConnectionString1"].ToString();
+            String connectionString = "Data Source =.\\SQLEXPRESS; Initial Catalog = HotelManagementSystem; Integrated Security = True";
+            SqlConnection connection = new SqlConnection(connectionString);
+            return connection;
+        }
+
+        public DataSet getData(String query)
+        {
+            SqlConnection connection = getConnection();
+            connection.Open();
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = query;
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            connection.Close();
+            return ds;
+        }
+
+        public void setData(String query, String message)
+        {
+            SqlConnection connection = getConnection();
+            connection.Open();
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = connection;
+
+            cmd.CommandText = query;
+            cmd.ExecuteNonQuery();
+            connection.Close();
+
+            if(message != "")
+                MessageBox.Show("'" + message + "'", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        }
+    }
+}
