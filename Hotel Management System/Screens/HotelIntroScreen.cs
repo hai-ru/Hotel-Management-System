@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,68 +8,84 @@ namespace Hotel_Management_System.Screens
 {
     public partial class HotelIntroScreen : Form
     {
-
-        String query;
-        DatabaseConnection dc = new DatabaseConnection();
+        private const string BaseUrl = "https://development.norapos.com/api/business";
 
         public HotelIntroScreen()
         {
             InitializeComponent();
         }
 
-        private void setBgImage()
+        private async void HotelIntroScreen_Load(object sender, EventArgs e)
         {
-            int i = getRandomNum();
-            Image myimage = new Bitmap(@"../Icons/hotel"+i+".jpg");
-            bgPanel.BackgroundImage = myimage;
+            await GetHotelDetails();
         }
 
-        private void HotelIntroScreen_Load(object sender, EventArgs e)
+        private async Task GetHotelDetails()
         {
-            //setBgImage();
-            getDetails();
-        }
-
-        private int getRandomNum()
-        {
-            Random rnd = new Random();
-            int i = rnd.Next(1, 8);
-            return i;
-        }
-        private void getDetails()
-        {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "Select * FROM Hotels.Hotel WHERE HotelId = " + Statics.hotelIdTKN;
-            Console.WriteLine(query);
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
+            try
             {
-                hotelName.Text = dr.GetString(1);
-                contactLabel.Text = dr.GetString(2);
-                emailLabel.Text = dr.GetString(3);
-                webLabel.Text = dr.GetString(4);
-                descripLabel.Text = dr.GetString(5);
-                String address = dr.GetString(8) + ", " + dr.GetString(9) + ", " + dr.GetString(10) + ", " + dr.GetString(12);
-                streetLabel.Text = address;
+                using (HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Properties.Settings.Default.Token);
+
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl, null);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string json = await response.Content.ReadAsStringAsync();
+                        Hotel hotel = JsonSerializer.Deserialize<Hotel>(json);
+
+                        if (hotel != null)
+                        {
+                            hotelName.Text = hotel.name;
+                            contactLabel.Text = hotel.contact;
+                            emailLabel.Text = hotel.email;
+                            webLabel.Text = hotel.website;
+                            descripLabel.Text = hotel.description;
+                            string address = $"{hotel.street}, {hotel.city}, {hotel.state}, {hotel.country}";
+                            streetLabel.Text = address;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to retrieve hotel details: " + response.StatusCode);
+                    }
+                }
             }
-            con.Close();
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
+        // Define a class to represent the Hotel JSON structure
+        public class Hotel
+        {
+            public int id { get; set; }
+            public string name { get; set; }
+            public string contact { get; set; }
+            public string email { get; set; }
+            public string website { get; set; }
+            public string description { get; set; }
+            public string street { get; set; }
+            public string city { get; set; }
+            public string state { get; set; }
+            public string country { get; set; }
         }
 
         private void addressLabel_Click(object sender, EventArgs e)
         {
-
+            // Handle click event if needed
         }
 
         private void cityLabel_Click(object sender, EventArgs e)
         {
-
+            // Handle click event if needed
         }
 
         private void hotelName_Click(object sender, EventArgs e)
         {
-
+            // Handle click event if needed
         }
     }
 }
