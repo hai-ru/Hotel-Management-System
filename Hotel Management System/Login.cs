@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Hotel_Management_System
 {
@@ -55,10 +56,9 @@ namespace Hotel_Management_System
             return str;
         }
 
-        private async void guna2Button1_Click(object sender, EventArgs e)
+        private async Task<string> GetAccessToken(string username, string password)
         {
-            string username = usernameTextField.Text;
-            string password = passwordTextField.Text;
+            string token = null;
 
             try
             {
@@ -89,11 +89,7 @@ namespace Hotel_Management_System
                                 // Login successful
                                 if (responseData.data != null)
                                 {
-                                    var token = responseData.data.token;
-                                    // Use token as needed, e.g., store in a secure location
-                                    this.Hide();
-                                    Dashboard db = new Dashboard();
-                                    db.Show();
+                                    token = responseData.data.token;
                                 }
                             }
                             else
@@ -119,6 +115,27 @@ namespace Hotel_Management_System
             catch (HttpRequestException ex)
             {
                 MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return token;
+        }
+
+        private async void guna2Button1_Click(object sender, EventArgs e)
+        {
+            string username = usernameTextField.Text;
+            string password = passwordTextField.Text;
+
+            string token = await GetAccessToken(username, password);
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                // Store the token securely
+                Properties.Settings.Default.Token = token; // Example of storing in application settings
+                Properties.Settings.Default.Save();
+
+                this.Hide();
+                Dashboard db = new Dashboard();
+                db.Show();
             }
         }
 
