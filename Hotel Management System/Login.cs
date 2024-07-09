@@ -2,19 +2,17 @@
 using Hotel_Management_System.Screens;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Hotel_Management_System
 {
     public partial class Login : Form
     {
+        private const string BaseUrl = "https://development.norapos.com/api/login";
 
         DatabaseConnection dc = new DatabaseConnection();
         String query;
@@ -57,48 +55,73 @@ namespace Hotel_Management_System
             return str;
         }
 
-        private void guna2Button1_Click(object sender, EventArgs e)
+        private async void guna2Button1_Click(object sender, EventArgs e)
         {
-            String isNewUser = checkNewUser().Trim();
-            query = "SELECT LoginId FROM Authentication.Login WHERE Username = @username AND Password = @password";
-            SqlConnection connection = dc.getConnection();
-            connection.Open();
-            SqlCommand cmd = new SqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("@username", usernameTextField.Text);
-            cmd.Parameters.AddWithValue("@password", passwordTextField.Text);
-            SqlDataReader reader = cmd.ExecuteReader();
-            reader.Read();
-            TokenHotelIdHOTEL();
-            Statics.setHotelId(hotelIdToken);
-            TokenEployeeId();
-            Statics.setEmployeeId(employeeIdToken);
-            if (String.IsNullOrEmpty(usernameTextField.Text) || String.IsNullOrEmpty(passwordTextField.Text))
+            string username = usernameTextField.Text;
+            string password = passwordTextField.Text;
+
+            try
             {
-                errorLabel.Text = "        All fields are required.";
-                errorLabel.Visible = true;
+                using (HttpClient client = new HttpClient())
+                {
+                    var content = new FormUrlEncodedContent(new[]
+                    {
+                new KeyValuePair<string, string>("username", username),
+                new KeyValuePair<string, string>("password", password)
+            });
+
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl, content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseContent = await response.Content.ReadAsStringAsync();
+
+                        try
+                        {
+                            var options = new JsonSerializerOptions
+                            {
+                                PropertyNameCaseInsensitive = true
+                            };
+                            var responseData = JsonSerializer.Deserialize<ApiResponse>(responseContent, options);
+
+                            if (responseData.status)
+                            {
+                                // Login successful
+                                if (responseData.data != null)
+                                {
+                                    var token = responseData.data.token;
+                                    // Use token as needed, e.g., store in a secure location
+                                    this.Hide();
+                                    Dashboard db = new Dashboard();
+                                    db.Show();
+                                }
+                            }
+                            else
+                            {
+                                // Login failed due to incorrect credentials
+                                errorLabel.Text = responseData.message;
+                                errorLabel.Visible = true;
+                            }
+                        }
+                        catch (JsonException ex)
+                        {
+                            MessageBox.Show($"Error parsing response: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    else
+                    {
+                        // HTTP request failed
+                        errorLabel.Text = "Failed to connect to server.";
+                        errorLabel.Visible = true;
+                    }
+                }
             }
-            else if (!reader.HasRows)
+            catch (HttpRequestException ex)
             {
-                errorLabel.Text = "Incorrect username or password.";
-                errorLabel.Visible = true;
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else if(reader.HasRows && isNewUser.Equals("Yes"))
-            {
-                Statics.setUname(usernameTextField.Text);
-                Statics.setPass(passwordTextField.Text);
-                CreatePassword reset = new CreatePassword();
-                reset.Show();
-                this.Hide();
-            }
-            else if (reader.HasRows && isNewUser.Equals("NO"))
-            {
-                errorLabel.Visible = false;
-                this.Hide();
-                Dashboard db = new Dashboard();
-                db.Show();
-            }
-            connection.Close();
         }
+
 
         private void TokenEployeeId()
         {
@@ -109,7 +132,7 @@ namespace Hotel_Management_System
             SqlDataReader dr = cmd.ExecuteReader();
             while (dr.Read())
             {
-                if(dr.GetValue(0) != DBNull.Value)
+                if (dr.GetValue(0) != DBNull.Value)
                 {
                     employeeIdToken = dr.GetInt32(0);
                 }
@@ -138,7 +161,7 @@ namespace Hotel_Management_System
 
         private void label3_Click(object sender, EventArgs e)
         {
-            if(usernameTextField.Text == "")
+            if (usernameTextField.Text == "")
             {
                 MessageBox.Show("Please enter username.", "Missing Info", MessageBoxButtons.OK);
             }
@@ -167,7 +190,7 @@ namespace Hotel_Management_System
 
         private void passwordTextField_TextChanged(object sender, EventArgs e)
         {
-            
+
         }
 
         private void changeVisibile(object sender, EventArgs e)
@@ -180,11 +203,51 @@ namespace Hotel_Management_System
                 passwordTextField.UseSystemPasswordChar = false;
                 //passwordTextField.IconRight = myimage2;
             }
-            else if(passwordTextField.UseSystemPasswordChar == false)
+            else if (passwordTextField.UseSystemPasswordChar == false)
             {
                 passwordTextField.UseSystemPasswordChar = true;
                 //passwordTextField.IconRight = myimage1;
             }
         }
+    }
+
+    public class DataConverter : JsonConverter<Data>
+    {
+        public override Data Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            if (reader.TokenType == JsonTokenType.StartObject)
+            {
+                // Deserialize as Data object
+                return JsonSerializer.Deserialize<Data>(ref reader, options);
+            }
+            else if (reader.TokenType == JsonTokenType.StartArray)
+            {
+                // Skip the array (empty array case)
+                reader.Skip();
+                return null;
+            }
+
+            throw new JsonException();
+        }
+
+        public override void Write(Utf8JsonWriter writer, Data value, JsonSerializerOptions options)
+        {
+            throw new NotImplementedException("Serialization not implemented.");
+        }
+    }
+
+    // Define a class to deserialize the API response
+    public class ApiResponse
+    {
+        public bool status { get; set; }
+        public string message { get; set; }
+
+        [JsonConverter(typeof(DataConverter))]
+        public Data data { get; set; }
+    }
+
+    public class Data
+    {
+        public string token { get; set; }
     }
 }

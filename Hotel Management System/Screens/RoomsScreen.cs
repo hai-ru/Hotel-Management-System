@@ -1,13 +1,8 @@
 ﻿using Hotel_Management_System.Screens;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,88 +10,47 @@ namespace Hotel_Management_System.Controllers
 {
     public partial class RoomsScreen : Form
     {
-
-        DatabaseConnection dc = new DatabaseConnection();
-        String query;
-
-        int roomId;
+        private const string BaseUrl = "https://your-backend-api-url/api/rooms"; // Replace with your actual API URL
+        private HttpClient client;
 
         public RoomsScreen()
         {
             InitializeComponent();
+            client = new HttpClient();
             roomIdField.ReadOnly = false;
             costField.ReadOnly = true;
         }
 
-        private void populateTable()
+        private async Task populateTableAsync()
         {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            String query = "SELECT RoomId, RoomNumber, RoomTypeId, Available FROM Rooms.Room WHERE HotelId = " + Statics.hotelIdTKN;
-            SqlDataAdapter sda = new SqlDataAdapter(query, con);
-            SqlCommandBuilder builder = new SqlCommandBuilder(sda);
-            var ds = new DataSet();
-            sda.Fill(ds);
-            roomsTable.DataSource = ds.Tables[0];
-            con.Close();
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync(BaseUrl);
+                response.EnsureSuccessStatusCode();
+                var responseData = await response.Content.ReadAsStringAsync();
+                var rooms = JsonSerializer.Deserialize<List<Room>>(responseData);
+
+                roomsTable.DataSource = rooms;
+            }
+            catch (HttpRequestException ex)
+            {
+                MessageBox.Show($"Request error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (JsonException ex)
+            {
+                MessageBox.Show($"JSON parse error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        public void populate()
+        public async void populate()
         {
-            populateTable();
-            populateTypeComboBox();
+            await populateTableAsync();
+            await populateTypeComboBoxAsync();
         }
 
-        private void Rooms_Load(object sender, EventArgs e)
+        private async void Rooms_Load(object sender, EventArgs e)
         {
             populate();
-        }
-
-        private void guna2CircleButton1_Click(object sender, EventArgs e)
-        {
-            addButton.Enabled = false;
-            if (roomIdField.Text == "")
-            {
-                MessageBox.Show("Please enter id to search record.", "Missing Info", MessageBoxButtons.OK);
-            }
-            else
-            {
-                bool temp = false;
-                SqlConnection con = dc.getConnection();
-                con.Open();
-                query = "SELECT * FROM Rooms.Room WHERE RoomId = " + int.Parse(roomIdField.Text);
-                SqlCommand cmd = new SqlCommand(query, con);
-                SqlDataReader dr = cmd.ExecuteReader();
-                while (dr.Read())
-                {
-                    roomNoField.Text = dr.GetValue(1).ToString();
-                    typeCmbox.Text = getNameFromId(dr.GetInt32(3));
-                    availableField.Text = dr.GetString(4).ToString();
-                    findCost();
-                    temp = true;
-                }
-                if (temp == false)
-                    MessageBox.Show("No record found.");
-                con.Close();
-            }
-        }
-
-        private void searchButton_Click(object sender, EventArgs e)
-        {
-            addButton.Enabled = true;
-            clearFields();
-        }
-
-        private void guna2CircleButton2_Click(object sender, EventArgs e)
-        {
-            Dashboard d = new Dashboard();
-            d.loadForm(new HotelIntroScreen());
-        }
-
-        private void guna2GradientButton1_Click(object sender, EventArgs e)
-        {
-            RoomType rt = new RoomType();
-            rt.ShowDialog(this);
         }
 
         private void clearFields()
@@ -108,89 +62,56 @@ namespace Hotel_Management_System.Controllers
             costField.Text = "";
         }
 
-        private void populateTypeComboBox()
+        private async Task populateTypeComboBoxAsync()
         {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT Name from Rooms.RoomType WHERE HotelId = " + Statics.hotelIdTKN;
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
+            try
             {
-                typeCmbox.Items.Add(dr["Name"]);
+                HttpResponseMessage response = await client.GetAsync($"{BaseUrl}/types");
+                response.EnsureSuccessStatusCode();
+                var responseData = await response.Content.ReadAsStringAsync();
+                var roomTypes = JsonSerializer.Deserialize<List<RoomType>>(responseData);
+
+                typeCmbox.Items.Clear();
+                foreach (var type in roomTypes)
+                {
+                    typeCmbox.Items.Add(type.Name);
+                }
             }
-            con.Close();
+            catch (HttpRequestException ex)
+            {
+                MessageBox.Show($"Request error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (JsonException ex)
+            {
+                MessageBox.Show($"JSON parse error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private int getIdFromTypeName()
+        private async void addButton_Click(object sender, EventArgs e)
         {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT RoomTypeId from Rooms.RoomType WHERE Name = '" + typeCmbox.Text + "' AND HotelId = " + Statics.hotelIdTKN;
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                roomId = dr.GetInt32(0);
-            }
-            return roomId;
-        }
-
-        String name;
-
-        private String getNameFromId(int id)
-        {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT Name from Rooms.RoomType WHERE RoomTypeId = " + id + " AND HotelId = " + Statics.hotelIdTKN;
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                name = dr.GetString(0);
-            }
-            return name;
-        }
-
-        private bool regChecker()
-        {
-            if (!Regex.Match(roomNoField.Text, @"^[a-zA-Z0-9]*$").Success)
-            {
-                MessageBox.Show("Room number must only contain numbers.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                roomNoField.Focus();
-                return false;
-            }
-            if (!Regex.Match(costField.Text, @"^[0-9]+$").Success)
-            {
-                MessageBox.Show("Contact number must only contain numbers.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                costField.Focus();
-                return false;
-            }
-            return true;
-        }
-
-        private void addButton_Click(object sender, EventArgs e)
-        {
-            int id = getIdFromTypeName();
             if (roomNoField.Text != "" && typeCmbox.Text != "" && costField.Text != "" && availableField.Text != "")
             {
-                int capacity = findCapacity();
-                int count = getRoomCount();
-                if (count < capacity)
+                var newRoom = new Room
                 {
-                    bool regCheck = regChecker();
-                    if (regCheck == false)
-                    {
-                        return;
-                    }
-                    query = "INSERT INTO Rooms.Room (RoomNumber, HotelId, RoomTypeId, Available) VALUES ('" + roomNoField.Text + "', " + Statics.hotelIdTKN + ", " + id + ", '" + availableField.Text + "')";
-                    dc.setData(query, "Room inserted successfully!");
+                    RoomNumber = roomNoField.Text,
+                    HotelId = Statics.hotelIdTKN,
+                    RoomTypeId = typeCmbox.SelectedIndex,
+                    Available = availableField.Text
+                };
+
+                try
+                {
+                    var content = new StringContent(JsonSerializer.Serialize(newRoom), System.Text.Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl, content);
+                    response.EnsureSuccessStatusCode();
+
+                    MessageBox.Show("Room inserted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     clearFields();
-                    populateTable();
+                    await populateTableAsync();
                 }
-                else
+                catch (HttpRequestException ex)
                 {
-                    MessageBox.Show("Hotel room capacity is full to add more rooms.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show($"Request error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
@@ -198,124 +119,73 @@ namespace Hotel_Management_System.Controllers
                 MessageBox.Show("All fields must be filled.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-        
-        private void typeCmbox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            
-            findCost();
-        }
 
-        private int getRoomCount()
+        private async void updateButton_Click(object sender, EventArgs e)
         {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT COUNT(RoomId) from Rooms.Room WHERE HotelId = " + Statics.hotelIdTKN;
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            int count = 0;
-            while (dr.Read())
-            {
-                count = dr.GetInt32(0);
-            }
-            return count;
-        }
-
-        private int findCapacity()
-        {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT TotalRooms from Hotels.Hotel WHERE HotelId = " + Statics.hotelIdTKN;
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            int cap = 0;
-            while (dr.Read())
-            {
-                cap = dr.GetInt32(0);
-            }
-            return cap;
-        }
-
-        private void findCost()
-        {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            int cost = 0; ;
-            query = "SELECT Cost from Rooms.RoomType WHERE Name = '" + typeCmbox.Text + "' AND HotelId = " + Statics.hotelIdTKN;
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                cost = dr.GetInt32(0);
-            }
-            costField.Text = cost.ToString();
-        }
-
-        private void updateButton_Click(object sender, EventArgs e)
-        {
-            addButton.Enabled = true;
             if (roomIdField.Text == "")
             {
                 MessageBox.Show("Please enter id to update record.", "Missing Info", MessageBoxButtons.OK);
             }
             else
             {
-                bool regCheck = regChecker();
-                if (regCheck == false)
+                var updatedRoom = new Room
                 {
-                    return;
+                    RoomId = int.Parse(roomIdField.Text),
+                    RoomNumber = roomNoField.Text,
+                    RoomTypeId = typeCmbox.SelectedIndex,
+                    Available = availableField.Text
+                };
+
+                try
+                {
+                    var content = new StringContent(JsonSerializer.Serialize(updatedRoom), System.Text.Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = await client.PutAsync($"{BaseUrl}/{updatedRoom.RoomId}", content);
+                    response.EnsureSuccessStatusCode();
+
+                    MessageBox.Show("Record updated successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    clearFields();
+                    await populateTableAsync();
                 }
-                getIdFromTypeName();
-                query = "UPDATE Rooms.Room SET RoomNumber = '" + roomNoField.Text + "', RoomTypeId = " + roomId + ", Available = '" + availableField.Text + "' WHERE RoomId = " + int.Parse(roomIdField.Text);
-                dc.setData(query, "Record updated successfully.");
-                clearFields();
-                populateTable();
+                catch (HttpRequestException ex)
+                {
+                    MessageBox.Show($"Request error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
-        private void deleteButton_Click(object sender, EventArgs e)
+        private async void deleteButton_Click(object sender, EventArgs e)
         {
-            addButton.Enabled = true;
             if (roomIdField.Text == "")
             {
                 MessageBox.Show("Please enter id to delete.", "Missing Info", MessageBoxButtons.OK);
             }
             else
             {
-                bool b = checkIfFree(int.Parse(roomIdField.Text));
-                if(b == true)
+                try
                 {
-                    query = "DELETE FROM Rooms.Room WHERE RoomId = " + int.Parse(roomIdField.Text);
-                    dc.setData(query, "Record deleted successfully.");
+                    HttpResponseMessage response = await client.DeleteAsync($"{BaseUrl}/{roomIdField.Text}");
+                    response.EnsureSuccessStatusCode();
+
+                    MessageBox.Show("Record deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     clearFields();
-                    populateTable();
+                    await populateTableAsync();
                 }
-                else
+                catch (HttpRequestException ex)
                 {
-                    MessageBox.Show("You cannot delete a room if its in use.", "Warning", MessageBoxButtons.OK);
+                    MessageBox.Show($"Request error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
-        private bool checkIfFree(int id)
+        private void typeCmbox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT Available FROM Rooms.Room WHERE RoomId = " + id + " AND HotelId = " + Statics.hotelIdTKN;
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            String s = "";
-            while (dr.Read())
-            {
-                s = dr.GetString(0).Trim();
-            }
-            if (s.Equals("Yes"))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            findCost();
+        }
+
+        private void findCost()
+        {
+            // This method should fetch the cost of the room type from the server
+            // Implement the logic to fetch the cost based on the selected room type
         }
 
         private void RoomsTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -331,7 +201,22 @@ namespace Hotel_Management_System.Controllers
         private void typeCmbox_Click(object sender, EventArgs e)
         {
             typeCmbox.Items.Clear();
-            populateTypeComboBox();
+            populateTypeComboBoxAsync();
         }
+    }
+
+    public class Room
+    {
+        public int RoomId { get; set; }
+        public string RoomNumber { get; set; }
+        public int HotelId { get; set; }
+        public int RoomTypeId { get; set; }
+        public string Available { get; set; }
+    }
+
+    public class RoomType
+    {
+        public int RoomTypeId { get; set; }
+        public string Name { get; set; }
     }
 }
