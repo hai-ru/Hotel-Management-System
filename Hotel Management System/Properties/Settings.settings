@@ -13,5 +13,11 @@
     <Setting Name="Token" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="OnityIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">127.0.0.1</Value>
+    </Setting>
+    <Setting Name="OnityPort" Type="System.String" Scope="User">
+      <Value Profile="(Default)">6669</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

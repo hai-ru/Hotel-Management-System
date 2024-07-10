@@ -45,5 +45,29 @@ namespace Hotel_Management_System.Properties {
                 this["Token"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
+        public string OnityIP {
+            get {
+                return ((string)(this["OnityIP"]));
+            }
+            set {
+                this["OnityIP"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6669")]
+        public string OnityPort {
+            get {
+                return ((string)(this["OnityPort"]));
+            }
+            set {
+                this["OnityPort"] = value;
+            }
+        }
     }
 }
