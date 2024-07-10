@@ -155,7 +155,14 @@ namespace Hotel_Management_System.Controllers
 
         private async void refreshTable()
         {
-
+            HttpData result = await conn.GetCheckinList();
+            if (!result.status)
+            {
+                MessageBox.Show(result.message);
+                return;
+            }
+            System.Data.DataTable MyTable = JsonConvert.DeserializeObject<System.Data.DataTable>(result.data.ToString());
+            bookingTable.DataSource = MyTable;
         }
 
         private void searchButton_Click(object sender, EventArgs e)
@@ -203,6 +210,17 @@ namespace Hotel_Management_System.Controllers
         //    }
         //}
 
+        private void myWebBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            // This method will handle the DocumentCompleted event of the WebBrowser control
+            WebBrowser webBrowser = sender as WebBrowser;
+            if (webBrowser != null)
+            {
+                webBrowser.Print(); // Print the document when it is fully loaded
+            }
+        }
+
+
         private async void addButton_Click(object sender, EventArgs e)
         {
             if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
@@ -230,6 +248,19 @@ namespace Hotel_Management_System.Controllers
                     guestIdCMBox.Items.Clear();
                     populateGuestComboBoxAsync();
                     //populateTable();
+
+                    // Create a new WebBrowser instance
+                    WebBrowser myWebBrowser = new WebBrowser();
+                    myWebBrowser.DocumentCompleted += myWebBrowser_DocumentCompleted;
+
+                    // Get the HTML content from the response
+                    string htmlContent = result.data.receipt.html_content;
+
+                    // Set the HTML content directly to the WebBrowser
+                    myWebBrowser.DocumentText = htmlContent;
+
+                    // Print the content
+                    myWebBrowser.Print();
                 }
                 else
                 {
@@ -511,21 +542,21 @@ namespace Hotel_Management_System.Controllers
             dc.setData(query, "");
         }
 
-        private void guna2ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //if (filterCMBox.Text == "All")
-            //{
-            //    populateTable();
-            //}
-            //else if (filterCMBox.Text == "Checkin")
-            //{
-            //    populateWithCheckIn();
-            //}
-            //else if (filterCMBox.Text == "Checkout")
-            //{
-            //    populateWithCheckOut();
-            //}
-        }
+        //private void guna2ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    if (filterCMBox.Text == "All")
+        //    {
+        //        populateTable();
+        //    }
+        //    else if (filterCMBox.Text == "Checkin")
+        //    {
+        //        populateWithCheckIn();
+        //    }
+        //    else if (filterCMBox.Text == "Checkout")
+        //    {
+        //        populateWithCheckOut();
+        //    }
+        //}
 
         private void populateWithCheckIn()
         {
