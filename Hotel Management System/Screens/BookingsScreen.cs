@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using System.Windows.Forms;
 
 namespace Hotel_Management_System.Controllers
@@ -153,9 +154,9 @@ namespace Hotel_Management_System.Controllers
             refreshTable();
         }
 
-        private async void refreshTable()
+        private async void refreshTable(string date = null)
         {
-            HttpData result = await conn.GetCheckinList();
+            HttpData result = await conn.GetCheckinList(date);
             if (!result.status)
             {
                 MessageBox.Show(result.message);
@@ -164,6 +165,13 @@ namespace Hotel_Management_System.Controllers
             System.Data.DataTable MyTable = JsonConvert.DeserializeObject<System.Data.DataTable>(result.data.ToString());
             bookingTable.DataSource = MyTable;
         }
+
+        private void FilterTableCheckinDate_ValueChanged(object sender, EventArgs e)
+        {
+            string selectedDate = FilterTableCheckinDate.Value.ToString("yyyy-MM-dd");
+            refreshTable(selectedDate);
+        }
+
 
         private void searchButton_Click(object sender, EventArgs e)
         {
@@ -710,8 +718,6 @@ namespace Hotel_Management_System.Controllers
 
             // Optionally, trigger any necessary validation or event handling
         }
-
-
 
         public class Guest
         {
