@@ -607,11 +607,14 @@ namespace Hotel_Management_System.Controllers
         {
             if (roomIdCMBox.SelectedItem is Room selectedRoom)
             {
-                // Assuming unit_price is a numeric type like float or decimal, parse it accordingly
+                // Assuming unit_price is a numeric type like decimal, parse it accordingly
                 if (decimal.TryParse(selectedRoom.unit_price, out decimal price))
                 {
                     amountField.Text = price.ToString(); // Set amountField to room's unit price
                     amountField.ReadOnly = false;
+
+                    // Call CalculateAmount to update total amount based on selected room and dates
+                    CalculateAmount();
                 }
                 else
                 {
@@ -625,6 +628,59 @@ namespace Hotel_Management_System.Controllers
                 amountField.ReadOnly = false;
             }
         }
+
+
+        private void label9_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkinPicker_ValueChanged(object sender, EventArgs e)
+        {
+            CalculateAmount();
+        }
+
+        private void checkoutPicker_ValueChanged(object sender, EventArgs e)
+        {
+            CalculateAmount();
+        }
+
+        private void CalculateAmount()
+        {
+            Room selectedRoom = (Room)roomIdCMBox.SelectedItem;
+            if (selectedRoom == null)
+            {
+                return; // Handle case where no room is selected
+            }
+
+            DateTime checkinDate = checkinPicker.Value.Date;
+            DateTime checkoutDate = checkoutPicker.Value.Date;
+
+            // Calculate days difference
+            int daysDifference = (int)(checkoutDate - checkinDate).TotalDays + 1; // Count the check-in day as well
+
+            // If checkin and checkout are the same day, daysDifference should be 1
+            if (daysDifference < 1)
+            {
+                daysDifference = 1; // Minimum of 1 day
+            }
+
+            // Clean unit_price and parse to decimal
+            string unitPriceString = selectedRoom.unit_price.Replace(",", "").Replace(".", "").Trim();
+            if (!decimal.TryParse(unitPriceString, out decimal price))
+            {
+                return; // Handle parsing failure
+            }
+
+            decimal totalAmount = price * daysDifference;
+
+            // Update amountField with formatted currency
+            amountField.Text = totalAmount.ToString("N0"); // Ensure consistent formatting
+
+            // Optionally, trigger any necessary validation or event handling
+        }
+
+
 
         public class Guest
         {
@@ -649,11 +705,6 @@ namespace Hotel_Management_System.Controllers
             {
                 return name; // Display the room name in combobox
             }
-        }
-
-        private void label9_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

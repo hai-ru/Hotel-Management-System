@@ -204,6 +204,7 @@
             this.checkinPicker.Size = new System.Drawing.Size(203, 44);
             this.checkinPicker.TabIndex = 70;
             this.checkinPicker.Value = new System.DateTime(2022, 5, 26, 1, 51, 32, 432);
+            this.checkinPicker.ValueChanged += new System.EventHandler(this.checkinPicker_ValueChanged);
             // 
             // checkoutPicker
             // 
@@ -223,6 +224,7 @@
             this.checkoutPicker.Size = new System.Drawing.Size(212, 44);
             this.checkoutPicker.TabIndex = 71;
             this.checkoutPicker.Value = new System.DateTime(2022, 5, 26, 1, 51, 32, 432);
+            this.checkoutPicker.ValueChanged += new System.EventHandler(this.checkoutPicker_ValueChanged);
             // 
             // label8
             // 
@@ -258,7 +260,6 @@
             this.amountField.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.amountField.TabIndex = 75;
             this.amountField.TextChanged += new System.EventHandler(this.amountField_TextChanged);
-
             // 
             // searchButton
             // 
@@ -474,7 +475,6 @@
             this.depositField.Name = "depositField";
             this.depositField.PasswordChar = '\0';
             this.depositField.PlaceholderText = "";
-            this.depositField.ReadOnly = false;
             this.depositField.SelectedText = "";
             this.depositField.Size = new System.Drawing.Size(378, 39);
             this.depositField.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
