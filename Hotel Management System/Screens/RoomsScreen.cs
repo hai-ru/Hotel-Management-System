@@ -6,12 +6,13 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Net.Http;
 using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace Hotel_Management_System.Controllers
 {
     public partial class RoomsScreen : Form
     {
-        private static readonly HttpClient client = new HttpClient();
+        HttpConnection conn = new HttpConnection();
         private int roomId;
 
         DatabaseConnection dc = new DatabaseConnection();
@@ -43,9 +44,21 @@ namespace Hotel_Management_System.Controllers
             populateTypeComboBox();
         }
 
+        private async void refreshTable()
+        {
+            HttpData result = await conn.GetRoomList();
+            if (!result.status)
+            {
+                MessageBox.Show(result.message);
+                return;
+            }
+            DataTable MyTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
+            roomsTable.DataSource = MyTable;
+        }
+
         private void Rooms_Load(object sender, EventArgs e)
         {
-            populate();
+            refreshTable();
         }
 
         private void guna2CircleButton1_Click(object sender, EventArgs e)

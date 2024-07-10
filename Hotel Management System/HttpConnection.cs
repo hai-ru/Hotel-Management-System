@@ -157,6 +157,43 @@ namespace Hotel_Management_System
             return resultData;
         }
 
+        public async Task<HttpData> GetRoomList()
+        {
+            HttpData resultData = new HttpData();
+
+            resultData.status = false;
+            resultData.message = "";
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string token = Properties.Settings.Default.Token;
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/products/list", null);
+
+                    var responseContent = await response.Content.ReadAsStringAsync() ;
+                    try
+                    {
+                        dynamic data = JsonConvert.DeserializeObject(responseContent);
+                        resultData.status = data.status;
+                        resultData.data = data.data;
+                    }
+                    catch (Newtonsoft.Json.JsonException ex)
+                    {
+                        resultData.status = false;
+                        resultData.message = ex.Message;
+                    }
+                }
+            } catch (HttpRequestException ex)
+            {
+                resultData.status= false;
+                resultData.message = ex.Message;
+            }
+            return resultData;
+        }
+
         public async Task<HttpData> GetCustomerList()
         {
 
