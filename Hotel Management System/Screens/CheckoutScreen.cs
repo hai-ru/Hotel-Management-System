@@ -1,4 +1,5 @@
 ﻿using Hotel_Management_System.Screens;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,6 +18,8 @@ namespace Hotel_Management_System.Controllers
 
         DatabaseConnection dc = new DatabaseConnection();
         String query;
+
+        HttpConnection conn = new HttpConnection();
 
         public CheckoutScreen()
         {
@@ -87,8 +90,27 @@ namespace Hotel_Management_System.Controllers
 
         private void CheckoutScreen_Load(object sender, EventArgs e)
         {
-            populateTable();
-            populateBookingIdCmbox();
+            //populateTable();
+            //populateBookingIdCmbox();
+
+            DateTime today = DateTime.Today;
+            string date = today.ToString("dd/MM/yyyy");
+            refreshTable(date);
+        }
+
+        private async void refreshTable(string date)
+        {
+            HttpData result = await conn.GetCheckinList(date);
+            if (!result.status)
+            {
+                MessageBox.Show(result.message);
+                return;
+            }
+
+            DataTable MyTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
+            checkoutTable.DataSource = MyTable;
+
+
         }
 
         private void bookingIdCMBox_SelectedIndexChanged(object sender, EventArgs e)

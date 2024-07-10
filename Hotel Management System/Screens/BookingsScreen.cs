@@ -513,18 +513,18 @@ namespace Hotel_Management_System.Controllers
 
         private void guna2ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (filterCMBox.Text == "All")
-            {
-                populateTable();
-            }
-            else if (filterCMBox.Text == "Checkin")
-            {
-                populateWithCheckIn();
-            }
-            else if (filterCMBox.Text == "Checkout")
-            {
-                populateWithCheckOut();
-            }
+            //if (filterCMBox.Text == "All")
+            //{
+            //    populateTable();
+            //}
+            //else if (filterCMBox.Text == "Checkin")
+            //{
+            //    populateWithCheckIn();
+            //}
+            //else if (filterCMBox.Text == "Checkout")
+            //{
+            //    populateWithCheckOut();
+            //}
         }
 
         private void populateWithCheckIn()
