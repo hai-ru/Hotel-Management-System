@@ -271,11 +271,6 @@ namespace Hotel_Management_System
                     string token = Properties.Settings.Default.Token;
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    //var valContent = new[]
-                    //{
-                    //    new KeyValuePair<string, string>("username", username)
-                    //};
-
                     var valContent = new Dictionary<string, string>();
                     valContent.Add("name", name);
                     valContent.Add("mobile", phone);
@@ -382,7 +377,7 @@ namespace Hotel_Management_System
         }
 
 
-        public async Task<HttpData> GetCheckinList()
+        public async Task<HttpData> GetCheckinList(string date = null,string status = null)
         {
 
             HttpData resultData = new HttpData();
@@ -397,7 +392,19 @@ namespace Hotel_Management_System
                     string token = Properties.Settings.Default.Token;
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/checkin/list", null);
+                    dynamic valContent = null;
+
+                    if (date != null)
+                    {
+                        valContent = new Dictionary<string, string>();
+                        valContent.Add("date", date);
+                        if(status != null)
+                        {
+                            valContent.Add("status", status);
+                        }
+                    }
+
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/checkin/list", valContent);
 
                     var responseContent = await response.Content.ReadAsStringAsync();
                     try

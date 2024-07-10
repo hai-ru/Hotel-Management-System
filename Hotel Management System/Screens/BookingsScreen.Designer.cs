@@ -47,14 +47,13 @@
             this.amountField = new Guna.UI2.WinForms.Guna2TextBox();
             this.searchButton = new Guna.UI2.WinForms.Guna2Button();
             this.updateButton = new Guna.UI2.WinForms.Guna2Button();
-            this.deleteButton = new Guna.UI2.WinForms.Guna2Button();
             this.addButton = new Guna.UI2.WinForms.Guna2Button();
             this.roomIdCMBox = new Guna.UI2.WinForms.Guna2ComboBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.guna2CircleButton3 = new Guna.UI2.WinForms.Guna2CircleButton();
             this.bookingTable = new Guna.UI2.WinForms.Guna2DataGridView();
             this.depositField = new Guna.UI2.WinForms.Guna2TextBox();
             this.label9 = new System.Windows.Forms.Label();
+            this.FilterTableCheckinDate = new Guna.UI2.WinForms.Guna2DateTimePicker();
             ((System.ComponentModel.ISupportInitialize)(this.bookingTable)).BeginInit();
             this.SuspendLayout();
             // 
@@ -63,7 +62,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Cooper Black", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.label1.Location = new System.Drawing.Point(27, 24);
+            this.label1.Location = new System.Drawing.Point(27, 21);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(120, 27);
             this.label1.TabIndex = 35;
@@ -107,7 +106,7 @@
             this.bookingIdField.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bookingIdField.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.bookingIdField.Location = new System.Drawing.Point(877, 54);
-            this.bookingIdField.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.bookingIdField.Margin = new System.Windows.Forms.Padding(4);
             this.bookingIdField.Name = "bookingIdField";
             this.bookingIdField.PasswordChar = '\0';
             this.bookingIdField.PlaceholderText = "";
@@ -237,13 +236,13 @@
             this.amountField.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.amountField.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.amountField.Location = new System.Drawing.Point(776, 324);
-            this.amountField.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.amountField.Margin = new System.Windows.Forms.Padding(4);
             this.amountField.Name = "amountField";
             this.amountField.PasswordChar = '\0';
             this.amountField.PlaceholderText = "";
             this.amountField.ReadOnly = true;
             this.amountField.SelectedText = "";
-            this.amountField.Size = new System.Drawing.Size(284, 32);
+            this.amountField.Size = new System.Drawing.Size(331, 32);
             this.amountField.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.amountField.TabIndex = 75;
             this.amountField.TextChanged += new System.EventHandler(this.amountField_TextChanged);
@@ -256,9 +255,9 @@
             this.searchButton.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.searchButton.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.searchButton.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.searchButton.Location = new System.Drawing.Point(814, 492);
+            this.searchButton.Location = new System.Drawing.Point(777, 492);
             this.searchButton.Name = "searchButton";
-            this.searchButton.Size = new System.Drawing.Size(96, 45);
+            this.searchButton.Size = new System.Drawing.Size(329, 45);
             this.searchButton.TabIndex = 83;
             this.searchButton.Text = "CLEAR";
             this.searchButton.Click += new System.EventHandler(this.searchButton_Click);
@@ -273,25 +272,10 @@
             this.updateButton.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.updateButton.Location = new System.Drawing.Point(946, 442);
             this.updateButton.Name = "updateButton";
-            this.updateButton.Size = new System.Drawing.Size(96, 45);
+            this.updateButton.Size = new System.Drawing.Size(161, 45);
             this.updateButton.TabIndex = 82;
             this.updateButton.Text = "UPDATE";
             this.updateButton.Click += new System.EventHandler(this.updateButton_Click);
-            // 
-            // deleteButton
-            // 
-            this.deleteButton.BackColor = System.Drawing.Color.Transparent;
-            this.deleteButton.BorderRadius = 20;
-            this.deleteButton.BorderThickness = 1;
-            this.deleteButton.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.deleteButton.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.deleteButton.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.deleteButton.Location = new System.Drawing.Point(946, 492);
-            this.deleteButton.Name = "deleteButton";
-            this.deleteButton.Size = new System.Drawing.Size(96, 45);
-            this.deleteButton.TabIndex = 81;
-            this.deleteButton.Text = "DELETE";
-            this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
             // 
             // addButton
             // 
@@ -301,9 +285,9 @@
             this.addButton.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.addButton.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.addButton.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.addButton.Location = new System.Drawing.Point(814, 442);
+            this.addButton.Location = new System.Drawing.Point(776, 442);
             this.addButton.Name = "addButton";
-            this.addButton.Size = new System.Drawing.Size(96, 45);
+            this.addButton.Size = new System.Drawing.Size(164, 45);
             this.addButton.TabIndex = 80;
             this.addButton.Text = "ADD";
             this.addButton.Click += new System.EventHandler(this.addButton_Click);
@@ -335,20 +319,6 @@
             this.label7.Size = new System.Drawing.Size(96, 19);
             this.label7.TabIndex = 88;
             this.label7.Text = "No. Kamar";
-            // 
-            // guna2CircleButton3
-            // 
-            this.guna2CircleButton3.BorderThickness = 2;
-            this.guna2CircleButton3.FillColor = System.Drawing.Color.Transparent;
-            this.guna2CircleButton3.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.guna2CircleButton3.ForeColor = System.Drawing.Color.White;
-            this.guna2CircleButton3.Image = ((System.Drawing.Image)(resources.GetObject("guna2CircleButton3.Image")));
-            this.guna2CircleButton3.Location = new System.Drawing.Point(1066, 318);
-            this.guna2CircleButton3.Name = "guna2CircleButton3";
-            this.guna2CircleButton3.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
-            this.guna2CircleButton3.Size = new System.Drawing.Size(40, 38);
-            this.guna2CircleButton3.TabIndex = 92;
-            this.guna2CircleButton3.Click += new System.EventHandler(this.guna2CircleButton3_Click);
             // 
             // bookingTable
             // 
@@ -416,12 +386,12 @@
             this.depositField.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.depositField.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.depositField.Location = new System.Drawing.Point(776, 392);
-            this.depositField.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.depositField.Margin = new System.Windows.Forms.Padding(4);
             this.depositField.Name = "depositField";
             this.depositField.PasswordChar = '\0';
             this.depositField.PlaceholderText = "";
             this.depositField.SelectedText = "";
-            this.depositField.Size = new System.Drawing.Size(284, 32);
+            this.depositField.Size = new System.Drawing.Size(330, 32);
             this.depositField.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.depositField.TabIndex = 118;
             this.depositField.TextChanged += new System.EventHandler(this.depositField_TextChanged);
@@ -438,21 +408,38 @@
             this.label9.Text = "Deposit";
             this.label9.Click += new System.EventHandler(this.label9_Click);
             // 
+            // FilterTableCheckinDate
+            // 
+            this.FilterTableCheckinDate.BackColor = System.Drawing.Color.Transparent;
+            this.FilterTableCheckinDate.BorderRadius = 15;
+            this.FilterTableCheckinDate.Checked = true;
+            this.FilterTableCheckinDate.CustomFormat = "yyyy-MM-dd";
+            this.FilterTableCheckinDate.FillColor = System.Drawing.Color.DimGray;
+            this.FilterTableCheckinDate.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.FilterTableCheckinDate.ForeColor = System.Drawing.Color.Gainsboro;
+            this.FilterTableCheckinDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.FilterTableCheckinDate.Location = new System.Drawing.Point(153, 15);
+            this.FilterTableCheckinDate.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
+            this.FilterTableCheckinDate.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
+            this.FilterTableCheckinDate.Name = "FilterTableCheckinDate";
+            this.FilterTableCheckinDate.Size = new System.Drawing.Size(152, 36);
+            this.FilterTableCheckinDate.TabIndex = 120;
+            this.FilterTableCheckinDate.Value = new System.DateTime(2022, 5, 26, 1, 51, 32, 432);
+            // 
             // BookingsScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(1133, 560);
+            this.Controls.Add(this.FilterTableCheckinDate);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.depositField);
             this.Controls.Add(this.bookingTable);
-            this.Controls.Add(this.guna2CircleButton3);
             this.Controls.Add(this.roomIdCMBox);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.searchButton);
             this.Controls.Add(this.updateButton);
-            this.Controls.Add(this.deleteButton);
             this.Controls.Add(this.addButton);
             this.Controls.Add(this.amountField);
             this.Controls.Add(this.label8);
@@ -496,13 +483,12 @@
         private Guna.UI2.WinForms.Guna2TextBox amountField;
         private Guna.UI2.WinForms.Guna2Button searchButton;
         private Guna.UI2.WinForms.Guna2Button updateButton;
-        private Guna.UI2.WinForms.Guna2Button deleteButton;
         private Guna.UI2.WinForms.Guna2Button addButton;
         private Guna.UI2.WinForms.Guna2ComboBox roomIdCMBox;
         private System.Windows.Forms.Label label7;
-        private Guna.UI2.WinForms.Guna2CircleButton guna2CircleButton3;
         private Guna.UI2.WinForms.Guna2DataGridView bookingTable;
         private Guna.UI2.WinForms.Guna2TextBox depositField;
         private System.Windows.Forms.Label label9;
+        private Guna.UI2.WinForms.Guna2DateTimePicker FilterTableCheckinDate;
     }
 }
