@@ -67,10 +67,11 @@ namespace Hotel_Management_System.Controllers
 
         private void clearFields()
         {
-            //paymentIdField.Text = "";
-            //bookingIdCMBox.Text = "";
-            //paymentTypeCmbox.SelectedIndex = -1;
-            //amountField.Text = "";
+            paymentIdField.Text = "";
+            namaField.Text = "";
+            depositField.Text = "";
+            totalTagihanField.Text = "";
+            sisaField.Text = "";
         }
 
         private void populateBookingIdCmbox()
@@ -197,8 +198,13 @@ namespace Hotel_Management_System.Controllers
 
         private void checkoutTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            populateTable();
-            fetchData(1);
+            //populateTable();
+            //fetchData(1);
+            paymentIdField.Text = checkoutTable.SelectedRows[0].Cells[0].Value.ToString();
+            namaField.Text = checkoutTable.SelectedRows[0].Cells[8].Value.ToString();
+            depositField.Text = checkoutTable.SelectedRows[0].Cells[3].Value.ToString();
+            totalTagihanField.Text = checkoutTable.SelectedRows[0].Cells[2].Value.ToString();
+            sisaField.Text = checkoutTable.SelectedRows[0].Cells[4].Value.ToString();
         }
 
         private void fetchData(int i)
