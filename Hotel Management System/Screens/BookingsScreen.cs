@@ -216,7 +216,7 @@ namespace Hotel_Management_System.Controllers
                 string lamainap = (DateTime.Parse(checkoutPicker.Text) - DateTime.Parse(checkinPicker.Text)).Days.ToString();
                 string room_product_id = selectedRoom?.product_id.ToString();
                 string harga_total = amountField.Text; // Assuming amountField contains the total price
-                string payment_amount = amountField.Text;
+                string payment_amount = depositField.Text;
 
                 // Call StoreCheckin method
                 HttpData result = await conn.StoreCheckin(contact_id, lamainap, room_product_id, harga_total, payment_amount);
@@ -561,7 +561,46 @@ namespace Hotel_Management_System.Controllers
 
         private void amountField_TextChanged(object sender, EventArgs e)
         {
+            Guna.UI2.WinForms.Guna2TextBox textBox = (Guna.UI2.WinForms.Guna2TextBox)sender;
 
+            // Get the current cursor position
+            int cursorPosition = textBox.SelectionStart;
+
+            // Remove any non-numeric characters
+            string numericText = string.Concat(textBox.Text.Where(char.IsDigit));
+
+            if (decimal.TryParse(numericText, out decimal value))
+            {
+                // Format the value as currency
+                textBox.Text = string.Format("{0:N0}", value);
+
+                // Adjust cursor position based on changes in text length
+                int newTextLength = textBox.Text.Length;
+                int newCursorPosition = cursorPosition + (newTextLength - textBox.TextLength);
+                textBox.SelectionStart = Math.Max(0, Math.Min(newCursorPosition, newTextLength));
+            }
+        }
+
+        private void depositField_TextChanged(object sender, EventArgs e)
+        {
+            Guna.UI2.WinForms.Guna2TextBox textBox = (Guna.UI2.WinForms.Guna2TextBox)sender;
+
+            // Get the current cursor position
+            int cursorPosition = textBox.SelectionStart;
+
+            // Remove any non-numeric characters
+            string numericText = string.Concat(textBox.Text.Where(char.IsDigit));
+
+            if (decimal.TryParse(numericText, out decimal value))
+            {
+                // Format the value as currency
+                textBox.Text = string.Format("{0:N0}", value);
+
+                // Adjust cursor position based on changes in text length
+                int newTextLength = textBox.Text.Length;
+                int newCursorPosition = cursorPosition + (newTextLength - textBox.TextLength);
+                textBox.SelectionStart = Math.Max(0, Math.Min(newCursorPosition, newTextLength));
+            }
         }
 
         private void roomIdCMBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -610,6 +649,11 @@ namespace Hotel_Management_System.Controllers
             {
                 return name; // Display the room name in combobox
             }
+        }
+
+        private void label9_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

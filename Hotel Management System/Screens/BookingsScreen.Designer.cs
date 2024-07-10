@@ -55,6 +55,8 @@
             this.bookingTable = new Guna.UI2.WinForms.Guna2DataGridView();
             this.filterCMBox = new Guna.UI2.WinForms.Guna2ComboBox();
             this.label12 = new System.Windows.Forms.Label();
+            this.depositField = new Guna.UI2.WinForms.Guna2TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.bookingTable)).BeginInit();
             this.SuspendLayout();
             // 
@@ -227,7 +229,7 @@
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.label8.Location = new System.Drawing.Point(1030, 388);
+            this.label8.Location = new System.Drawing.Point(1030, 371);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(152, 23);
@@ -245,7 +247,7 @@
             this.amountField.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.amountField.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.amountField.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.amountField.Location = new System.Drawing.Point(1035, 416);
+            this.amountField.Location = new System.Drawing.Point(1035, 399);
             this.amountField.Margin = new System.Windows.Forms.Padding(5);
             this.amountField.Name = "amountField";
             this.amountField.PasswordChar = '\0';
@@ -256,6 +258,7 @@
             this.amountField.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.amountField.TabIndex = 75;
             this.amountField.TextChanged += new System.EventHandler(this.amountField_TextChanged);
+
             // 
             // searchButton
             // 
@@ -265,7 +268,7 @@
             this.searchButton.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.searchButton.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.searchButton.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.searchButton.Location = new System.Drawing.Point(1087, 548);
+            this.searchButton.Location = new System.Drawing.Point(1085, 606);
             this.searchButton.Margin = new System.Windows.Forms.Padding(4);
             this.searchButton.Name = "searchButton";
             this.searchButton.Size = new System.Drawing.Size(128, 55);
@@ -281,7 +284,7 @@
             this.updateButton.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.updateButton.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.updateButton.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.updateButton.Location = new System.Drawing.Point(1263, 486);
+            this.updateButton.Location = new System.Drawing.Point(1261, 544);
             this.updateButton.Margin = new System.Windows.Forms.Padding(4);
             this.updateButton.Name = "updateButton";
             this.updateButton.Size = new System.Drawing.Size(128, 55);
@@ -297,7 +300,7 @@
             this.deleteButton.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.deleteButton.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.deleteButton.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.deleteButton.Location = new System.Drawing.Point(1263, 548);
+            this.deleteButton.Location = new System.Drawing.Point(1261, 606);
             this.deleteButton.Margin = new System.Windows.Forms.Padding(4);
             this.deleteButton.Name = "deleteButton";
             this.deleteButton.Size = new System.Drawing.Size(128, 55);
@@ -313,7 +316,7 @@
             this.addButton.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.addButton.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.addButton.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.addButton.Location = new System.Drawing.Point(1087, 486);
+            this.addButton.Location = new System.Drawing.Point(1085, 544);
             this.addButton.Margin = new System.Windows.Forms.Padding(4);
             this.addButton.Name = "addButton";
             this.addButton.Size = new System.Drawing.Size(128, 55);
@@ -331,7 +334,7 @@
             this.roomIdCMBox.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.roomIdCMBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
             this.roomIdCMBox.ItemHeight = 30;
-            this.roomIdCMBox.Location = new System.Drawing.Point(1035, 329);
+            this.roomIdCMBox.Location = new System.Drawing.Point(1035, 322);
             this.roomIdCMBox.Margin = new System.Windows.Forms.Padding(4);
             this.roomIdCMBox.Name = "roomIdCMBox";
             this.roomIdCMBox.Size = new System.Drawing.Size(440, 36);
@@ -344,7 +347,7 @@
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.label7.Location = new System.Drawing.Point(1029, 298);
+            this.label7.Location = new System.Drawing.Point(1029, 291);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(159, 23);
@@ -358,7 +361,7 @@
             this.guna2CircleButton3.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.guna2CircleButton3.ForeColor = System.Drawing.Color.White;
             this.guna2CircleButton3.Image = ((System.Drawing.Image)(resources.GetObject("guna2CircleButton3.Image")));
-            this.guna2CircleButton3.Location = new System.Drawing.Point(1422, 408);
+            this.guna2CircleButton3.Location = new System.Drawing.Point(1422, 391);
             this.guna2CircleButton3.Margin = new System.Windows.Forms.Padding(4);
             this.guna2CircleButton3.Name = "guna2CircleButton3";
             this.guna2CircleButton3.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
@@ -455,12 +458,50 @@
             this.label12.TabIndex = 117;
             this.label12.Text = "Filter";
             // 
+            // depositField
+            // 
+            this.depositField.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.depositField.DefaultText = "";
+            this.depositField.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.depositField.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.depositField.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.depositField.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.depositField.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.depositField.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.depositField.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.depositField.Location = new System.Drawing.Point(1035, 482);
+            this.depositField.Margin = new System.Windows.Forms.Padding(5);
+            this.depositField.Name = "depositField";
+            this.depositField.PasswordChar = '\0';
+            this.depositField.PlaceholderText = "";
+            this.depositField.ReadOnly = false;
+            this.depositField.SelectedText = "";
+            this.depositField.Size = new System.Drawing.Size(378, 39);
+            this.depositField.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
+            this.depositField.TabIndex = 118;
+            this.depositField.TextChanged += new System.EventHandler(this.depositField_TextChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.label9.Location = new System.Drawing.Point(1031, 454);
+            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(88, 23);
+            this.label9.TabIndex = 119;
+            this.label9.Text = "Deposit";
+            this.label9.Click += new System.EventHandler(this.label9_Click);
+            // 
             // BookingsScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(1511, 689);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.depositField);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.filterCMBox);
             this.Controls.Add(this.bookingTable);
@@ -522,5 +563,7 @@
         private Guna.UI2.WinForms.Guna2DataGridView bookingTable;
         private Guna.UI2.WinForms.Guna2ComboBox filterCMBox;
         private System.Windows.Forms.Label label12;
+        private Guna.UI2.WinForms.Guna2TextBox depositField;
+        private System.Windows.Forms.Label label9;
     }
 }
