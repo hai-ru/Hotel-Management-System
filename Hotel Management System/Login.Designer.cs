@@ -179,11 +179,11 @@
             this.errorLabel.AutoSize = true;
             this.errorLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.errorLabel.ForeColor = System.Drawing.Color.Red;
-            this.errorLabel.Location = new System.Drawing.Point(461, 398);
+            this.errorLabel.Location = new System.Drawing.Point(516, 398);
             this.errorLabel.Name = "errorLabel";
-            this.errorLabel.Size = new System.Drawing.Size(172, 15);
+            this.errorLabel.Size = new System.Drawing.Size(61, 15);
             this.errorLabel.TabIndex = 7;
-            this.errorLabel.Text = "Wrong username or password";
+            this.errorLabel.Text = "Loading...";
             this.errorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.errorLabel.Visible = false;
             // 
@@ -214,7 +214,6 @@
             this.passwordTextField.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.passwordTextField.UseSystemPasswordChar = true;
             this.passwordTextField.IconRightClick += new System.EventHandler(this.changeVisibile);
-            this.passwordTextField.TextChanged += new System.EventHandler(this.passwordTextField_TextChanged);
             // 
             // imageList1
             // 
