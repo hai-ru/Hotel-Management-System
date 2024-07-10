@@ -148,14 +148,14 @@ namespace Hotel_Management_System.Controllers
 
         private void BookingsScreen_Load(object sender, EventArgs e)
         {
-            //populateTable();
-            //populateCheckBox();
-            //populateGuestComboBox();
-            //popuklateRoomType();
-            //populateDiscountId();
-
             populateGuestComboBoxAsync();
             populateRoomAsync();
+            refreshTable();
+        }
+
+        private async void refreshTable()
+        {
+
         }
 
         private void searchButton_Click(object sender, EventArgs e)

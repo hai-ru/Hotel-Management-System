@@ -380,6 +380,48 @@ namespace Hotel_Management_System
         }
 
 
+        public async Task<HttpData> GetCheckinList()
+        {
+
+            HttpData resultData = new HttpData();
+
+            resultData.status = false;
+            resultData.message = "";
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string token = Properties.Settings.Default.Token;
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/checkin/list", null);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+
+                        dynamic data = JsonConvert.DeserializeObject(responseContent);
+                        resultData.status = data.status;
+                        resultData.data = data.data;
+
+                    }
+                    catch (Newtonsoft.Json.JsonException ex)
+                    {
+                        resultData.status = false;
+                        resultData.message = ex.Message;
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                resultData.status = false;
+                resultData.message = ex.Message;
+            }
+
+            return resultData;
+        }
+
 
     }
 
