@@ -15,6 +15,8 @@ namespace Hotel_Management_System
     {
         private const string BaseUrl = "https://development.norapos.com/api/login";
 
+        HttpConnection conn = new HttpConnection();
+
         DatabaseConnection dc = new DatabaseConnection();
         String query;
         public int hotelIdToken;
@@ -125,17 +127,29 @@ namespace Hotel_Management_System
             string username = usernameTextField.Text;
             string password = passwordTextField.Text;
 
-            string token = await GetAccessToken(username, password);
+            errorLabel.Visible = true;
+            errorLabel.Text = "Loading...";
 
-            if (!string.IsNullOrEmpty(token))
+            HttpData data = await conn.GetAccessToken(username,password);
+
+
+            if (data.status)
             {
+                errorLabel.Visible = false;
+
+                string token = data.message;
+
                 // Store the token securely
-                Properties.Settings.Default.Token = token; // Example of storing in application settings
+                Properties.Settings.Default.Token = token;
                 Properties.Settings.Default.Save();
 
                 this.Hide();
                 Dashboard db = new Dashboard();
                 db.Show();
+            } else
+            {
+                errorLabel.Text = data.message;
+                errorLabel.Visible = true;
             }
         }
 
@@ -254,17 +268,6 @@ namespace Hotel_Management_System
     }
 
     // Define a class to deserialize the API response
-    public class ApiResponse
-    {
-        public bool status { get; set; }
-        public string message { get; set; }
 
-        [JsonConverter(typeof(DataConverter))]
-        public Data data { get; set; }
-    }
-
-    public class Data
-    {
-        public string token { get; set; }
-    }
+   
 }

@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Login));
             this.guna2GradientPanel1 = new Guna.UI2.WinForms.Guna2GradientPanel();
+            this.label4 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.guna2CirclePictureBox1 = new Guna.UI2.WinForms.Guna2CirclePictureBox();
@@ -40,10 +41,7 @@
             this.guna2ImageRadioButton1 = new Guna.UI2.WinForms.Guna2ImageRadioButton();
             this.errorLabel = new System.Windows.Forms.Label();
             this.passwordTextField = new Guna.UI2.WinForms.Guna2TextBox();
-            this.guna2CircleButton1 = new Guna.UI2.WinForms.Guna2CircleButton();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.guna2GradientPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.guna2CirclePictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -59,6 +57,18 @@
             this.guna2GradientPanel1.Name = "guna2GradientPanel1";
             this.guna2GradientPanel1.Size = new System.Drawing.Size(300, 450);
             this.guna2GradientPanel1.TabIndex = 0;
+            // 
+            // label4
+            // 
+            this.label4.BackColor = System.Drawing.Color.Transparent;
+            this.label4.Font = new System.Drawing.Font("Bernard MT Condensed", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.Lime;
+            this.label4.Location = new System.Drawing.Point(33, 245);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(225, 73);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "GRAND KARTIKA";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel1
             // 
@@ -174,6 +184,7 @@
             this.errorLabel.Size = new System.Drawing.Size(172, 15);
             this.errorLabel.TabIndex = 7;
             this.errorLabel.Text = "Wrong username or password";
+            this.errorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.errorLabel.Visible = false;
             // 
             // passwordTextField
@@ -205,58 +216,17 @@
             this.passwordTextField.IconRightClick += new System.EventHandler(this.changeVisibile);
             this.passwordTextField.TextChanged += new System.EventHandler(this.passwordTextField_TextChanged);
             // 
-            // guna2CircleButton1
-            // 
-            this.guna2CircleButton1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("guna2CircleButton1.BackgroundImage")));
-            this.guna2CircleButton1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.guna2CircleButton1.BorderThickness = 2;
-            this.guna2CircleButton1.FillColor = System.Drawing.Color.Transparent;
-            this.guna2CircleButton1.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.guna2CircleButton1.ForeColor = System.Drawing.Color.White;
-            this.guna2CircleButton1.Location = new System.Drawing.Point(727, 376);
-            this.guna2CircleButton1.Name = "guna2CircleButton1";
-            this.guna2CircleButton1.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
-            this.guna2CircleButton1.Size = new System.Drawing.Size(61, 62);
-            this.guna2CircleButton1.TabIndex = 9;
-            this.guna2CircleButton1.Click += new System.EventHandler(this.guna2CircleButton1_Click);
-            // 
             // imageList1
             // 
             this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
             this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.label3.Location = new System.Drawing.Point(493, 309);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(106, 15);
-            this.label3.TabIndex = 10;
-            this.label3.Text = "Forgot Password?";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
-            // 
-            // label4
-            // 
-            this.label4.BackColor = System.Drawing.Color.Transparent;
-            this.label4.Font = new System.Drawing.Font("Bernard MT Condensed", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = System.Drawing.Color.Lime;
-            this.label4.Location = new System.Drawing.Point(33, 245);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(225, 73);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "GRAND KARTIKA";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.guna2CircleButton1);
             this.Controls.Add(this.passwordTextField);
             this.Controls.Add(this.errorLabel);
             this.Controls.Add(this.guna2ImageRadioButton1);
@@ -288,9 +258,7 @@
         private Guna.UI2.WinForms.Guna2ImageRadioButton guna2ImageRadioButton1;
         private System.Windows.Forms.Label errorLabel;
         private Guna.UI2.WinForms.Guna2TextBox passwordTextField;
-        private Guna.UI2.WinForms.Guna2CircleButton guna2CircleButton1;
         private System.Windows.Forms.ImageList imageList1;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
     }
 }

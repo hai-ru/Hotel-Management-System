@@ -10,11 +10,14 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace Hotel_Management_System.Controllers
 {
     public partial class GuestsScreen : Form
     {
+
+        HttpConnection conn = new HttpConnection();
 
         DatabaseConnection dc = new DatabaseConnection();
         String query;
@@ -35,7 +38,7 @@ namespace Hotel_Management_System.Controllers
         {
             InitializeComponent();
             guestIdField.ReadOnly = false;
-            checkIfEmployee();
+            //checkIfEmployee();
         }
 
         private void checkIfEmployee()
@@ -83,9 +86,16 @@ namespace Hotel_Management_System.Controllers
             zipField.Text = "";
         }
 
-        private void GuestsScreen_Load(object sender, EventArgs e)
+        private async void GuestsScreen_Load(object sender, EventArgs e)
         {
-            populateTable();
+            HttpData result = await conn.GetCustomerList();
+            if (!result.status)
+            {
+                MessageBox.Show(result.message);
+                return;
+            }
+            DataTable MyTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
+            guestTable.DataSource = MyTable;
         }
 
         private void searchButton_Click(object sender, EventArgs e)

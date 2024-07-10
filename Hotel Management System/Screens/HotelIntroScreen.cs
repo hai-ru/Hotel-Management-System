@@ -10,6 +10,8 @@ namespace Hotel_Management_System.Screens
     {
         private const string BaseUrl = "https://development.norapos.com/api/business";
 
+        private HttpConnection conn = new HttpConnection();
+
         public HotelIntroScreen()
         {
             InitializeComponent();
@@ -17,46 +19,54 @@ namespace Hotel_Management_System.Screens
 
         private async void HotelIntroScreen_Load(object sender, EventArgs e)
         {
-            await GetHotelDetails();
+            HttpData res = await conn.GetHotelDetails();
+            if (!res.status)
+            {
+                MessageBox.Show(res.message);
+                return;
+            }
+            
+            string hotel_name = res.data.name ?? "";
+            hotelName.Text = hotel_name;
         }
 
-        private async Task GetHotelDetails()
-        {
-            try
-            {
-                using (HttpClient client = new HttpClient())
-                {
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Properties.Settings.Default.Token);
+        //private async Task GetHotelDetails()
+        //{
+        //    try
+        //    {
+        //        using (HttpClient client = new HttpClient())
+        //        {
+        //            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", Properties.Settings.Default.Token);
 
-                    HttpResponseMessage response = await client.PostAsync(BaseUrl, null);
+        //            HttpResponseMessage response = await client.PostAsync(BaseUrl, null);
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string json = await response.Content.ReadAsStringAsync();
-                        Hotel hotel = JsonSerializer.Deserialize<Hotel>(json);
+        //            if (response.IsSuccessStatusCode)
+        //            {
+        //                string json = await response.Content.ReadAsStringAsync();
+        //                Hotel hotel = JsonSerializer.Deserialize<Hotel>(json);
 
-                        if (hotel != null)
-                        {
-                            hotelName.Text = hotel.name;
-                            contactLabel.Text = hotel.contact;
-                            emailLabel.Text = hotel.email;
-                            webLabel.Text = hotel.website;
-                            descripLabel.Text = hotel.description;
-                            string address = $"{hotel.street}, {hotel.city}, {hotel.state}, {hotel.country}";
-                            streetLabel.Text = address;
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Failed to retrieve hotel details: " + response.StatusCode);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
-            }
-        }
+        //                if (hotel != null)
+        //                {
+        //                    hotelName.Text = hotel.name;
+        //                    contactLabel.Text = hotel.contact;
+        //                    emailLabel.Text = hotel.email;
+        //                    webLabel.Text = hotel.website;
+        //                    descripLabel.Text = hotel.description;
+        //                    string address = $"{hotel.street}, {hotel.city}, {hotel.state}, {hotel.country}";
+        //                    streetLabel.Text = address;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                MessageBox.Show("Failed to retrieve hotel details: " + response.StatusCode);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Error: " + ex.Message);
+        //    }
+        //}
 
         // Define a class to represent the Hotel JSON structure
         public class Hotel
