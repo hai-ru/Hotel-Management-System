@@ -13,7 +13,6 @@ namespace Hotel_Management_System
 {
     public partial class Login : Form
     {
-        private const string BaseUrl = "https://development.norapos.com/api/login";
 
         HttpConnection conn = new HttpConnection();
 
@@ -57,71 +56,6 @@ namespace Hotel_Management_System
             con.Close();
             return str;
         }
-
-        private async Task<string> GetAccessToken(string username, string password)
-        {
-            string token = null;
-
-            try
-            {
-                using (HttpClient client = new HttpClient())
-                {
-                    var content = new FormUrlEncodedContent(new[]
-                    {
-                new KeyValuePair<string, string>("username", username),
-                new KeyValuePair<string, string>("password", password)
-            });
-
-                    HttpResponseMessage response = await client.PostAsync(BaseUrl, content);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var responseContent = await response.Content.ReadAsStringAsync();
-
-                        try
-                        {
-                            var options = new JsonSerializerOptions
-                            {
-                                PropertyNameCaseInsensitive = true
-                            };
-                            var responseData = JsonSerializer.Deserialize<ApiResponse>(responseContent, options);
-
-                            if (responseData.status)
-                            {
-                                // Login successful
-                                if (responseData.data != null)
-                                {
-                                    token = responseData.data.token;
-                                }
-                            }
-                            else
-                            {
-                                // Login failed due to incorrect credentials
-                                errorLabel.Text = responseData.message;
-                                errorLabel.Visible = true;
-                            }
-                        }
-                        catch (JsonException ex)
-                        {
-                            MessageBox.Show($"Error parsing response: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                    else
-                    {
-                        // HTTP request failed
-                        errorLabel.Text = "Failed to connect to server.";
-                        errorLabel.Visible = true;
-                    }
-                }
-            }
-            catch (HttpRequestException ex)
-            {
-                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            return token;
-        }
-
         private async void guna2Button1_Click(object sender, EventArgs e)
         {
             string username = usernameTextField.Text;
@@ -150,36 +84,6 @@ namespace Hotel_Management_System
             {
                 errorLabel.Text = data.message;
                 errorLabel.Visible = true;
-            }
-        }
-
-
-        private void TokenEployeeId()
-        {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT EmployeeId FROM Authentication.Login WHERE username = '" + usernameTextField.Text + "' AND password = '" + passwordTextField.Text + "'";
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                if (dr.GetValue(0) != DBNull.Value)
-                {
-                    employeeIdToken = dr.GetInt32(0);
-                }
-            }
-        }
-
-        private void TokenHotelIdHOTEL()
-        {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT HotelId FROM Authentication.Login WHERE Username = '" + usernameTextField.Text + "' AND Password = '" + passwordTextField.Text + "'";
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                hotelIdToken = dr.GetInt32(0);
             }
         }
 
@@ -219,11 +123,6 @@ namespace Hotel_Management_System
             }
         }
 
-        private void passwordTextField_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void changeVisibile(object sender, EventArgs e)
         {
             //Image myimage1 = new Bitmap(@"C:\Users\Ali Asar\source\repos\Hotel Management System\Hotel Management System\Icons\eyevisoff.png");
@@ -239,31 +138,6 @@ namespace Hotel_Management_System
                 passwordTextField.UseSystemPasswordChar = true;
                 //passwordTextField.IconRight = myimage1;
             }
-        }
-    }
-
-    public class DataConverter : JsonConverter<Data>
-    {
-        public override Data Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            if (reader.TokenType == JsonTokenType.StartObject)
-            {
-                // Deserialize as Data object
-                return JsonSerializer.Deserialize<Data>(ref reader, options);
-            }
-            else if (reader.TokenType == JsonTokenType.StartArray)
-            {
-                // Skip the array (empty array case)
-                reader.Skip();
-                return null;
-            }
-
-            throw new JsonException();
-        }
-
-        public override void Write(Utf8JsonWriter writer, Data value, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException("Serialization not implemented.");
         }
     }
 

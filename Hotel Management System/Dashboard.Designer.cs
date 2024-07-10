@@ -31,7 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
             this.mainPanel = new Guna.UI2.WinForms.Guna2Panel();
             this.guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
-            this.servicesBtn = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Button6 = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Button5 = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Button4 = new Guna.UI2.WinForms.Guna2Button();
@@ -55,7 +54,6 @@
             // 
             // guna2Panel2
             // 
-            this.guna2Panel2.Controls.Add(this.servicesBtn);
             this.guna2Panel2.Controls.Add(this.guna2Button6);
             this.guna2Panel2.Controls.Add(this.guna2Button5);
             this.guna2Panel2.Controls.Add(this.guna2Button4);
@@ -64,25 +62,6 @@
             this.guna2Panel2.Name = "guna2Panel2";
             this.guna2Panel2.Size = new System.Drawing.Size(1144, 61);
             this.guna2Panel2.TabIndex = 0;
-            // 
-            // servicesBtn
-            // 
-            this.servicesBtn.BorderRadius = 15;
-            this.servicesBtn.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton;
-            this.servicesBtn.CheckedState.FillColor = System.Drawing.Color.WhiteSmoke;
-            this.servicesBtn.CheckedState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.servicesBtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.servicesBtn.FillColor = System.Drawing.Color.DimGray;
-            this.servicesBtn.Font = new System.Drawing.Font("Cooper Black", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.servicesBtn.ForeColor = System.Drawing.Color.White;
-            this.servicesBtn.Image = ((System.Drawing.Image)(resources.GetObject("servicesBtn.Image")));
-            this.servicesBtn.ImageSize = new System.Drawing.Size(30, 30);
-            this.servicesBtn.Location = new System.Drawing.Point(708, 6);
-            this.servicesBtn.Name = "servicesBtn";
-            this.servicesBtn.Size = new System.Drawing.Size(138, 44);
-            this.servicesBtn.TabIndex = 8;
-            this.servicesBtn.Text = "Services";
-            this.servicesBtn.Click += new System.EventHandler(this.servicesBtn_Click);
             // 
             // guna2Button6
             // 
@@ -236,7 +215,6 @@
         private Guna.UI2.WinForms.Guna2Button guna2Button3;
         private Guna.UI2.WinForms.Guna2Button guna2Button6;
         private Guna.UI2.WinForms.Guna2CircleButton guna2CircleButton1;
-        private Guna.UI2.WinForms.Guna2Button servicesBtn;
         private Guna.UI2.WinForms.Guna2CircleButton guna2CircleButton2;
     }
 }
