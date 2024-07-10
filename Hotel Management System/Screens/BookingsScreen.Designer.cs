@@ -193,6 +193,7 @@
             this.checkinPicker.Size = new System.Drawing.Size(152, 36);
             this.checkinPicker.TabIndex = 70;
             this.checkinPicker.Value = new System.DateTime(2022, 5, 26, 1, 51, 32, 432);
+            this.checkinPicker.ValueChanged += new System.EventHandler(this.checkinPicker_ValueChanged);
             // 
             // checkoutPicker
             // 
@@ -211,6 +212,7 @@
             this.checkoutPicker.Size = new System.Drawing.Size(159, 36);
             this.checkoutPicker.TabIndex = 71;
             this.checkoutPicker.Value = new System.DateTime(2022, 5, 26, 1, 51, 32, 432);
+            this.checkoutPicker.ValueChanged += new System.EventHandler(this.checkoutPicker_ValueChanged);
             // 
             // label8
             // 
