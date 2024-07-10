@@ -67,34 +67,32 @@ namespace Hotel_Management_System.Controllers
 
         private void clearFields()
         {
-            paymentIdField.Text = "";
-            bookingIdCMBox.Text = "";
-            paymentTypeCmbox.SelectedIndex = -1;
-            amountField.Text = "";
+            //paymentIdField.Text = "";
+            //bookingIdCMBox.Text = "";
+            //paymentTypeCmbox.SelectedIndex = -1;
+            //amountField.Text = "";
         }
 
         private void populateBookingIdCmbox()
         {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT BookingId FROM Bookings.Booking WHERE Status = 'Checkin' AND HotelId = " + Statics.hotelIdTKN;
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                bookingIdCMBox.Items.Add(dr["BookingId"]);
-            }
-            con.Close();
+            //SqlConnection con = dc.getConnection();
+            //con.Open();
+            //query = "SELECT BookingId FROM Bookings.Booking WHERE Status = 'Checkin' AND HotelId = " + Statics.hotelIdTKN;
+            //SqlCommand cmd = new SqlCommand(query, con);
+            //SqlDataReader dr = cmd.ExecuteReader();
+            //while (dr.Read())
+            //{
+            //    bookingIdCMBox.Items.Add(dr["BookingId"]);
+            //}
+            //con.Close();
         }
 
 
         private void CheckoutScreen_Load(object sender, EventArgs e)
         {
-            //populateTable();
-            //populateBookingIdCmbox();
-
             DateTime today = DateTime.Today;
-            string date = today.ToString("dd/MM/yyyy");
+            string date = today.ToString("yyyy-MM-dd");
+            FilterTableCheckoutDate.Value = today;
             refreshTable(date);
         }
 
@@ -115,42 +113,42 @@ namespace Hotel_Management_System.Controllers
 
         private void bookingIdCMBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int id = int.Parse(bookingIdCMBox.Text);
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT BookingAmount From Bookings.Booking WHERE BookingId = " + id;
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                amountField.Text = dr.GetSqlInt32(0).ToString();
-            }
+            //int id = int.Parse(bookingIdCMBox.Text);
+            //SqlConnection con = dc.getConnection();
+            //con.Open();
+            //query = "SELECT BookingAmount From Bookings.Booking WHERE BookingId = " + id;
+            //SqlCommand cmd = new SqlCommand(query, con);
+            //SqlDataReader dr = cmd.ExecuteReader();
+            //while (dr.Read())
+            //{
+            //    //amountField.Text = dr.GetSqlInt32(0).ToString();
+            //}
         }
 
         private void payButton_Click(object sender, EventArgs e)
         {
-            if (bookingIdCMBox.SelectedIndex != -1 && paymentTypeCmbox.SelectedIndex != -1 && amountField.Text != "")
-            {
-                int bId = int.Parse(bookingIdCMBox.Text);
-                int gId = getGuestIdS(bId);
-                query = "UPDATE Hotels.Guests SET Status = 'Not Reserved' WHERE GuestId = " + gId;
-                dc.setData(query, "");
-                int a = getRoomId(bId);
-                query = "UPDATE Rooms.Room SET Available = 'Yes' WHERE RoomId = " + a;
-                dc.setData(query, "");
-                delServiceUsed(bId);
-                query = "INSERT INTO Bookings.Payments (PaymentStatus, PaymentType, PaymentAmount, BookingId) VALUES ('" + statusField.Text + "', '" + paymentTypeCmbox.Text + "', " + amountField.Text + ", " + bookingIdCMBox.Text +")";
-                dc.setData(query, "Checkout Data inserted successfully!");
-                changeBookingStatus(bId);
-                clearFields();
-                bookingIdCMBox.Items.Clear();
-                populateBookingIdCmbox();
-                populateTable();
-            }
-            else
-            {
-                MessageBox.Show("All fields must be filled.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            //if (bookingIdCMBox.SelectedIndex != -1 && paymentTypeCmbox.SelectedIndex != -1 && amountField.Text != "")
+            //{
+            //    //int bId = int.Parse(bookingIdCMBox.Text);
+            //    int gId = getGuestIdS(bId);
+            //    query = "UPDATE Hotels.Guests SET Status = 'Not Reserved' WHERE GuestId = " + gId;
+            //    dc.setData(query, "");
+            //    int a = getRoomId(bId);
+            //    query = "UPDATE Rooms.Room SET Available = 'Yes' WHERE RoomId = " + a;
+            //    dc.setData(query, "");
+            //    delServiceUsed(bId);
+            //    query = "INSERT INTO Bookings.Payments (PaymentStatus, PaymentType, PaymentAmount, BookingId) VALUES ('" + statusField.Text + "', '" + paymentTypeCmbox.Text + "', " + amountField.Text + ", " + bookingIdCMBox.Text +")";
+            //    dc.setData(query, "Checkout Data inserted successfully!");
+            //    changeBookingStatus(bId);
+            //    clearFields();
+            //    //bookingIdCMBox.Items.Clear();
+            //    populateBookingIdCmbox();
+            //    populateTable();
+            //}
+            //else
+            //{
+            //    MessageBox.Show("All fields must be filled.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //}
         }
 
 
@@ -233,10 +231,10 @@ namespace Hotel_Management_System.Controllers
                 while (dr.Read())
                 {
                     paymentIdField.Text = dr.GetInt32(0).ToString();
-                    statusField.Text = dr.GetString(1);
-                    paymentTypeCmbox.Text = dr.GetString(2);
-                    amountField.Text = dr.GetInt32(3).ToString();
-                    bookingIdCMBox.Text = dr.GetInt32(4).ToString();
+                    //statusField.Text = dr.GetString(1);
+                    //paymentTypeCmbox.Text = dr.GetString(2);
+                    //amountField.Text = dr.GetInt32(3).ToString();
+                    //bookingIdCMBox.Text = dr.GetInt32(4).ToString();
                     temp = true;
                 }
                 if (temp == false && i == 0)
@@ -244,6 +242,11 @@ namespace Hotel_Management_System.Controllers
                 con.Close();
             }
         }
-    
+
+        private void FilterTableCheckoutDate_ValueChanged(object sender, EventArgs e)
+        {
+            string date = FilterTableCheckoutDate.Value.ToString("yyyy-MM-dd");
+            refreshTable(date);
+        }
     }
 }
