@@ -155,7 +155,14 @@ namespace Hotel_Management_System.Controllers
 
         private async void refreshTable()
         {
-
+            HttpData result = await conn.GetCheckinList();
+            if (!result.status)
+            {
+                MessageBox.Show(result.message);
+                return;
+            }
+            System.Data.DataTable MyTable = JsonConvert.DeserializeObject<System.Data.DataTable>(result.data.ToString());
+            bookingTable.DataSource = MyTable;
         }
 
         private void searchButton_Click(object sender, EventArgs e)
@@ -535,21 +542,21 @@ namespace Hotel_Management_System.Controllers
             dc.setData(query, "");
         }
 
-        private void guna2ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (filterCMBox.Text == "All")
-            {
-                populateTable();
-            }
-            else if (filterCMBox.Text == "Checkin")
-            {
-                populateWithCheckIn();
-            }
-            else if (filterCMBox.Text == "Checkout")
-            {
-                populateWithCheckOut();
-            }
-        }
+        //private void guna2ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    if (filterCMBox.Text == "All")
+        //    {
+        //        populateTable();
+        //    }
+        //    else if (filterCMBox.Text == "Checkin")
+        //    {
+        //        populateWithCheckIn();
+        //    }
+        //    else if (filterCMBox.Text == "Checkout")
+        //    {
+        //        populateWithCheckOut();
+        //    }
+        //}
 
         private void populateWithCheckIn()
         {
