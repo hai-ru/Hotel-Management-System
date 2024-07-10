@@ -527,11 +527,18 @@ namespace Hotel_Management_System.Controllers
                 if (decimal.TryParse(selectedRoom.unit_price, out decimal price))
                 {
                     amountField.Text = price.ToString(); // Set amountField to room's unit price
+                    amountField.ReadOnly = false;
                 }
                 else
                 {
                     amountField.Text = "0"; // Handle default case if parsing fails
+                    amountField.ReadOnly = false;
                 }
+            }
+            else
+            {
+                amountField.Text = "0";
+                amountField.ReadOnly = false;
             }
         }
 
