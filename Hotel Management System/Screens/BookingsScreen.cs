@@ -247,7 +247,7 @@ namespace Hotel_Management_System.Controllers
                     clearFields();
                     guestIdCMBox.Items.Clear();
                     populateGuestComboBoxAsync();
-                    //populateTable();
+                    refreshTable();
 
                     // Create a new WebBrowser instance
                     WebBrowser myWebBrowser = new WebBrowser();
