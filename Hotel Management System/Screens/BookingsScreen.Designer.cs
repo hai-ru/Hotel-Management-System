@@ -223,7 +223,7 @@ namespace Hotel_Management_System.Controllers
             this.checkoutPicker.Name = "checkoutPicker";
             this.checkoutPicker.Size = new System.Drawing.Size(212, 44);
             this.checkoutPicker.TabIndex = 71;
-            this.checkoutPicker.Value = DateTime.Today;
+            this.checkoutPicker.Value = DateTime.Today.AddDays(1);
             this.checkoutPicker.ValueChanged += new System.EventHandler(this.checkoutPicker_ValueChanged);
             // 
             // label8
