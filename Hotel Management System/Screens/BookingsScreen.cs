@@ -1,4 +1,5 @@
 ﻿using Hotel_Management_System.Screens;
+using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -70,9 +71,12 @@ namespace Hotel_Management_System.Controllers
             Guest[] guests = JsonConvert.DeserializeObject<Guest[]>(result.data.ToString());
             guestIdCMBox.Items.Clear();
 
+            // Bind rooms to roomIdCMBox
+            guestIdCMBox.DisplayMember = "text"; // Set the DisplayMember to "text" property
+
             foreach (Guest guest in guests)
             {
-                guestIdCMBox.Items.Add(guest.text); // Add guest ID to combo box
+                guestIdCMBox.Items.Add(guest); // Add guest to combo box
             }
         }
 
@@ -175,29 +179,70 @@ namespace Hotel_Management_System.Controllers
             amountField.Text = "";
         }
 
-        private void addButton_Click(object sender, EventArgs e)
+        //private void addButton_Click(object sender, EventArgs e)
+        //{
+        //    if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
+        //        roomIdCMBox.SelectedIndex != -1 )
+        //    {
+        //        //query = "INSERT INTO Bookings.Booking (BookingDate, StayDuration, CheckInDate, CheckOutDate, BookingAmount, HotelId, EmployeeId, GuestId, Status) VALUES (FORMAT(GETDATE(), 'yyyy-MM-dd'), DATEDIFF(day, '" + checkinPicker.Text + "', '" + checkoutPicker.Text + "'),'" + checkinPicker.Text + "', '" + checkoutPicker.Text + "', " + bookingAmount + ", " + Statics.hotelIdTKN + ", " + Statics.employeeIdTKN + ", " + guestIdCMBox.Text + ", 'Checkin'" + ")";
+        //        //dc.setData(query, "Booking inserted successfully!");
+        //        //int j = getRecentBookingId();
+        //        //query = "UPDATE Hotels.Guests SET Status = 'Reserved' WHERE GuestId = " + guestIdCMBox.Text;
+        //        //dc.setData(query, "");
+        //        //query = "UPDATE Rooms.Room SET Available = 'No' WHERE RoomId = " + int.Parse(roomIdCMBox.Text);
+        //        //dc.setData(query, "");
+        //        //insertInRoomBooked(j, int.Parse(roomIdCMBox.Text));
+        //        //clearFields();
+        //        //guestIdCMBox.Items.Clear();
+        //        //populateGuestComboBox();
+        //        //populateTable();
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("All fields must be filled.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //    }
+        //}
+
+        private async void addButton_Click(object sender, EventArgs e)
         {
-            //if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
-            //    roomIdCMBox.SelectedIndex != -1 )
-            //{
-            //    query = "INSERT INTO Bookings.Booking (BookingDate, StayDuration, CheckInDate, CheckOutDate, BookingAmount, HotelId, EmployeeId, GuestId, Status) VALUES (FORMAT(GETDATE(), 'yyyy-MM-dd'), DATEDIFF(day, '" + checkinPicker.Text + "', '" + checkoutPicker.Text + "'),'" + checkinPicker.Text + "', '" + checkoutPicker.Text + "', " + bookingAmount + ", " + Statics.hotelIdTKN + ", " + Statics.employeeIdTKN + ", " + guestIdCMBox.Text + ", 'Checkin'" + ")";
-            //    dc.setData(query, "Booking inserted successfully!");
-            //    int j = getRecentBookingId();
-            //    query = "UPDATE Hotels.Guests SET Status = 'Reserved' WHERE GuestId = " + guestIdCMBox.Text;
-            //    dc.setData(query, "");
-            //    query = "UPDATE Rooms.Room SET Available = 'No' WHERE RoomId = " + int.Parse(roomIdCMBox.Text);
-            //    dc.setData(query, "");
-            //    insertInRoomBooked(j, int.Parse(roomIdCMBox.Text));
-            //    clearFields();
-            //    guestIdCMBox.Items.Clear();
-            //    populateGuestComboBox();
-            //    populateTable();
-            //}
-            //else
-            //{
-            //    MessageBox.Show("All fields must be filled.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //}
+            if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
+                roomIdCMBox.SelectedIndex != -1)
+            {
+                // Extract values from form fields
+                var selectedGuest = guestIdCMBox.SelectedItem as Guest; 
+                var selectedRoom = roomIdCMBox.SelectedItem as Room;
+
+                string contact_id = selectedGuest?.id.ToString();
+                string lamainap = (DateTime.Parse(checkoutPicker.Text) - DateTime.Parse(checkinPicker.Text)).Days.ToString();
+                string room_product_id = selectedRoom?.product_id.ToString();
+                string harga_total = amountField.Text; // Assuming amountField contains the total price
+                string payment_amount = amountField.Text;
+
+                // Call StoreCheckin method
+                HttpData result = await conn.StoreCheckin(contact_id, lamainap, room_product_id, harga_total, payment_amount);
+
+                // Handle the response
+                if (result.status)
+                {
+                    MessageBox.Show("Booking inserted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // Perform additional actions such as clearing fields, updating UI, etc.
+                    clearFields();
+                    guestIdCMBox.Items.Clear();
+                    populateGuestComboBoxAsync();
+                    //populateTable();
+                }
+                else
+                {
+                    MessageBox.Show(result.message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("All fields must be filled.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
+
+
         private int getRecentBookingId()
         {
             SqlConnection con = dc.getConnection();
@@ -546,6 +591,11 @@ namespace Hotel_Management_System.Controllers
         {
             public string id;
             public string text;
+
+            public override string ToString()
+            {
+                return text; // Display the guest name in combobox
+            }
         }
 
         public class Room

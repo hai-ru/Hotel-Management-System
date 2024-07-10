@@ -329,9 +329,8 @@ namespace Hotel_Management_System
             return resultData;
         }
 
-        public async Task<HttpData> StoreCheckin()
+        public async Task<HttpData> StoreCheckin(string contact_id, string lamainap, string room_product_id, string harga_total, string payment_amount)
         {
-
             HttpData resultData = new HttpData();
 
             resultData.status = false;
@@ -344,18 +343,14 @@ namespace Hotel_Management_System
                     string token = Properties.Settings.Default.Token;
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
+                    string YourJson = "{\"is_direct_sale\":1,\"location_id\":0,\"sub_type\":null,\"contact_id\":\"" + contact_id
+                        + "\",\"search_product\":null,\"pay_term_number\":" + lamainap
+                        + ",\"pay_term_type\":\"days\",\"price_group\":0,\"sell_price_tax\":\"includes\",\"products\":[{\"quantity\":1,\"product_id\":\"" + room_product_id
+                        + "\",\"name\":\"Room101\",\"type\":\"single\",\"enable_stock\":0,\"product_type\":\"single\",\"product_unit_id\":228,\"sub_unit_id\":null,\"tax_id\":null,\"variation_id\":17469,\"variation\":\"DUMMY\",\"qty_available\":null,\"selling_price\":\"200.000\",\"unit_price\":\"200000.0000\",\"unit_price_inc_tax\":\"200000.0000\",\"sub_sku\":\"101\",\"unit\":\"Unit\",\"image_url\":\"https://development.norapos.com/img/default.png\"}],\"discount_type\":\"percentage\",\"discount_amount\":0.00,\"rp_redeemed\":0,\"rp_redeemed_amount\":0,\"tax_rate_id\":null,\"tax_calculation_amount\":0.00,\"shipping_details\":null,\"shipping_address\":null,\"shipping_status\":null,\"delivered_to\":null,\"shipping_charges\":0.00,\"advance_balance\":0.0000,\"payment\":[{\"amount\":\"" + payment_amount
+                        + "\",\"method\":\"cash\",\"card_number\":\"\",\"card_holder_name\":\"\",\"card_transaction_number\":\"\",\"card_type\":\"\",\"card_month\":\"\",\"card_year\":\"\",\"card_security\":\"\",\"cheque_number\":\"\",\"bank_account_number\":\"\",\"transaction_no_1\":\"\",\"transaction_no_2\":\"\",\"transaction_no_3\":\"\",\"note\":\"\"}],\"sale_note\":\"\",\"staff_note\":\"\",\"change_return\":0.00,\"additional_notes\":\"\",\"is_suspend\":0,\"recur_interval\":1,\"recur_interval_type\":\"days\",\"recur_repetitions\":null,\"subscription_repeat_on\":\"\",\"is_enabled_stock\":null,\"is_credit_sale\":0,"
+                        + "\"final_total\":" + harga_total
+                        + ",\"discount_type_modal\":\"percentage\",\"discount_amount_modal\":0.00,\"rp_redeemed_modal\":null,\"order_tax_modal\":null,\"shipping_details_modal\":null,\"shipping_address_modal\":null,\"shipping_charges_modal\":0,\"shipping_status_modal\":null,\"delivered_to_modal\":null,\"status\":\"final\"}";
 
-                    string contact_id = "";
-                    string lamainap = "";
-                    string room_product_id = "";
-                    string harga_total = "";
-
-                    string YourJson = "{\"is_direct_sale\":1,\"location_id\":0,\"sub_type\":null,\"contact_id\":"+contact_id
-                        +",\"search_product\":null,\"pay_term_number\":"+lamainap
-                        +",\"pay_term_type\":\"days\",\"price_group\":0,\"sell_price_tax\":\"includes\",\"products\":[{\"quantity\":1,\"product_id\":"+room_product_id
-                        +",\"name\":\"Room101\",\"type\":\"single\",\"enable_stock\":0,\"product_type\":\"single\",\"product_unit_id\":228,\"sub_unit_id\":null,\"tax_id\":null,\"variation_id\":17469,\"variation\":\"DUMMY\",\"qty_available\":null,\"selling_price\":\"200.000\",\"unit_price\":\"200000.0000\",\"unit_price_inc_tax\":\"200000.0000\",\"sub_sku\":\"101\",\"unit\":\"Unit\",\"image_url\":\"https://development.norapos.com/img/default.png\"}],\"discount_type\":\"percentage\",\"discount_amount\":0.00,\"rp_redeemed\":0,\"rp_redeemed_amount\":0,\"tax_rate_id\":null,\"tax_calculation_amount\":0.00,\"shipping_details\":null,\"shipping_address\":null,\"shipping_status\":null,\"delivered_to\":null,\"shipping_charges\":0.00,\"advance_balance\":0.0000,\"payment\":[{\"amount\":\"0\",\"method\":\"cash\",\"card_number\":\"\",\"card_holder_name\":\"\",\"card_transaction_number\":\"\",\"card_type\":\"\",\"card_month\":\"\",\"card_year\":\"\",\"card_security\":\"\",\"cheque_number\":\"\",\"bank_account_number\":\"\",\"transaction_no_1\":\"\",\"transaction_no_2\":\"\",\"transaction_no_3\":\"\",\"note\":\"\"}],\"sale_note\":\"\",\"staff_note\":\"\",\"change_return\":0.00,\"additional_notes\":\"\",\"is_suspend\":0,\"recur_interval\":1,\"recur_interval_type\":\"days\",\"recur_repetitions\":null,\"subscription_repeat_on\":\"\",\"is_enabled_stock\":null,\"is_credit_sale\":0,"+
-                        "\"final_total\":"+harga_total
-                        +",//inihargafinal\"discount_type_modal\":\"percentage\",\"discount_amount_modal\":0.00,\"rp_redeemed_modal\":null,\"order_tax_modal\":null,\"shipping_details_modal\":null,\"shipping_address_modal\":null,\"shipping_charges_modal\":0,\"shipping_status_modal\":null,\"delivered_to_modal\":null,\"status\":\"final\"}";
                     var content = new StringContent(YourJson, Encoding.UTF8, "application/json");
 
                     HttpResponseMessage response = await client.PostAsync(BaseUrl + "/customers/store", content);
@@ -363,12 +358,10 @@ namespace Hotel_Management_System
                     var responseContent = await response.Content.ReadAsStringAsync();
                     try
                     {
-
                         dynamic data = JsonConvert.DeserializeObject(responseContent);
                         resultData.status = data.status;
                         resultData.message = data.message;
                         resultData.data = data.data;
-
                     }
                     catch (Newtonsoft.Json.JsonException ex)
                     {
@@ -385,6 +378,7 @@ namespace Hotel_Management_System
 
             return resultData;
         }
+
 
 
     }
