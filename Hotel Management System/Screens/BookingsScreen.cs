@@ -1,4 +1,5 @@
 ﻿using Hotel_Management_System.Screens;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,6 +20,10 @@ namespace Hotel_Management_System.Controllers
         DatabaseConnection dc = new DatabaseConnection();
         String query;
 
+        HttpConnection conn = new HttpConnection();
+
+        private int roomId;
+
         public BookingsScreen()
         {
             InitializeComponent();
@@ -31,26 +36,12 @@ namespace Hotel_Management_System.Controllers
         {
             if (Statics.employeeIdTKN.Equals(0))
             {
-                
+
                 Console.WriteLine(Statics.employeeIdTKN.Equals(""));
                 //addButton.Enabled = false;
                 //updateButton.Enabled = false;
                 //deleteButton.Enabled = false;
             }
-        }
-
-        private void populateCheckBox()
-        {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT DISTINCT(ServiceName) from HotelService.Services WHERE HotelId = " + Statics.hotelIdTKN;
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                checkListBox.Items.Add(dr["ServiceName"]);
-            }
-            con.Close();
         }
 
         private void populateGuestComboBox()
@@ -65,6 +56,24 @@ namespace Hotel_Management_System.Controllers
                 guestIdCMBox.Items.Add(dr["GuestId"]);
             }
             con.Close();
+        }
+        private async void populateGuestComboBoxAsync()
+        {
+            HttpData result = await conn.GetCustomerList();
+            if (!result.status)
+            {
+                MessageBox.Show(result.message);
+                return;
+            }
+
+            // Deserialize JSON string directly to Guest array
+            Guest[] guests = JsonConvert.DeserializeObject<Guest[]>(result.data.ToString());
+            guestIdCMBox.Items.Clear();
+
+            foreach (Guest guest in guests)
+            {
+                guestIdCMBox.Items.Add(guest.text); // Add guest ID to combo box
+            }
         }
 
         private void populateRoomId()
@@ -81,64 +90,44 @@ namespace Hotel_Management_System.Controllers
             con.Close();
         }
 
-        private void populateDiscountId()
+        private async void populateRoomAsync()
         {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT DiscountId from Bookings.Discount WHERE EmployeeId = " + Statics.employeeIdTKN;
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
+            HttpData result = await conn.GetRoomList();
+            if (!result.status)
             {
-                promoIdCMBox.Items.Add(dr["DiscountId"]);
+                MessageBox.Show(result.message);
+                return;
             }
-            con.Close();
+
+            // Deserialize JSON string directly to Room array
+            Room[] rooms = JsonConvert.DeserializeObject<Room[]>(result.data.ToString());
+
+            // Clear existing items in roomIdCMBox
+            roomIdCMBox.Items.Clear();
+
+            // Bind rooms to roomIdCMBox
+            roomIdCMBox.DisplayMember = "name"; // Set the DisplayMember to "name" property
+
+            foreach (Room room in rooms)
+            {
+                // Add each Room object to roomIdCMBox
+                roomIdCMBox.Items.Add(room);
+            }
         }
 
-        private int roomId;
-
-        private int getIdFromTypeName()
-        {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT RoomTypeId from Rooms.RoomType WHERE Name = '" + roomTypeCMBox.Text + "' AND HotelId = " + Statics.hotelIdTKN;
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                roomId = dr.GetInt32(0);
-            }
-            return roomId;
-        }
-
-        private int getIdFromServiceName(String str)
-        {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT ServiceId from HotelService.Services WHERE ServiceName = '" + str + "' AND HotelId = " + Statics.hotelIdTKN;
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                roomId = dr.GetInt32(0);
-            }
-            return roomId;
-        }
-
-        private void popuklateRoomType()
-        {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT DISTINCT(Name) from Rooms.RoomType WHERE HotelId = " + Statics.hotelIdTKN;
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                roomTypeCMBox.Items.Add(dr["Name"]);
-            }
-            con.Close();
-        }
-
+        //private void populateDiscountId()
+        //{
+        //    SqlConnection con = dc.getConnection();
+        //    con.Open();
+        //    query = "SELECT DiscountId from Bookings.Discount WHERE EmployeeId = " + Statics.employeeIdTKN;
+        //    SqlCommand cmd = new SqlCommand(query, con);
+        //    SqlDataReader dr = cmd.ExecuteReader();
+        //    while (dr.Read())
+        //    {
+        //        promoIdCMBox.Items.Add(dr["DiscountId"]);
+        //    }
+        //    con.Close();
+        //}
         private void populateTable()
         {
             SqlConnection con = dc.getConnection();
@@ -154,11 +143,14 @@ namespace Hotel_Management_System.Controllers
 
         private void BookingsScreen_Load(object sender, EventArgs e)
         {
-            populateTable();
-            populateCheckBox();
-            populateGuestComboBox();
-            popuklateRoomType();
-            populateDiscountId();
+            //populateTable();
+            //populateCheckBox();
+            //populateGuestComboBox();
+            //popuklateRoomType();
+            //populateDiscountId();
+
+            populateGuestComboBoxAsync();
+            populateRoomAsync();
         }
 
         private void searchButton_Click(object sender, EventArgs e)
@@ -171,12 +163,6 @@ namespace Hotel_Management_System.Controllers
             fetchBookingRecord(0);
         }
 
-        private void roomTypeCMBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            roomIdCMBox.Items.Clear();
-            getIdFromTypeName();
-            populateRoomId();
-        }
 
         private void clearFields()
         {
@@ -186,79 +172,31 @@ namespace Hotel_Management_System.Controllers
             checkoutPicker.Text = "";
             roomIdCMBox.SelectedIndex = -1;
             amountField.Text = "";
-            roomTypeCMBox.SelectedIndex = -1;
-            promoIdCMBox.SelectedIndex = -1;
         }
 
         private void addButton_Click(object sender, EventArgs e)
         {
-            if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
-                roomIdCMBox.SelectedIndex != -1 && roomTypeCMBox.SelectedIndex != -1)
-            {
-                int bookingAmount = getAmount();
-                String disId = promoIdCMBox.Text == "" ? "NULL" : promoIdCMBox.Text;
-                if (disId.Equals("NULL"))
-                {
-                    query = "INSERT INTO Bookings.Booking (BookingDate, StayDuration, CheckInDate, CheckOutDate, BookingAmount, HotelId, EmployeeId, GuestId, Status) VALUES (FORMAT(GETDATE(), 'yyyy-MM-dd'), DATEDIFF(day, '" + checkinPicker.Text + "', '" + checkoutPicker.Text + "'),'" + checkinPicker.Text + "', '" + checkoutPicker.Text + "', " + bookingAmount + ", " + Statics.hotelIdTKN + ", " + Statics.employeeIdTKN + ", " + guestIdCMBox.Text + ", 'Checkin'" + ")";
-                }
-                else
-                {
-                    query = "INSERT INTO Bookings.Booking (BookingDate, StayDuration, CheckInDate, CheckOutDate, BookingAmount, HotelId, EmployeeId, GuestId, DiscountId, Status) VALUES (FORMAT(GETDATE(), 'yyyy-MM-dd'), DATEDIFF(day, '" + checkinPicker.Text + "', '" + checkoutPicker.Text + "'),'" + checkinPicker.Text + "', '" + checkoutPicker.Text + "', " + bookingAmount + ", " + Statics.hotelIdTKN + ", " + Statics.employeeIdTKN + ", " + guestIdCMBox.Text + ", " + int.Parse(disId) + ", 'Checkin'" + ")";
-                }
-                dc.setData(query, "Booking inserted successfully!");
-                int j = getRecentBookingId();
-                query = "UPDATE Hotels.Guests SET Status = 'Reserved' WHERE GuestId = " + guestIdCMBox.Text;
-                dc.setData(query, "");
-                query = "UPDATE Rooms.Room SET Available = 'No' WHERE RoomId = " + int.Parse(roomIdCMBox.Text);
-                dc.setData(query, "");
-                insertInRoomBooked(j, int.Parse(roomIdCMBox.Text));
-                readServiceCmbox(j);
-                clearFields();
-                guestIdCMBox.Items.Clear();
-                populateGuestComboBox();
-                populateTable();
-            }
-            else
-            {
-                MessageBox.Show("All fields must be filled.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            //if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
+            //    roomIdCMBox.SelectedIndex != -1 )
+            //{
+            //    query = "INSERT INTO Bookings.Booking (BookingDate, StayDuration, CheckInDate, CheckOutDate, BookingAmount, HotelId, EmployeeId, GuestId, Status) VALUES (FORMAT(GETDATE(), 'yyyy-MM-dd'), DATEDIFF(day, '" + checkinPicker.Text + "', '" + checkoutPicker.Text + "'),'" + checkinPicker.Text + "', '" + checkoutPicker.Text + "', " + bookingAmount + ", " + Statics.hotelIdTKN + ", " + Statics.employeeIdTKN + ", " + guestIdCMBox.Text + ", 'Checkin'" + ")";
+            //    dc.setData(query, "Booking inserted successfully!");
+            //    int j = getRecentBookingId();
+            //    query = "UPDATE Hotels.Guests SET Status = 'Reserved' WHERE GuestId = " + guestIdCMBox.Text;
+            //    dc.setData(query, "");
+            //    query = "UPDATE Rooms.Room SET Available = 'No' WHERE RoomId = " + int.Parse(roomIdCMBox.Text);
+            //    dc.setData(query, "");
+            //    insertInRoomBooked(j, int.Parse(roomIdCMBox.Text));
+            //    clearFields();
+            //    guestIdCMBox.Items.Clear();
+            //    populateGuestComboBox();
+            //    populateTable();
+            //}
+            //else
+            //{
+            //    MessageBox.Show("All fields must be filled.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //}
         }
-
-        private void readServiceCmbox(int a)
-        {
-            foreach(var item in checkListBox.CheckedItems)
-            {
-                insertServiceUsed(a, getServiceIdFromName(item.ToString()));
-            }
-        }
-
-        private int getServiceIdFromName(String s)
-        {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT ServiceId FROM HotelService.Services WHERE ServiceName = '" + s + "' AND HotelId = " + Statics.hotelIdTKN;
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            int sId = 0;
-            while (dr.Read())
-            {
-                sId = dr.GetInt32(0);
-            }
-            return sId;
-        }
-
-        private void insertServiceUsed(int a, int b)
-        {
-            SqlConnection connection = dc.getConnection();
-            connection.Open();
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = connection;
-            String q = "INSERT INTO HotelService.ServicesUsed (ServiceId, BookingId) VALUES (" + b + ", " + a + ")";
-            cmd.CommandText = q;
-            cmd.ExecuteNonQuery();
-            connection.Close();
-        }
-
         private int getRecentBookingId()
         {
             SqlConnection con = dc.getConnection();
@@ -273,7 +211,6 @@ namespace Hotel_Management_System.Controllers
             }
             return recentId;
         }
-
         private int getAmount()
         {
             int i = 0;
@@ -283,78 +220,52 @@ namespace Hotel_Management_System.Controllers
             if (rate != 0)
             {
                 rate = (float)getDiscountRate() / 100;
-                int serviceTotalPrice = getServicesTotalPrice();
-                i = (int)(((diff * cost) + serviceTotalPrice) * rate);
+                i = (int)(((diff * cost)) * rate);
             }
             else
             {
-                int serviceTotalPrice = getServicesTotalPrice();
-                i = (int)((diff * cost) + serviceTotalPrice);
+                i = (int)((diff * cost));
             }
             return i;
         }
 
-        private int getServicesTotalPrice()
-        {
-            int price = 0;
-            foreach(var item in checkListBox.CheckedItems)
-            {
-                price = price + getServicePrice(item);
-            }
-            return price;
-        }
-
-        private int getServicePrice(Object item)
-        {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT ServiceCost FROM HotelService.Services WHERE ServiceId =  " + getIdFromServiceName(item.ToString());
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            int cost = 0;
-            while (dr.Read())
-            {
-                cost = dr.GetInt32(0);
-            }
-            return cost;
-        }
 
         private int getDiscountRate()
         {
             int rate = 0;
-            if (promoIdCMBox.SelectedIndex != -1 && promoIdCMBox.Text != "")
-            {
-                SqlConnection con = dc.getConnection();
-                con.Open();
-                query = "SELECT DiscountRate AS DR FROM Bookings.Discount WHERE DiscountId = " + promoIdCMBox.Text;
-                SqlCommand cmd = new SqlCommand(query, con);
-                SqlDataReader dr = cmd.ExecuteReader();
-                while (dr.Read())
-                {
-                    rate = dr.GetInt32(0);
-                }
-                rate = 100 - rate;
-            }
-            else
-            {
-                rate = 0;
-            }
+            //if (promoIdCMBox.SelectedIndex != -1 && promoIdCMBox.Text != "")
+            //{
+            //    SqlConnection con = dc.getConnection();
+            //    con.Open();
+            //    query = "SELECT DiscountRate AS DR FROM Bookings.Discount WHERE DiscountId = " + promoIdCMBox.Text;
+            //    SqlCommand cmd = new SqlCommand(query, con);
+            //    SqlDataReader dr = cmd.ExecuteReader();
+            //    while (dr.Read())
+            //    {
+            //        rate = dr.GetInt32(0);
+            //    }
+            //    rate = 100 - rate;
+            //}
+            //else
+            //{
+            //    rate = 0;
+            //}
             return rate;
         }
 
         private int getCost()
         {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT COST FROM Rooms.RoomType WHERE RoomTypeId =  " + getIdFromTypeName();
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
+            //SqlConnection con = dc.getConnection();
+            //con.Open();
+            //query = "SELECT COST FROM Rooms.RoomType WHERE RoomTypeId =  " + getIdFromTypeName();
+            //SqlCommand cmd = new SqlCommand(query, con);
+            //SqlDataReader dr = cmd.ExecuteReader();
             int cost = 0;
-            while (dr.Read())
-            {
-               cost  = dr.GetInt32(0);
-            }
-            return cost; 
+            //while (dr.Read())
+            //{
+            //cost  = dr.GetInt32(0);
+            //}
+            return cost;
         }
 
         private int getDateDifference()
@@ -406,7 +317,7 @@ namespace Hotel_Management_System.Controllers
         private void fetchBookingRecord(int i)
         {
             String bId;
-            if(i == 1)
+            if (i == 1)
             {
                 bId = bookingTable.SelectedRows[0].Cells[0].Value.ToString();
             }
@@ -438,8 +349,8 @@ namespace Hotel_Management_System.Controllers
                     guestIdCMBox.Text = dr.GetSqlInt32(8).ToString();
                     getRoomId();
                     int id = getRoomId();
-                    roomTypeCMBox.Text = getTypeNameFromId(id);
-                    promoIdCMBox.Text = dr.GetSqlInt32(9).ToString();
+                    //roomTypeCMBox.Text = getTypeNameFromId(id);
+                    //promoIdCMBox.Text = dr.GetSqlInt32(9).ToString();
                     amountField.Text = dr.GetSqlInt32(5).ToString();
                     temp = true;
                 }
@@ -454,7 +365,7 @@ namespace Hotel_Management_System.Controllers
             SqlConnection con = dc.getConnection();
             con.Open();
             query = "SELECT RoomId from Rooms.RoomBooked WHERE BookingId = " + bookingIdField.Text;
-            
+
             SqlCommand cmd = new SqlCommand(query, con);
             SqlDataReader dr = cmd.ExecuteReader();
             int id = 0;
@@ -525,7 +436,7 @@ namespace Hotel_Management_System.Controllers
             {
                 st = dr.GetString(0);
             }
-            if(st == "Checkout")
+            if (st == "Checkout")
             {
                 return false;
             }
@@ -556,14 +467,15 @@ namespace Hotel_Management_System.Controllers
 
         private void guna2ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(filterCMBox.Text == "All") {
+            if (filterCMBox.Text == "All")
+            {
                 populateTable();
             }
-            else if(filterCMBox.Text == "Checkin")
+            else if (filterCMBox.Text == "Checkin")
             {
                 populateWithCheckIn();
             }
-            else if(filterCMBox.Text == "Checkout")
+            else if (filterCMBox.Text == "Checkout")
             {
                 populateWithCheckOut();
             }
@@ -594,6 +506,47 @@ namespace Hotel_Management_System.Controllers
             sda.Fill(ds);
             bookingTable.DataSource = ds.Tables[0];
             con.Close();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void amountField_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void roomIdCMBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (roomIdCMBox.SelectedItem is Room selectedRoom)
+            {
+                // Assuming unit_price is a numeric type like float or decimal, parse it accordingly
+                if (decimal.TryParse(selectedRoom.unit_price, out decimal price))
+                {
+                    amountField.Text = price.ToString(); // Set amountField to room's unit price
+                }
+                else
+                {
+                    amountField.Text = "0"; // Handle default case if parsing fails
+                }
+            }
+        }
+
+        public class Guest
+        {
+            public string id;
+            public string text;
+        }
+
+        public class Room
+        {
+            public string product_id;
+            public string name;
+            public string type;
+            public string selling_price;
+            public string unit_price;
         }
     }
 }
