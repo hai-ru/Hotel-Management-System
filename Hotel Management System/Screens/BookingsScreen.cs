@@ -23,13 +23,20 @@ namespace Hotel_Management_System.Controllers
         String query;
 
         HttpConnection conn = new HttpConnection();
+        OnityConnection onity = new OnityConnection();
+
+        Guest[] guests = new Guest[] { };
+        Room[] rooms = new Room[] { };
+
+        private int durasi_menginap = 1;
+
 
         private int roomId;
 
         public BookingsScreen()
         {
             InitializeComponent();
-            bookingIdField.ReadOnly = false;
+            //bookingIdField.ReadOnly = false;
             checkIfEmployee();
             //addButton.Enabled = false;
         }
@@ -69,7 +76,7 @@ namespace Hotel_Management_System.Controllers
             }
 
             // Deserialize JSON string directly to Guest array
-            Guest[] guests = JsonConvert.DeserializeObject<Guest[]>(result.data.ToString());
+            guests = JsonConvert.DeserializeObject<Guest[]>(result.data.ToString());
             guestIdCMBox.Items.Clear();
 
             // Bind rooms to roomIdCMBox
@@ -105,7 +112,7 @@ namespace Hotel_Management_System.Controllers
             }
 
             // Deserialize JSON string directly to Room array
-            Room[] rooms = JsonConvert.DeserializeObject<Room[]>(result.data.ToString());
+            rooms = JsonConvert.DeserializeObject<Room[]>(result.data.ToString());
 
             // Clear existing items in roomIdCMBox
             roomIdCMBox.Items.Clear();
@@ -186,7 +193,7 @@ namespace Hotel_Management_System.Controllers
 
         private void clearFields()
         {
-            bookingIdField.Text = "";
+            //bookingIdField.Text = "";
             guestIdCMBox.SelectedIndex = -1;
             checkinPicker.Text = "";
             checkoutPicker.Text = "";
@@ -381,34 +388,41 @@ namespace Hotel_Management_System.Controllers
 
         private void updateButton_Click(object sender, EventArgs e)
         {
-            if (bookingIdField.Text == "")
-            {
-                MessageBox.Show("Please enter id to update record.", "Missing Info", MessageBoxButtons.OK);
-            }
-            else
-            {
-                query = "UPDATE Bookings.Booking SET CheckInDate = '" + checkinPicker.Text + "', CheckOutDate = '" + checkoutPicker.Text + "' WHERE BookingId = " + int.Parse(bookingIdField.Text);
-                dc.setData(query, "Record updated successfully.");
-                clearFields();
-                populateTable();
-            }
+            //if (bookingIdField.Text == "")
+            //{
+            //    MessageBox.Show("Please enter id to update record.", "Missing Info", MessageBoxButtons.OK);
+            //}
+            //else
+            //{
+            //    query = "UPDATE Bookings.Booking SET CheckInDate = '" + checkinPicker.Text + "', CheckOutDate = '" + checkoutPicker.Text + "' WHERE BookingId = " + int.Parse(bookingIdField.Text);
+            //    dc.setData(query, "Record updated successfully.");
+            //    clearFields();
+            //    populateTable();
+            //}
         }
 
         private void bookingTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            fetchBookingRecord(1);
+            //fetchBookingRecord(1);
+            durasi_menginap = int.Parse( bookingTable.SelectedRows[0].Cells[6].Value.ToString() );
+            string pelanggan = bookingTable.SelectedRows[0].Cells[8].Value.ToString();
+            int dataIndex = Array.FindIndex(guests, c => c.text.ToString().Contains(pelanggan));
+            guestIdCMBox.SelectedIndex = dataIndex;
+            string no_kamar = bookingTable.SelectedRows[0].Cells[7].Value.ToString();
+            int indexKamar = Array.FindIndex(rooms, c => c.name.ToString() == no_kamar);
+            roomIdCMBox.SelectedIndex = indexKamar;
         }
 
         private void fetchBookingRecord(int i)
         {
-            String bId;
+            String bId = "";
             if (i == 1)
             {
                 bId = bookingTable.SelectedRows[0].Cells[0].Value.ToString();
             }
             else
             {
-                bId = bookingIdField.Text;
+                //bId = bookingIdField.Text;
             }
 
             Console.WriteLine(bId);
@@ -430,10 +444,10 @@ namespace Hotel_Management_System.Controllers
                 {
                     //checkinPicker.Text = DateTime.Parse(dr.GetString(3)).ToString();
                     //checkoutPicker.Text = DateTime.Parse(dr.GetString(4)).ToString();
-                    bookingIdField.Text = bId;
+                    //bookingIdField.Text = bId;
                     guestIdCMBox.Text = dr.GetSqlInt32(8).ToString();
-                    getRoomId();
-                    int id = getRoomId();
+                    //getRoomId();
+                    //int id = getRoomId();
                     //roomTypeCMBox.Text = getTypeNameFromId(id);
                     //promoIdCMBox.Text = dr.GetSqlInt32(9).ToString();
                     amountField.Text = dr.GetSqlInt32(5).ToString();
@@ -443,23 +457,6 @@ namespace Hotel_Management_System.Controllers
                     MessageBox.Show("No record found.");
                 con.Close();
             }
-        }
-
-        private int getRoomId()
-        {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT RoomId from Rooms.RoomBooked WHERE BookingId = " + bookingIdField.Text;
-
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            int id = 0;
-            while (dr.Read())
-            {
-                id = dr.GetInt32(0);
-            }
-            roomIdCMBox.Text = id.ToString();
-            return id;
         }
 
         private String getTypeNameFromId(int id)
@@ -479,34 +476,34 @@ namespace Hotel_Management_System.Controllers
 
         private void deleteButton_Click(object sender, EventArgs e)
         {
-            if (bookingIdField.Text == "")
-            {
-                MessageBox.Show("Please enter id to delete.", "Missing Info", MessageBoxButtons.OK);
-            }
-            else
-            {
-                int bId = int.Parse(bookingIdField.Text);
-                int gId = getGuestIdS(bId);
-                bool check = checkBookingStatus(bId);
-                if (check == true)
-                {
-                    query = "UPDATE Hotels.Guests SET Status = 'Not Reserved' WHERE GuestId = " + gId;
-                    dc.setData(query, "");
-                    int a = getRoomId();
-                    query = "UPDATE Rooms.Room SET Available = 'Yes' WHERE RoomId = " + a;
-                    dc.setData(query, "");
-                    delServiceUsed();
-                    query = "DELETE FROM Bookings.Booking WHERE BookingId = " + bId;
-                    dc.setData(query, "Record deleted successfully.");
-                    clearFields();
-                    populateTable();
-                }
-                else
-                {
-                    MessageBox.Show("You cannot delete a booking if guest has already checkout.", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //if (bookingIdField.Text == "")
+            //{
+            //    MessageBox.Show("Please enter id to delete.", "Missing Info", MessageBoxButtons.OK);
+            //}
+            //else
+            //{
+            //    int bId = int.Parse(bookingIdField.Text);
+            //    int gId = getGuestIdS(bId);
+            //    bool check = checkBookingStatus(bId);
+            //    if (check == true)
+            //    {
+            //        query = "UPDATE Hotels.Guests SET Status = 'Not Reserved' WHERE GuestId = " + gId;
+            //        dc.setData(query, "");
+            //        int a = getRoomId();
+            //        query = "UPDATE Rooms.Room SET Available = 'Yes' WHERE RoomId = " + a;
+            //        dc.setData(query, "");
+            //        delServiceUsed();
+            //        query = "DELETE FROM Bookings.Booking WHERE BookingId = " + bId;
+            //        dc.setData(query, "Record deleted successfully.");
+            //        clearFields();
+            //        populateTable();
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show("You cannot delete a booking if guest has already checkout.", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                }
-            }
+            //    }
+            //}
         }
 
         private bool checkBookingStatus(int bid)
@@ -546,8 +543,8 @@ namespace Hotel_Management_System.Controllers
 
         private void delServiceUsed()
         {
-            query = "DELETE FROM HotelService.ServicesUsed WHERE BookingId = " + bookingIdField.Text;
-            dc.setData(query, "");
+            //query = "DELETE FROM HotelService.ServicesUsed WHERE BookingId = " + bookingIdField.Text;
+            //dc.setData(query, "");
         }
 
         //private void guna2ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -737,11 +734,32 @@ namespace Hotel_Management_System.Controllers
             public string type;
             public string selling_price;
             public string unit_price;
+            public string sub_sku;
+
 
             public override string ToString()
             {
                 return name; // Display the room name in combobox
             }
+        }
+
+        private void guna2Button1_Click(object sender, EventArgs e)
+        {
+            var selectedRoom = roomIdCMBox.SelectedItem as Room;
+            Boolean res = onity.createCard(selectedRoom.sub_sku, durasi_menginap);
+            if (res)
+            {
+                MessageBox.Show("Berhasil");
+                return;
+            }
+            MessageBox.Show("Periksa Koneksi Onity encoder IP dan Port.");
+        }
+
+        private void guna2Button2_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Masukan kartu Anda...");
+            string result = onity.readCard();
+            MessageBox.Show("Hasil Reader : "+result);
         }
     }
 }
