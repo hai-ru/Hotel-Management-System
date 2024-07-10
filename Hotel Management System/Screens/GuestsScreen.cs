@@ -74,19 +74,14 @@ namespace Hotel_Management_System.Controllers
         private void clearFields()
         {
             guestIdField.Text = "";
-            fnameField.Text = "";
-            lnameField.Text = "";
-            emailField.Text = "";
+            namaField.Text = "";
             numberField.Text = "";
-            passportField.Text = "";
-            cnicField.Text = "";
-            addressField.Text = "";
-            streetField.Text = "";
+            alamatField.Text = "";
             cityField.Text = "";
-            zipField.Text = "";
+            provinsiField.Text = "";
         }
 
-        private async void GuestsScreen_Load(object sender, EventArgs e)
+        private async void refreshTable()
         {
             HttpData result = await conn.GetCustomerList();
             if (!result.status)
@@ -96,6 +91,11 @@ namespace Hotel_Management_System.Controllers
             }
             DataTable MyTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
             guestTable.DataSource = MyTable;
+        }
+
+        private async void GuestsScreen_Load(object sender, EventArgs e)
+        {
+            refreshTable();
         }
 
         private void searchButton_Click(object sender, EventArgs e)
@@ -118,54 +118,35 @@ namespace Hotel_Management_System.Controllers
                 numberField.Focus();
                 return false;
             }
-            if (!Regex.Match(zipField.Text, @"^\d{5}$").Success)
-            {
-                MessageBox.Show("Zipcode must only contain numbers with length of 5.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                zipField.Focus();
-                return false;
-            }
-            if (!Regex.Match(fnameField.Text, @"^([a-zA-Z]+|[a-zA-Z]+\s[a-zA-Z]+)$").Success)
+            if (!Regex.Match(namaField.Text, @"^([a-zA-Z]+|[a-zA-Z]+\s[a-zA-Z]+)$").Success)
             {
                 MessageBox.Show("First name can only contain alphabets and spaces if required.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                fnameField.Focus();
-                return false;
-            }
-            if (!Regex.Match(lnameField.Text, @"^([a-zA-Z]+|[a-zA-Z]+\s[a-zA-Z]+)$").Success)
-            {
-                MessageBox.Show("Last name can only contain alphabets and spaces if required.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                lnameField.Focus();
-                return false;
-            }
-            if (!Regex.Match(cityField.Text, @"^([a-zA-Z]+|[a-zA-Z]+\s[a-zA-Z]+)$").Success)
-            {
-                MessageBox.Show("City field must contain alpabets or space only.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                cityField.Focus();
+                namaField.Focus();
                 return false;
             }
             return true;
         }
 
-        private void addButton_Click(object sender, EventArgs e)
+        private async void addButton_Click(object sender, EventArgs e)
         {
-            if (fnameField.Text != "" && lnameField.Text != "" && emailField.Text != "" && numberField.Text != "" && passportField.Text != "" && zipField.Text != ""
-                && addressField.Text != "" && cityField.Text != "" && streetField.Text != "")
+            bool regCheck = regChecker();
+            if (regCheck == false)
             {
-                bool regCheck = regChecker();
-                if (regCheck == false)
-                {
-                    return;
-                }
-                String cnic = cnicField.Text == "" ? "NULL" : cnicField.Text;
-                String passNum = passportField.Text == "" ? "NULL" : passportField.Text;
-                query = "INSERT INTO Hotels.Guests (GuestFirstName, GuestLastName, GuestEmailAddress, GuestContactNumber, GuestPassportNumber, AddressLine, Street, City, Zip, GuestCnic, HotelId, Status) VALUES ('" + fnameField.Text + "' , '" + lnameField.Text + "', '" + emailField.Text + "', '" + numberField.Text + "', '" + passNum + "', '" + addressField.Text + "', '" + streetField.Text + "', '" + cityField.Text + "', '" + zipField.Text + "', '" + cnic + "', " + Statics.hotelIdTKN + ", 'Not Reserved'" + ")";
-                dc.setData(query, "Guest inserted successfully!");
-                clearFields();
-                populateTable();
+                return;
             }
-            else
-            {
-                MessageBox.Show("All fields must be filled.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+
+            //add logic here
+            HttpData result = await conn.StoreCustomer(
+                "insert",
+                namaField.Text,
+                numberField.Text,
+                alamatField.Text,
+                cityField.Text,
+                provinsiField.Text
+            );
+
+            MessageBox.Show(result.message);
+            refreshTable();
         }
 
         private void retrieveData(int id)
@@ -176,44 +157,11 @@ namespace Hotel_Management_System.Controllers
             }
             else
             {
-                bool temp = false;
-                SqlConnection con = dc.getConnection();
-                con.Open();
-                query = "SELECT * FROM Hotels.Guests WHERE GuestId = " + id + "AND HotelId = " +Statics.hotelIdTKN;
-                SqlCommand cmd = new SqlCommand(query, con);
-                SqlDataReader dr = cmd.ExecuteReader();
-                this.id = id;
-                while (dr.Read())
-                {
-                    fname = dr.GetString(1);
-                    fnameField.Text = fname;
-                    lname = dr.GetString(2);
-                    lnameField.Text = lname;
-                    email = dr.GetString(3);
-                    emailField.Text = email;
-                    contact = dr.GetString(4);
-                    numberField.Text = contact;
-                    passNum = dr.GetString(5);
-                    passportField.Text = passNum;
-                    cnic = dr.IsDBNull(6) ? "NULL" : dr.GetString(6); 
-                    cnicField.Text = cnic;
-                    address = dr.IsDBNull(7) ? "NULL" : dr.GetString(7);
-                    addressField.Text = address;
-                    street = dr.GetString(8);
-                    streetField.Text = street;
-                    city = dr.GetString(9);
-                    cityField.Text = city;
-                    zip = dr.GetString(10);
-                    zipField.Text = zip;
-                    temp = true;
-                }
-                if (temp == false)
-                    MessageBox.Show("No record found.");
-                con.Close();
+                //search logic here
             }
         }
 
-        private void deleteButton_Click(object sender, EventArgs e)
+        private async void deleteButton_Click(object sender, EventArgs e)
         {
             if (guestIdField.Text == "")
             {
@@ -221,10 +169,19 @@ namespace Hotel_Management_System.Controllers
             }
             else
             {
-                query = "DELETE FROM Hotels.Guests WHERE GuestId = " + int.Parse(guestIdField.Text);
-                dc.setData(query, "Record deleted successfully.");
+                HttpData result = await conn.StoreCustomer(
+                      "delete",
+                      namaField.Text,
+                      numberField.Text,
+                      alamatField.Text,
+                      cityField.Text,
+                      provinsiField.Text,
+                      guestIdField.Text
+                 );
+
+                MessageBox.Show(result.message);
+                refreshTable();
                 clearFields();
-                populateTable();
             }
         }
 
@@ -233,7 +190,7 @@ namespace Hotel_Management_System.Controllers
             query = "DELETE FROM Bookings.Booking WHERE GuestId = " + guestIdField.Text;
         }
 
-        private void updateButton_Click(object sender, EventArgs e)
+        private async void updateButton_Click(object sender, EventArgs e)
         {
             if (guestIdField.Text == "")
             {
@@ -246,17 +203,44 @@ namespace Hotel_Management_System.Controllers
                 {
                     return;
                 }
-                query = "UPDATE Hotels.Guests SET GuestFirstName = '" + fnameField.Text + "', GuestLastName = '" + lnameField.Text + "', GuestEmailAddress = '" + emailField.Text + "', GuestContactNumber = '" + numberField.Text + "', GuestCnic = '" + cnicField.Text + "', GuestPassportNumber = '" + passportField.Text + "', AddressLine = '" + addressField.Text + "', Street = '" + streetField.Text + "', City = '" + cityField.Text + "', Zip = '" + zipField.Text + "' WHERE GuestId = " + int.Parse(guestIdField.Text);
-                dc.setData(query, "Record updated successfully.");
-                clearFields();
-                populateTable();
+                HttpData result = await conn.StoreCustomer(
+                   "update",
+                   namaField.Text,
+                   numberField.Text,
+                   alamatField.Text,
+                   cityField.Text,
+                   provinsiField.Text,
+                   guestIdField.Text
+               );
+
+                    MessageBox.Show(result.message);
+                    refreshTable();
             }
         }
 
         private void guestTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            guestIdField.Text = guestTable.SelectedRows[0].Cells[0].Value.ToString();
-            retrieveData(int.Parse(guestIdField.Text));
+            //MessageBox.Show("Selected");
+            //guestIdField.Text = guestTable.SelectedRows[0].Cells[0].Value.ToString();
+            //retrieveData(int.Parse(guestIdField.Text));
+
+            var row = guestTable.SelectedRows[0];
+            string id = row.Cells[0].Value.ToString();
+            if(id == "38")
+            {
+                MessageBox.Show("Data ini tidak bisa di ubah");
+                return;
+            }
+            guestIdField.Text = id;
+            string name = row.Cells[1].Value.ToString();
+            //name = Regex.Replace(name, @"^[a-zA-Z]+$",String.Empty);
+            //string s2 = Regex.Replace(name, @"[^A-Z]+", String.Empty);
+            namaField.Text = name;
+            numberField.Text = row.Cells[2].Value.ToString();
+            alamatField.Text = row.Cells[3].Value.ToString();
+            cityField.Text = row.Cells[4].Value.ToString();
+            provinsiField.Text = row.Cells[5].Value.ToString();
+            //MessageBox.Show(row);
         }
     }
 }

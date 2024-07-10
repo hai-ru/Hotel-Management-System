@@ -199,7 +199,107 @@ namespace Hotel_Management_System
             return resultData;
         }
 
-        
+        //"update":1,
+        //"name": "Farida edited",
+        //"mobile": "081254197359",
+        //"address_line_1": null,
+        //"city": null,
+        //"state": null
+
+        public async Task<HttpData> StoreCustomer(
+            string type, 
+            string name, 
+            string phone, 
+            string address_line_1 = null,
+            string city = null,
+            string state= null,
+            string id = null
+        )
+        {
+
+            HttpData resultData = new HttpData();
+
+            resultData.status = false;
+            resultData.message = "";
+
+            if(
+                (
+                    type == "update" ||
+                    type == "delete"
+                ) &&
+                id == null
+            )
+            {
+                resultData.message = "ID tidak ada...";
+                return resultData;
+            }
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string token = Properties.Settings.Default.Token;
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    //var valContent = new[]
+                    //{
+                    //    new KeyValuePair<string, string>("username", username)
+                    //};
+
+                    var valContent = new Dictionary<string, string>();
+                    valContent.Add("name", name);
+                    valContent.Add("mobile", phone);
+                    valContent.Add("address_line_1", address_line_1 ?? "");
+                    valContent.Add("city", city ?? "");
+                    valContent.Add("state", state ?? "");
+
+                    switch (type)
+                    {
+                        case "update":
+                            valContent.Add("id", id);
+                            valContent.Add("update", "1");
+                            break;
+                        case "delete":
+                            valContent.Add("id", id);
+                            valContent.Add("delete", "1");
+                            break;
+                        default:
+                            valContent.Add("insert", "1");
+                            break;
+                    }
+
+
+                    var content = new FormUrlEncodedContent(valContent);
+
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/customers/store", content);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+
+                        dynamic data = JsonConvert.DeserializeObject(responseContent);
+                        resultData.status = data.status;
+                        resultData.message = data.message;
+                        resultData.data = data.data;
+
+                    }
+                    catch (Newtonsoft.Json.JsonException ex)
+                    {
+                        resultData.status = false;
+                        resultData.message = ex.Message;
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                resultData.status = false;
+                resultData.message = ex.Message;
+            }
+
+            return resultData;
+        }
+
+
     }
 
 
