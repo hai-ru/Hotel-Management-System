@@ -19,12 +19,14 @@ namespace Hotel_Management_System.Controllers
         DatabaseConnection dc = new DatabaseConnection();
         String query;
 
+        DateTime filterDate = DateTime.Today;
+
         HttpConnection conn = new HttpConnection();
 
         public CheckoutScreen()
         {
             InitializeComponent();
-            paymentIdField.ReadOnly = false;
+            //paymentIdField.ReadOnly = false;
             checkIfEmployee();
         }
 
@@ -92,13 +94,14 @@ namespace Hotel_Management_System.Controllers
         private void CheckoutScreen_Load(object sender, EventArgs e)
         {
             DateTime today = DateTime.Today;
-            string date = today.ToString("yyyy-MM-dd");
+            filterDate = today;
             FilterTableCheckoutDate.Value = today;
-            refreshTable(date);
+            refreshTable();
         }
 
-        private async void refreshTable(string date)
+        private async void refreshTable()
         {
+            string date = filterDate.ToString("yyyy-MM-dd");
             HttpData result = await conn.GetCheckinList(date);
             if (!result.status)
             {
@@ -126,30 +129,21 @@ namespace Hotel_Management_System.Controllers
             //}
         }
 
-        private void payButton_Click(object sender, EventArgs e)
+        private async void payButton_Click(object sender, EventArgs e)
         {
-            //if (bookingIdCMBox.SelectedIndex != -1 && paymentTypeCmbox.SelectedIndex != -1 && amountField.Text != "")
-            //{
-            //    //int bId = int.Parse(bookingIdCMBox.Text);
-            //    int gId = getGuestIdS(bId);
-            //    query = "UPDATE Hotels.Guests SET Status = 'Not Reserved' WHERE GuestId = " + gId;
-            //    dc.setData(query, "");
-            //    int a = getRoomId(bId);
-            //    query = "UPDATE Rooms.Room SET Available = 'Yes' WHERE RoomId = " + a;
-            //    dc.setData(query, "");
-            //    delServiceUsed(bId);
-            //    query = "INSERT INTO Bookings.Payments (PaymentStatus, PaymentType, PaymentAmount, BookingId) VALUES ('" + statusField.Text + "', '" + paymentTypeCmbox.Text + "', " + amountField.Text + ", " + bookingIdCMBox.Text +")";
-            //    dc.setData(query, "Checkout Data inserted successfully!");
-            //    changeBookingStatus(bId);
-            //    clearFields();
-            //    //bookingIdCMBox.Items.Clear();
-            //    populateBookingIdCmbox();
-            //    populateTable();
-            //}
-            //else
-            //{
-            //    MessageBox.Show("All fields must be filled.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //}
+            HttpData result = await conn.StoreCheckout(
+                paymentIdField.Text,
+                sisaField.Text,
+                catatanField.Text
+            );
+            if (!result.status)
+            {
+                MessageBox.Show(result.message);
+                return;
+            }
+
+            MessageBox.Show(result.message);
+            refreshTable();
         }
 
 
@@ -205,6 +199,7 @@ namespace Hotel_Management_System.Controllers
             depositField.Text = checkoutTable.SelectedRows[0].Cells[3].Value.ToString();
             totalTagihanField.Text = checkoutTable.SelectedRows[0].Cells[2].Value.ToString();
             sisaField.Text = checkoutTable.SelectedRows[0].Cells[4].Value.ToString();
+            payButton.Enabled = true;
         }
 
         private void fetchData(int i)
@@ -251,8 +246,8 @@ namespace Hotel_Management_System.Controllers
 
         private void FilterTableCheckoutDate_ValueChanged(object sender, EventArgs e)
         {
-            string date = FilterTableCheckoutDate.Value.ToString("yyyy-MM-dd");
-            refreshTable(date);
+            filterDate = FilterTableCheckoutDate.Value;
+            refreshTable();
         }
     }
 }

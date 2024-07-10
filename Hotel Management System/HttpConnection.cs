@@ -464,6 +464,7 @@ namespace Hotel_Management_System
                         dynamic data = JsonConvert.DeserializeObject(responseContent);
                         resultData.status = data.status;
                         resultData.data = data.data;
+                        resultData.message = data.message;
 
                     }
                     catch (Newtonsoft.Json.JsonException ex)
