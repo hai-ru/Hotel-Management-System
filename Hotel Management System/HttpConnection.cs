@@ -392,19 +392,20 @@ namespace Hotel_Management_System
                     string token = Properties.Settings.Default.Token;
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    dynamic valContent = null;
+                    dynamic content = null;
 
                     if (date != null)
                     {
-                        valContent = new Dictionary<string, string>();
+                        var valContent = new Dictionary<string, string>();
                         valContent.Add("date", date);
                         if(status != null)
                         {
                             valContent.Add("status", status);
                         }
+                        content = new FormUrlEncodedContent(valContent);
                     }
 
-                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/checkin/list", valContent);
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/checkin/list", content);
 
                     var responseContent = await response.Content.ReadAsStringAsync();
                     try
