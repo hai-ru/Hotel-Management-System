@@ -433,6 +433,56 @@ namespace Hotel_Management_System
         }
 
 
+        public async Task<HttpData> StoreCheckout(string id, string amount, string notes)
+        {
+
+            HttpData resultData = new HttpData();
+
+            resultData.status = false;
+            resultData.message = "";
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string token = Properties.Settings.Default.Token;
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    var valContent = new Dictionary<string, string>();
+                    valContent.Add("id", id);
+                    valContent.Add("amount", amount);
+                    valContent.Add("notes", notes);
+
+                    var content = new FormUrlEncodedContent(valContent);
+
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/checkout/store", content);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+
+                        dynamic data = JsonConvert.DeserializeObject(responseContent);
+                        resultData.status = data.status;
+                        resultData.data = data.data;
+
+                    }
+                    catch (Newtonsoft.Json.JsonException ex)
+                    {
+                        resultData.status = false;
+                        resultData.message = ex.Message;
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                resultData.status = false;
+                resultData.message = ex.Message;
+            }
+
+            return resultData;
+        }
+
+
     }
 
 
