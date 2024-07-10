@@ -105,6 +105,7 @@ namespace Hotel_Management_System.Controllers
             // Clear existing items in roomIdCMBox
             roomIdCMBox.Items.Clear();
 
+
             // Bind rooms to roomIdCMBox
             roomIdCMBox.DisplayMember = "name"; // Set the DisplayMember to "name" property
 
@@ -547,6 +548,11 @@ namespace Hotel_Management_System.Controllers
             public string type;
             public string selling_price;
             public string unit_price;
+
+            public override string ToString()
+            {
+                return name; // Display the room name in combobox
+            }
         }
     }
 }
