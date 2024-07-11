@@ -599,8 +599,9 @@ namespace Hotel_Management_System.Controllers
         {
             Guna.UI2.WinForms.Guna2TextBox textBox = (Guna.UI2.WinForms.Guna2TextBox)sender;
 
-            // Get the current cursor position
+            // Save the current cursor position and text length
             int cursorPosition = textBox.SelectionStart;
+            int originalTextLength = textBox.Text.Length;
 
             // Remove any non-numeric characters
             string numericText = string.Concat(textBox.Text.Where(char.IsDigit));
@@ -608,21 +609,32 @@ namespace Hotel_Management_System.Controllers
             if (decimal.TryParse(numericText, out decimal value))
             {
                 // Format the value as currency
-                textBox.Text = string.Format("{0:N0}", value);
+                string formattedText = string.Format("{0:N0}", value);
 
-                // Adjust cursor position based on changes in text length
-                int newTextLength = textBox.Text.Length;
-                int newCursorPosition = cursorPosition + (newTextLength - textBox.TextLength);
-                textBox.SelectionStart = Math.Max(0, Math.Min(newCursorPosition, newTextLength));
+                // Update the text only if it's different to avoid resetting the cursor position unnecessarily
+                if (textBox.Text != formattedText)
+                {
+                    textBox.Text = formattedText;
+
+                    // Calculate the new cursor position
+                    int newTextLength = textBox.Text.Length;
+                    int cursorDelta = newTextLength - originalTextLength;
+                    int newCursorPosition = cursorPosition + cursorDelta;
+
+                    // Set the cursor position within the valid range
+                    textBox.SelectionStart = Math.Max(0, Math.Min(newCursorPosition, newTextLength));
+                }
             }
         }
+
 
         private void depositField_TextChanged(object sender, EventArgs e)
         {
             Guna.UI2.WinForms.Guna2TextBox textBox = (Guna.UI2.WinForms.Guna2TextBox)sender;
 
-            // Get the current cursor position
+            // Save the current cursor position and text length
             int cursorPosition = textBox.SelectionStart;
+            int originalTextLength = textBox.Text.Length;
 
             // Remove any non-numeric characters
             string numericText = string.Concat(textBox.Text.Where(char.IsDigit));
@@ -630,14 +642,24 @@ namespace Hotel_Management_System.Controllers
             if (decimal.TryParse(numericText, out decimal value))
             {
                 // Format the value as currency
-                textBox.Text = string.Format("{0:N0}", value);
+                string formattedText = string.Format("{0:N0}", value);
 
-                // Adjust cursor position based on changes in text length
-                int newTextLength = textBox.Text.Length;
-                int newCursorPosition = cursorPosition + (newTextLength - textBox.TextLength);
-                textBox.SelectionStart = Math.Max(0, Math.Min(newCursorPosition, newTextLength));
+                // Update the text only if it's different to avoid resetting the cursor position unnecessarily
+                if (textBox.Text != formattedText)
+                {
+                    textBox.Text = formattedText;
+
+                    // Calculate the new cursor position
+                    int newTextLength = textBox.Text.Length;
+                    int cursorDelta = newTextLength - originalTextLength;
+                    int newCursorPosition = cursorPosition + cursorDelta;
+
+                    // Set the cursor position within the valid range
+                    textBox.SelectionStart = Math.Max(0, Math.Min(newCursorPosition, newTextLength));
+                }
             }
         }
+
 
         private void roomIdCMBox_SelectedIndexChanged(object sender, EventArgs e)
         {
