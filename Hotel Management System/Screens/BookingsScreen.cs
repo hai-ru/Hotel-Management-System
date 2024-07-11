@@ -248,8 +248,9 @@ namespace Hotel_Management_System.Controllers
                 string contact_id = selectedGuest?.id.ToString();
                 string lamainap = (DateTime.Parse(checkoutPicker.Text) - DateTime.Parse(checkinPicker.Text)).Days.ToString();
                 string room_product_id = selectedRoom?.product_id.ToString();
-                string harga_total = amountField.Text; // Assuming amountField contains the total price
-                string payment_amount = depositField.Text;
+                // Trim non-numeric characters from amountField.Text and depositField.Text
+                string harga_total = string.Concat(amountField.Text.Where(char.IsDigit));
+                string payment_amount = string.Concat(depositField.Text.Where(char.IsDigit));
 
                 // Call StoreCheckin method
                 HttpData result = await conn.StoreCheckin(contact_id, lamainap, room_product_id, harga_total, payment_amount);
