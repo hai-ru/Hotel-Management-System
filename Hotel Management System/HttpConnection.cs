@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 public class ApiResponse
 {
@@ -171,7 +172,10 @@ namespace Hotel_Management_System
                     string token = Properties.Settings.Default.Token;
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/products/list", null);
+                    string jsonPayload = "{\"business_type\":\"hotel\"}";
+                    HttpContent content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/products/list", content);
 
                     var responseContent = await response.Content.ReadAsStringAsync() ;
                     try
@@ -324,7 +328,89 @@ namespace Hotel_Management_System
             return resultData;
         }
 
-        public async Task<HttpData> StoreCheckin(string contact_id, string lamainap, string room_product_id, string harga_total, string payment_amount)
+        public async Task<HttpData> GetOTAList()
+        {
+
+            HttpData resultData = new HttpData();
+
+            resultData.status = false;
+            resultData.message = "";
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string token = Properties.Settings.Default.Token;
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/hotel/ota", null);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+
+                        dynamic data = JsonConvert.DeserializeObject(responseContent);
+                        resultData.status = data.status;
+                        resultData.data = data.data;
+
+                    }
+                    catch (Newtonsoft.Json.JsonException ex)
+                    {
+                        resultData.status = false;
+                        resultData.message = ex.Message;
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                resultData.status = false;
+                resultData.message = ex.Message;
+            }
+
+            return resultData;
+        }
+        public async Task<HttpData> GetPaymentList()
+        {
+
+            HttpData resultData = new HttpData();
+
+            resultData.status = false;
+            resultData.message = "";
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string token = Properties.Settings.Default.Token;
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/hotel/payment", null);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+
+                        dynamic data = JsonConvert.DeserializeObject(responseContent);
+                        resultData.status = data.status;
+                        resultData.data = data.data;
+
+                    }
+                    catch (Newtonsoft.Json.JsonException ex)
+                    {
+                        resultData.status = false;
+                        resultData.message = ex.Message;
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                resultData.status = false;
+                resultData.message = ex.Message;
+            }
+
+            return resultData;
+        }
+        public async Task<HttpData> StoreCheckin(string contact_id, string lamainap, string room_product_id, string harga_total, string payment_amount, string payment_method, string ota)
         {
             HttpData resultData = new HttpData();
 
@@ -338,15 +424,98 @@ namespace Hotel_Management_System
                     string token = Properties.Settings.Default.Token;
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    string YourJson = "{\"print\":1,\"is_direct_sale\":1,\"location_id\":0,\"sub_type\":null,\"contact_id\":\"" + contact_id
-                        + "\",\"search_product\":null,\"pay_term_number\":" + lamainap
-                        + ",\"pay_term_type\":\"days\",\"price_group\":0,\"sell_price_tax\":\"includes\",\"products\":[{\"quantity\":1,\"product_id\":\"" + room_product_id
-                        + "\",\"name\":\"Room 101\",\"type\":\"single\",\"enable_stock\":0,\"product_type\":\"single\",\"variation_id\":17469,\"selling_price\":\"200.000\",\"unit_price\":\"200000.0000\",\"unit_price_inc_tax\":\"200000.0000\",\"sub_sku\":\"101\",\"unit\":\"Unit\"}],\"discount_type\":\"percentage\",\"discount_amount\":0.00,\"rp_redeemed\":0,\"rp_redeemed_amount\":0,\"tax_rate_id\":null,\"tax_calculation_amount\":0.00,\"shipping_details\":null,\"shipping_address\":null,\"shipping_status\":null,\"delivered_to\":null,\"shipping_charges\":0.00,\"advance_balance\":0.0000,\"payment\":[{\"amount\":\"" + payment_amount
-                        + "\",\"method\":\"cash\",\"card_number\":\"\",\"card_holder_name\":\"\",\"card_transaction_number\":\"\",\"card_type\":\"\",\"card_month\":\"\",\"card_year\":\"\",\"card_security\":\"\",\"cheque_number\":\"\",\"bank_account_number\":\"\",\"transaction_no_1\":\"\",\"transaction_no_2\":\"\",\"transaction_no_3\":\"\",\"note\":\"\"}],\"sale_note\":\"\",\"staff_note\":\"\",\"change_return\":0.00,\"additional_notes\":\"\",\"is_suspend\":0,\"recur_interval\":1,\"recur_interval_type\":\"days\",\"recur_repetitions\":null,\"subscription_repeat_on\":\"\",\"is_enabled_stock\":null,\"is_credit_sale\":0,\"final_total\":\"" + harga_total
-                        + "\",\"discount_type_modal\":\"percentage\",\"discount_amount_modal\":0.00,\"rp_redeemed_modal\":null,\"order_tax_modal\":null,\"shipping_details_modal\":null,\"shipping_address_modal\":null,\"shipping_charges_modal\":0,\"shipping_status_modal\":null,\"delivered_to_modal\":null,\"status\":\"final\"}";
+                    // Calculate deposit from payment_amount - harga_total
+                    int deposit = int.Parse(payment_amount) - int.Parse(harga_total);
 
+                    // Construct JSON payload
+                    var payload = new
+                    {
+                        hotel = 1,
+                        print = 1,
+                        is_direct_sale = 1,
+                        location_id = 0,
+                        sub_type = (string)null,
+                        contact_id = contact_id,
+                        search_product = (object)null,
+                        pay_term_number = int.Parse(lamainap),
+                        pay_term_type = "days",
+                        price_group = 0,
+                        sell_price_tax = "includes",
+                        products = new[] {
+                    new {
+                        quantity = 1,
+                        product_id = room_product_id,
+                        name = "Room 101",
+                        type = "single",
+                        enable_stock = 0,
+                        product_type = "single",
+                        variation_id = 17469,
+                        selling_price = "200.000",
+                        unit_price = "200000.0000",
+                        unit_price_inc_tax = "200000.0000",
+                        sub_sku = "101",
+                        unit = "Unit"
+                    }
+                },
+                        discount_type = "percentage",
+                        discount_amount = 0.00,
+                        rp_redeemed = 0,
+                        rp_redeemed_amount = 0,
+                        tax_rate_id = (object)null,
+                        tax_calculation_amount = 0.00,
+                        shipping_details = (object)null,
+                        shipping_address = (object)null,
+                        shipping_status = (object)null,
+                        delivered_to = (object)null,
+                        shipping_charges = 0.00,
+                        advance_balance = 0.0000,
+                        payment = new[] {
+                    new {
+                        amount = payment_amount,
+                        method = "cash",
+                        card_number = "",
+                        card_holder_name = "",
+                        card_transaction_number = "",
+                        card_type = "",
+                        card_month = "",
+                        card_year = "",
+                        card_security = "",
+                        cheque_number = "",
+                        bank_account_number = "",
+                        transaction_no_1 = "",
+                        transaction_no_2 = "",
+                        transaction_no_3 = "",
+                        note = ""
+                    }
+                },
+                        sale_note = "",
+                        staff_note = "",
+                        change_return = 0.00,
+                        additional_notes = "",
+                        is_suspend = 0,
+                        recur_interval = 1,
+                        recur_interval_type = "days",
+                        recur_repetitions = (object)null,
+                        subscription_repeat_on = "",
+                        is_enabled_stock = (object)null,
+                        is_credit_sale = 0,
+                        final_total = harga_total,
+                        discount_type_modal = "percentage",
+                        discount_amount_modal = 0.00,
+                        rp_redeemed_modal = (object)null,
+                        order_tax_modal = (object)null,
+                        shipping_details_modal = (object)null,
+                        shipping_address_modal = (object)null,
+                        shipping_charges_modal = 0,
+                        shipping_status_modal = (object)null,
+                        delivered_to_modal = (object)null,
+                        status = "final",
+                        service_custom_field_1 = payment_method,
+                        service_custom_field_2 = ota,
+                        service_custom_field_3 = deposit.ToString()
+                    };
 
-                    var content = new StringContent(YourJson, Encoding.UTF8, "application/json");
+                    var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
 
                     HttpResponseMessage response = await client.PostAsync(BaseUrl + "/pos", content);
 
@@ -375,6 +544,7 @@ namespace Hotel_Management_System
 
             return resultData;
         }
+
 
 
         public async Task<HttpData> GetCheckinList(string date = null,string status = null)
@@ -433,7 +603,7 @@ namespace Hotel_Management_System
         }
 
 
-        public async Task<HttpData> StoreCheckout(string id, string amount, string notes)
+        public async Task<HttpData> StoreCheckout(string id, string amount, string notes, string depositReturn)
         {
 
             HttpData resultData = new HttpData();
@@ -452,6 +622,7 @@ namespace Hotel_Management_System
                     valContent.Add("id", id);
                     valContent.Add("amount", amount);
                     valContent.Add("notes", notes);
+                    valContent.Add("deposit_return", depositReturn);
 
                     var content = new FormUrlEncodedContent(valContent);
 

@@ -134,7 +134,8 @@ namespace Hotel_Management_System.Controllers
             HttpData result = await conn.StoreCheckout(
                 paymentIdField.Text,
                 sisaField.Text,
-                catatanField.Text
+                catatanField.Text,
+                depositReturnField.Text
             );
             if (!result.status)
             {
@@ -248,6 +249,21 @@ namespace Hotel_Management_System.Controllers
         {
             filterDate = FilterTableCheckoutDate.Value;
             refreshTable();
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void depositField_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void depositReturnField_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

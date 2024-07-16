@@ -27,6 +27,8 @@ namespace Hotel_Management_System.Controllers
 
         Guest[] guests = new Guest[] { };
         Room[] rooms = new Room[] { };
+        Ota[] otas = new Ota[] { };
+        PaymentMethod[] paymentMethods = new PaymentMethod[] { };
 
         private int durasi_menginap = 1;
 
@@ -88,6 +90,50 @@ namespace Hotel_Management_System.Controllers
             }
         }
 
+        private async void populateOTAComboBoxAsync()
+        {
+            HttpData result = await conn.GetOTAList();
+            if (!result.status)
+            {
+                MessageBox.Show(result.message);
+                return;
+            }
+
+            // Deserialize JSON string directly to OTA array
+            otas = JsonConvert.DeserializeObject<Ota[]>(result.data.ToString());
+            otaComboBox.Items.Clear();
+
+            // Bind rooms to roomIdCMBox
+            otaComboBox.DisplayMember = "label"; // Set the DisplayMember to "text" property
+
+            foreach (Ota ota in otas)
+            {
+                otaComboBox.Items.Add(ota); // Add ota to combo box
+            }
+        }
+
+        private async void populatePaymentMethodComboBoxAsync()
+        {
+            HttpData result = await conn.GetPaymentList();
+            if (!result.status)
+            {
+                MessageBox.Show(result.message);
+                return;
+            }
+
+            // Deserialize JSON string directly to Payment array
+            paymentMethods = JsonConvert.DeserializeObject<PaymentMethod[]>(result.data.ToString());
+            paymentComboBox.Items.Clear();
+
+            // Bind rooms to roomIdCMBox
+            paymentComboBox.DisplayMember = "label"; // Set the DisplayMember to "label" property
+
+            foreach (PaymentMethod paymentMethod in paymentMethods)
+            {
+                paymentComboBox.Items.Add(paymentMethod); // Add payment to combo box
+            }
+        }
+
         private void populateRoomId()
         {
             SqlConnection con = dc.getConnection();
@@ -119,7 +165,7 @@ namespace Hotel_Management_System.Controllers
 
 
             // Bind rooms to roomIdCMBox
-            roomIdCMBox.DisplayMember = "name"; // Set the DisplayMember to "name" property
+            roomIdCMBox.DisplayMember = "ROOM NAME"; // Set the DisplayMember to "name" property
 
             foreach (Room room in rooms)
             {
@@ -159,6 +205,8 @@ namespace Hotel_Management_System.Controllers
             populateGuestComboBoxAsync();
             populateRoomAsync();
             refreshTable();
+            populateOTAComboBoxAsync();
+            populatePaymentMethodComboBoxAsync();
         }
 
         private async void refreshTable(string date = null)
@@ -239,21 +287,24 @@ namespace Hotel_Management_System.Controllers
         private async void addButton_Click(object sender, EventArgs e)
         {
             if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
-                roomIdCMBox.SelectedIndex != -1)
-            {
+                roomIdCMBox.SelectedIndex != -1 && paymentComboBox.SelectedItem.ToString() != "" && paymentComboBox.SelectedItem.ToString() != "")
+                {
                 // Extract values from form fields
                 var selectedGuest = guestIdCMBox.SelectedItem as Guest; 
                 var selectedRoom = roomIdCMBox.SelectedItem as Room;
 
                 string contact_id = selectedGuest?.id.ToString();
                 string lamainap = (DateTime.Parse(checkoutPicker.Text) - DateTime.Parse(checkinPicker.Text)).Days.ToString();
-                string room_product_id = selectedRoom?.product_id.ToString();
+                string room_product_id = selectedRoom?.ProductId.ToString();
                 // Trim non-numeric characters from amountField.Text and depositField.Text
                 string harga_total = string.Concat(amountField.Text.Where(char.IsDigit));
                 string payment_amount = string.Concat(depositField.Text.Where(char.IsDigit));
 
+                string payment_method = paymentComboBox.SelectedItem.ToString();
+                string ota = otaComboBox.SelectedItem.ToString();
+
                 // Call StoreCheckin method
-                HttpData result = await conn.StoreCheckin(contact_id, lamainap, room_product_id, harga_total, payment_amount);
+                HttpData result = await conn.StoreCheckin(contact_id, lamainap, room_product_id, harga_total, payment_amount, payment_method, ota);
 
                 // Handle the response
                 if (result.status)
@@ -405,13 +456,13 @@ namespace Hotel_Management_System.Controllers
         private void bookingTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             //fetchBookingRecord(1);
-            durasi_menginap = int.Parse( bookingTable.SelectedRows[0].Cells[6].Value.ToString() );
-            string pelanggan = bookingTable.SelectedRows[0].Cells[8].Value.ToString();
-            int dataIndex = Array.FindIndex(guests, c => c.text.ToString().Contains(pelanggan));
-            guestIdCMBox.SelectedIndex = dataIndex;
-            string no_kamar = bookingTable.SelectedRows[0].Cells[7].Value.ToString();
-            int indexKamar = Array.FindIndex(rooms, c => c.name.ToString() == no_kamar);
-            roomIdCMBox.SelectedIndex = indexKamar;
+            //durasi_menginap = int.Parse( bookingTable.SelectedRows[0].Cells[6].Value.ToString() );
+            //string pelanggan = bookingTable.SelectedRows[0].Cells[8].Value.ToString();
+            //int dataIndex = Array.FindIndex(guests, c => c.text.ToString().Contains(pelanggan));
+            //guestIdCMBox.SelectedIndex = dataIndex;
+            //string no_kamar = bookingTable.SelectedRows[0].Cells[7].Value.ToString();
+            //int indexKamar = Array.FindIndex(rooms, c => c.Name.ToString() == no_kamar);
+            //roomIdCMBox.SelectedIndex = indexKamar;
         }
 
         private void fetchBookingRecord(int i)
@@ -667,7 +718,7 @@ namespace Hotel_Management_System.Controllers
             if (roomIdCMBox.SelectedItem is Room selectedRoom)
             {
                 // Assuming unit_price is a numeric type like decimal, parse it accordingly
-                if (decimal.TryParse(selectedRoom.unit_price, out decimal price))
+                if (decimal.TryParse(selectedRoom.SellingPrice, out decimal price))
                 {
                     amountField.Text = price.ToString(); // Set amountField to room's unit price
                     amountField.ReadOnly = false;
@@ -725,7 +776,7 @@ namespace Hotel_Management_System.Controllers
             }
 
             // Clean unit_price and parse to decimal
-            string unitPriceString = selectedRoom.unit_price.Replace(",", "").Replace(".", "").Trim();
+            string unitPriceString = selectedRoom.SellingPrice.Replace(",", "").Replace(".", "").Trim();
             if (!decimal.TryParse(unitPriceString, out decimal price))
             {
                 return; // Handle parsing failure
@@ -752,24 +803,57 @@ namespace Hotel_Management_System.Controllers
 
         public class Room
         {
-            public string product_id;
-            public string name;
-            public string type;
-            public string selling_price;
-            public string unit_price;
-            public string sub_sku;
+            [JsonProperty("id")]
+            public int ProductId { get; set; }
 
+            [JsonProperty("ROOM NAME")]
+            public string Name { get; set; }
+
+            [JsonProperty("BRAND NAME")]
+            public string Type { get; set; }
+
+            [JsonProperty("selling_price")]
+            public string SellingPrice { get; set; }
+
+            [JsonProperty("unit_price")]
+            public string UnitPrice { get; set; }
+
+            [JsonProperty("sub_sku")]
+            public string SubSku { get; set; }
+
+            // Optional: You can keep the ToString method for displaying the room name
+            public override string ToString()
+            {
+                return Name; // Display the room name in combobox
+            }
+        }
+
+        public class PaymentMethod
+        {
+            public string label;
+            public string value;
 
             public override string ToString()
             {
-                return name; // Display the room name in combobox
+                return label;
+            }
+        }
+
+        public class Ota
+        {
+            public string label;
+            public string value;
+
+            public override string ToString()
+            {
+                return label;
             }
         }
 
         private void guna2Button1_Click(object sender, EventArgs e)
         {
             var selectedRoom = roomIdCMBox.SelectedItem as Room;
-            Boolean res = onity.createCard(selectedRoom.sub_sku, durasi_menginap);
+            Boolean res = onity.createCard(selectedRoom.SubSku, durasi_menginap);
             if (res)
             {
                 MessageBox.Show("Berhasil");
@@ -783,6 +867,26 @@ namespace Hotel_Management_System.Controllers
             MessageBox.Show("Masukan kartu Anda...");
             string result = onity.readCard();
             MessageBox.Show("Hasil Reader : "+result);
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void paymentComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+ 
+        }
+
+        private void otaComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
