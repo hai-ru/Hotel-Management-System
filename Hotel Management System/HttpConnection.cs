@@ -410,7 +410,7 @@ namespace Hotel_Management_System
 
             return resultData;
         }
-        public async Task<HttpData> StoreCheckin(string contact_id, string lamainap, string room_product_id, string harga_total, string payment_amount, string payment_method, string ota)
+        public async Task<HttpData> StoreCheckin(string contact_id, string lamainap, string room_product_id, string harga_total, string payment_amount, string payment_method, string ota, string deposit)
         {
             HttpData resultData = new HttpData();
 
@@ -425,7 +425,7 @@ namespace Hotel_Management_System
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                     // Calculate deposit from payment_amount - harga_total
-                    int deposit = int.Parse(payment_amount) - int.Parse(harga_total);
+                    //int deposit = int.Parse(payment_amount) - int.Parse(harga_total);
 
                     // Construct JSON payload
                     var payload = new

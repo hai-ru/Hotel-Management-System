@@ -299,12 +299,14 @@ namespace Hotel_Management_System.Controllers
                 // Trim non-numeric characters from amountField.Text and depositField.Text
                 string harga_total = string.Concat(amountField.Text.Where(char.IsDigit));
                 string payment_amount = string.Concat(depositField.Text.Where(char.IsDigit));
+                string deposit = string.Concat(depositTextBox1.Text.Where(char.IsDigit));
 
                 string payment_method = paymentComboBox.SelectedItem.ToString();
                 string ota = otaComboBox.SelectedItem.ToString();
 
+
                 // Call StoreCheckin method
-                HttpData result = await conn.StoreCheckin(contact_id, lamainap, room_product_id, harga_total, payment_amount, payment_method, ota);
+                HttpData result = await conn.StoreCheckin(contact_id, lamainap, room_product_id, harga_total, payment_amount, payment_method, ota, deposit);
 
                 // Handle the response
                 if (result.status)
@@ -767,7 +769,7 @@ namespace Hotel_Management_System.Controllers
             DateTime checkoutDate = checkoutPicker.Value.Date;
 
             // Calculate days difference
-            int daysDifference = (int)(checkoutDate - checkinDate).TotalDays + 1; // Count the check-in day as well
+            int daysDifference = (int)(checkoutDate - checkinDate).TotalDays; // Count the check-in day as well
 
             // If checkin and checkout are the same day, daysDifference should be 1
             if (daysDifference < 1)
@@ -887,6 +889,38 @@ namespace Hotel_Management_System.Controllers
         private void label8_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void depositTextBox1_TextChanged(object sender, EventArgs e)
+        {
+            Guna.UI2.WinForms.Guna2TextBox textBox = (Guna.UI2.WinForms.Guna2TextBox)sender;
+
+            // Save the current cursor position and text length
+            int cursorPosition = textBox.SelectionStart;
+            int originalTextLength = textBox.Text.Length;
+
+            // Remove any non-numeric characters
+            string numericText = string.Concat(textBox.Text.Where(char.IsDigit));
+
+            if (decimal.TryParse(numericText, out decimal value))
+            {
+                // Format the value as currency
+                string formattedText = string.Format("{0:N0}", value);
+
+                // Update the text only if it's different to avoid resetting the cursor position unnecessarily
+                if (textBox.Text != formattedText)
+                {
+                    textBox.Text = formattedText;
+
+                    // Calculate the new cursor position
+                    int newTextLength = textBox.Text.Length;
+                    int cursorDelta = newTextLength - originalTextLength;
+                    int newCursorPosition = cursorPosition + cursorDelta;
+
+                    // Set the cursor position within the valid range
+                    textBox.SelectionStart = Math.Max(0, Math.Min(newCursorPosition, newTextLength));
+                }
+            }
         }
     }
 }

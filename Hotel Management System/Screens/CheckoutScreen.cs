@@ -131,11 +131,14 @@ namespace Hotel_Management_System.Controllers
 
         private async void payButton_Click(object sender, EventArgs e)
         {
+            string sisa = string.Concat(sisaField.Text.Where(char.IsDigit));
+            string depositReturn = string.Concat(depositReturnField.Text.Where(char.IsDigit));
+
             HttpData result = await conn.StoreCheckout(
                 paymentIdField.Text,
-                sisaField.Text,
+                sisa,
                 catatanField.Text,
-                depositReturnField.Text
+                depositReturn
             );
             if (!result.status)
             {
@@ -197,9 +200,10 @@ namespace Hotel_Management_System.Controllers
             //fetchData(1);
             paymentIdField.Text = checkoutTable.SelectedRows[0].Cells[0].Value.ToString();
             namaField.Text = checkoutTable.SelectedRows[0].Cells[8].Value.ToString();
-            depositField.Text = checkoutTable.SelectedRows[0].Cells[3].Value.ToString();
-            totalTagihanField.Text = checkoutTable.SelectedRows[0].Cells[2].Value.ToString();
-            sisaField.Text = checkoutTable.SelectedRows[0].Cells[4].Value.ToString();
+            depositField.Text = checkoutTable.SelectedRows[0].Cells[2].Value.ToString();
+            totalTagihanField.Text = checkoutTable.SelectedRows[0].Cells[3].Value.ToString();
+            telahbayarTextBox1.Text = checkoutTable.SelectedRows[0].Cells[4].Value.ToString();
+            sisaField.Text = checkoutTable.SelectedRows[0].Cells[5].Value.ToString();
             payButton.Enabled = true;
         }
 
@@ -263,7 +267,66 @@ namespace Hotel_Management_System.Controllers
 
         private void depositReturnField_TextChanged(object sender, EventArgs e)
         {
+            Guna.UI2.WinForms.Guna2TextBox textBox = (Guna.UI2.WinForms.Guna2TextBox)sender;
 
+            // Save the current cursor position and text length
+            int cursorPosition = textBox.SelectionStart;
+            int originalTextLength = textBox.Text.Length;
+
+            // Remove any non-numeric characters
+            string numericText = string.Concat(textBox.Text.Where(char.IsDigit));
+
+            if (decimal.TryParse(numericText, out decimal value))
+            {
+                // Format the value as currency
+                string formattedText = string.Format("{0:N0}", value);
+
+                // Update the text only if it's different to avoid resetting the cursor position unnecessarily
+                if (textBox.Text != formattedText)
+                {
+                    textBox.Text = formattedText;
+
+                    // Calculate the new cursor position
+                    int newTextLength = textBox.Text.Length;
+                    int cursorDelta = newTextLength - originalTextLength;
+                    int newCursorPosition = cursorPosition + cursorDelta;
+
+                    // Set the cursor position within the valid range
+                    textBox.SelectionStart = Math.Max(0, Math.Min(newCursorPosition, newTextLength));
+                }
+            }
+        }
+
+        private void sisaField_TextChanged(object sender, EventArgs e)
+        {
+            Guna.UI2.WinForms.Guna2TextBox textBox = (Guna.UI2.WinForms.Guna2TextBox)sender;
+
+            // Save the current cursor position and text length
+            int cursorPosition = textBox.SelectionStart;
+            int originalTextLength = textBox.Text.Length;
+
+            // Remove any non-numeric characters
+            string numericText = string.Concat(textBox.Text.Where(char.IsDigit));
+
+            if (decimal.TryParse(numericText, out decimal value))
+            {
+                // Format the value as currency
+                string formattedText = string.Format("{0:N0}", value);
+
+                // Update the text only if it's different to avoid resetting the cursor position unnecessarily
+                if (textBox.Text != formattedText)
+                {
+                    textBox.Text = formattedText;
+
+                    // Calculate the new cursor position
+                    int newTextLength = textBox.Text.Length;
+                    int cursorDelta = newTextLength - originalTextLength;
+                    int newCursorPosition = cursorPosition + cursorDelta;
+
+                    // Set the cursor position within the valid range
+                    textBox.SelectionStart = Math.Max(0, Math.Min(newCursorPosition, newTextLength));
+                }
+            }
         }
     }
 }
