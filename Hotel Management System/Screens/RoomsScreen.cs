@@ -1,11 +1,9 @@
 ﻿using Hotel_Management_System.Screens;
 using System;
+using System.Drawing;
 using System.Data;
 using System.Data.SqlClient;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using System.Net.Http;
-using System.Text.Json;
 using Newtonsoft.Json;
 
 namespace Hotel_Management_System.Controllers
@@ -54,6 +52,18 @@ namespace Hotel_Management_System.Controllers
             }
             DataTable MyTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
             roomsTable.DataSource = MyTable;
+            roomsTable.CellFormatting += roomsTable_CellFormatting;
+        }
+
+        private void roomsTable_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (roomsTable.Columns[e.ColumnIndex].Name == "TODAY AVAILABLE" && e.Value != null)
+            {
+                if (e.Value.ToString() == "1")
+                {
+                    e.CellStyle.BackColor = Color.Yellow;
+                }
+            }
         }
 
         private void Rooms_Load(object sender, EventArgs e)
