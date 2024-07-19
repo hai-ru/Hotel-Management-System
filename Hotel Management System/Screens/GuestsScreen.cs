@@ -242,5 +242,20 @@ namespace Hotel_Management_System.Controllers
             provinsiField.Text = row.Cells[5].Value.ToString();
             //MessageBox.Show(row);
         }
+
+        private void numberField_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2TextBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

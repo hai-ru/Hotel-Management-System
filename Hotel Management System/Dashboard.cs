@@ -95,5 +95,10 @@ namespace Hotel_Management_System
             Form1 d = new Form1();
             d.Show();
         }
+
+        private void guna2Button2_Click_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }
