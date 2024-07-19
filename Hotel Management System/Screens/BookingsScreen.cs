@@ -202,9 +202,10 @@ namespace Hotel_Management_System.Controllers
 
         private void BookingsScreen_Load(object sender, EventArgs e)
         {
+            FilterTableCheckinDate.Value = DateTime.Today;
             populateGuestComboBoxAsync();
             populateRoomAsync();
-            refreshTable();
+            refreshTable(FilterTableCheckinDate.Value.ToString("yyyy-MM-dd"));
             populateOTAComboBoxAsync();
             populatePaymentMethodComboBoxAsync();
         }
@@ -287,7 +288,7 @@ namespace Hotel_Management_System.Controllers
         private async void addButton_Click(object sender, EventArgs e)
         {
             if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
-                roomIdCMBox.SelectedIndex != -1 && paymentComboBox.SelectedItem.ToString() != "" && paymentComboBox.SelectedItem.ToString() != "")
+                roomIdCMBox.SelectedIndex != -1)
                 {
                 // Extract values from form fields
                 var selectedGuest = guestIdCMBox.SelectedItem as Guest; 
@@ -301,8 +302,14 @@ namespace Hotel_Management_System.Controllers
                 string payment_amount = string.Concat(depositField.Text.Where(char.IsDigit));
                 string deposit = string.Concat(depositTextBox1.Text.Where(char.IsDigit));
 
+                if (paymentComboBox.SelectedItem == null)
+                {
+                    MessageBox.Show("Silahkan pilih metode pembayaran yang di lakukan");
+                    return;
+                }
+
                 string payment_method = paymentComboBox.SelectedItem.ToString();
-                string ota = otaComboBox.SelectedItem.ToString();
+                string ota = otaComboBox.SelectedItem == null ? "" : otaComboBox.SelectedItem.ToString();
 
 
                 // Call StoreCheckin method
