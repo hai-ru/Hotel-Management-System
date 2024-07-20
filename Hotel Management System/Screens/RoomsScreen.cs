@@ -61,7 +61,11 @@ namespace Hotel_Management_System.Controllers
             {
                 if (e.Value.ToString() == "0")
                 {
-                    e.CellStyle.BackColor = Color.Yellow;
+                    e.CellStyle.BackColor = Color.Red;
+                }
+                if (e.Value.ToString() == "1")
+                {
+                    e.CellStyle.BackColor = Color.GreenYellow;
                 }
             }
         }

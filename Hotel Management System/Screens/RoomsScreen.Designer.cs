@@ -42,9 +42,10 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Cooper Black", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.label1.Location = new System.Drawing.Point(37, 32);
+            this.label1.Location = new System.Drawing.Point(49, 39);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(93, 27);
+            this.label1.Size = new System.Drawing.Size(117, 35);
             this.label1.TabIndex = 33;
             this.label1.Text = "Rooms";
             // 
@@ -56,9 +57,10 @@
             this.guna2GradientButton1.FillColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.guna2GradientButton1.Font = new System.Drawing.Font("Cooper Black", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.guna2GradientButton1.ForeColor = System.Drawing.Color.White;
-            this.guna2GradientButton1.Location = new System.Drawing.Point(136, 27);
+            this.guna2GradientButton1.Location = new System.Drawing.Point(181, 33);
+            this.guna2GradientButton1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.guna2GradientButton1.Name = "guna2GradientButton1";
-            this.guna2GradientButton1.Size = new System.Drawing.Size(159, 34);
+            this.guna2GradientButton1.Size = new System.Drawing.Size(212, 42);
             this.guna2GradientButton1.TabIndex = 114;
             this.guna2GradientButton1.Text = "Add Room Types";
             this.guna2GradientButton1.Visible = false;
@@ -87,12 +89,14 @@
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.roomsTable.DefaultCellStyle = dataGridViewCellStyle3;
             this.roomsTable.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            this.roomsTable.Location = new System.Drawing.Point(42, 67);
+            this.roomsTable.Location = new System.Drawing.Point(56, 82);
+            this.roomsTable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.roomsTable.Name = "roomsTable";
             this.roomsTable.ReadOnly = true;
             this.roomsTable.RowHeadersVisible = false;
+            this.roomsTable.RowHeadersWidth = 51;
             this.roomsTable.RowTemplate.Height = 35;
-            this.roomsTable.Size = new System.Drawing.Size(1039, 491);
+            this.roomsTable.Size = new System.Drawing.Size(1385, 629);
             this.roomsTable.TabIndex = 115;
             this.roomsTable.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White;
             this.roomsTable.ThemeStyle.AlternatingRowsStyle.Font = null;
@@ -119,15 +123,16 @@
             // 
             // RoomsScreen
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
-            this.ClientSize = new System.Drawing.Size(1133, 560);
+            this.ClientSize = new System.Drawing.Size(1511, 724);
             this.Controls.Add(this.roomsTable);
             this.Controls.Add(this.guna2GradientButton1);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Location = new System.Drawing.Point(118, 123);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "RoomsScreen";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Rooms";
