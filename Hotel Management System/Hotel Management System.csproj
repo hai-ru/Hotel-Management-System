@@ -164,6 +164,12 @@
     <Compile Include="Screens\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\ReservationScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\ReservationScreen.Designer.cs">
+      <DependentUpon>ReservationScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Screens\GuestsScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -272,6 +278,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\ReservationScreen.resx">
+      <DependentUpon>ReservationScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\GuestsScreen.resx">
       <DependentUpon>GuestsScreen.cs</DependentUpon>

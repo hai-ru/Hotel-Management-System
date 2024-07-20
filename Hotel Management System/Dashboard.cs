@@ -98,7 +98,7 @@ namespace Hotel_Management_System
 
         private void guna2Button2_Click_1(object sender, EventArgs e)
         {
-
+            loadForm(new ReservationScreen());
         }
     }
 }

@@ -59,7 +59,7 @@ namespace Hotel_Management_System.Controllers
         {
             if (roomsTable.Columns[e.ColumnIndex].Name == "TODAY AVAILABLE" && e.Value != null)
             {
-                if (e.Value.ToString() == "1")
+                if (e.Value.ToString() == "0")
                 {
                     e.CellStyle.BackColor = Color.Yellow;
                 }

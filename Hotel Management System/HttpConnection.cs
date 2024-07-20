@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Runtime.CompilerServices;
+using Microsoft.Office.Interop.Excel;
 
 public class ApiResponse
 {
@@ -197,7 +198,55 @@ namespace Hotel_Management_System
             }
             return resultData;
         }
+        public async Task<HttpData> GetReservationList(string date = null)
+        {
 
+            HttpData resultData = new HttpData();
+
+            resultData.status = false;
+            resultData.message = "";
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string token = Properties.Settings.Default.Token;
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    dynamic content = null;
+
+                    if (date != null)
+                    {
+                        var valContent = new Dictionary<string, string>();
+                        valContent.Add("date", date);
+                    }
+
+                    HttpResponseMessage response = await client.GetAsync(BaseUrl + "/hotel/reservasi/list");
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+
+                        dynamic data = JsonConvert.DeserializeObject(responseContent);
+                        resultData.status = data.status;
+                        resultData.data = data.data;
+
+                    }
+                    catch (Newtonsoft.Json.JsonException ex)
+                    {
+                        resultData.status = false;
+                        resultData.message = ex.Message;
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                resultData.status = false;
+                resultData.message = ex.Message;
+            }
+
+            return resultData;
+        }
         public async Task<HttpData> GetCustomerList()
         {
 
@@ -213,7 +262,12 @@ namespace Hotel_Management_System
                     string token = Properties.Settings.Default.Token;
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/customers", null);
+                    var valContent = new Dictionary<string, string>();
+                    valContent.Add("hotel", "1");
+
+                    var content = new FormUrlEncodedContent(valContent);
+
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/customers", content);
 
                     var responseContent = await response.Content.ReadAsStringAsync();
                     try
@@ -410,7 +464,7 @@ namespace Hotel_Management_System
 
             return resultData;
         }
-        public async Task<HttpData> StoreCheckin(string contact_id, string lamainap, string room_product_id, string harga_total, string payment_amount, string payment_method, string ota, string deposit)
+        public async Task<HttpData> StoreCheckin(string contact_id, string lamainap, string room_product_id, string harga_total, string payment_amount, string payment_method, string ota, string deposit, string staff_note="")
         {
             HttpData resultData = new HttpData();
 
@@ -435,7 +489,7 @@ namespace Hotel_Management_System
                         is_direct_sale = 1,
                         location_id = 0,
                         sub_type = (string)null,
-                        contact_id = contact_id,
+                        contact_id,
                         search_product = (object)null,
                         pay_term_number = int.Parse(lamainap),
                         pay_term_type = "days",
@@ -489,7 +543,7 @@ namespace Hotel_Management_System
                     }
                 },
                         sale_note = "",
-                        staff_note = "",
+                        staff_note,
                         change_return = 0.00,
                         additional_notes = "",
                         is_suspend = 0,
@@ -544,9 +598,180 @@ namespace Hotel_Management_System
 
             return resultData;
         }
+        public async Task<HttpData> UpdateCheckin(string id, string amount, string productId, string notes, string service_custom_field_3)
+        {
+            HttpData resultData = new HttpData();
 
 
+            resultData.status = false;
+            resultData.message = "";
 
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string token = Properties.Settings.Default.Token;
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    // Calculate deposit from payment_amount - harga_total
+                    //int deposit = int.Parse(payment_amount) - int.Parse(harga_total);
+
+                    // Construct JSON payload
+                    var payload = new
+                    {
+                        id,
+                        amount,
+                        productId,
+                        notes,
+                        service_custom_field_3
+                    };
+
+                    var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/hotel/reservasi/store", content);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+                        dynamic data = JsonConvert.DeserializeObject(responseContent);
+                        resultData.status = data.status;
+                        resultData.message = data.message;
+                        resultData.data = data.data;
+
+                        Console.WriteLine(data);
+                    }
+                    catch (Newtonsoft.Json.JsonException ex)
+                    {
+                        resultData.status = false;
+                        resultData.message = ex.Message;
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                resultData.status = false;
+                resultData.message = ex.Message;
+            }
+
+            return resultData;
+        }
+        public async Task<HttpData> StoreReservation(string harga, string checkin, string checkout, string durasi, string contact_id, string ota)
+        {
+            HttpData resultData = new HttpData();
+
+            resultData.status = false;
+            resultData.message = "";
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string token = Properties.Settings.Default.Token;
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    // Calculate deposit from payment_amount - harga_total
+                    //int deposit = int.Parse(payment_amount) - int.Parse(harga_total);
+
+                    // Construct JSON payload
+                    var payload = new
+                    {
+                        insert = 1,
+                        harga,
+                        checkin,
+                        checkout,
+                        durasi,
+                        contact_id,
+                        ota
+                    };
+
+                    var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/hotel/reservasi/store", content);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+                        dynamic data = JsonConvert.DeserializeObject(responseContent);
+                        resultData.status = data.status;
+                        resultData.message = data.message;
+                        resultData.data = data.data;
+
+                        Console.WriteLine(data);
+                    }
+                    catch (Newtonsoft.Json.JsonException ex)
+                    {
+                        resultData.status = false;
+                        resultData.message = ex.Message;
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                resultData.status = false;
+                resultData.message = ex.Message;
+            }
+
+            return resultData;
+        }
+        public async Task<HttpData> UpdateReservation(string harga, string checkin, string checkout, string durasi, string contact_id, string ota)
+        {
+            HttpData resultData = new HttpData();
+
+
+            resultData.status = false;
+            resultData.message = "";
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string token = Properties.Settings.Default.Token;
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    // Calculate deposit from payment_amount - harga_total
+                    //int deposit = int.Parse(payment_amount) - int.Parse(harga_total);
+
+                    // Construct JSON payload
+                    var payload = new
+                    {
+                        update = 1,
+                        harga,
+                        checkin,
+                        checkout,
+                        durasi,
+                        contact_id,
+                        ota
+                    };
+
+                    var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/hotel/reservasi/store", content);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+                        dynamic data = JsonConvert.DeserializeObject(responseContent);
+                        resultData.status = data.status;
+                        resultData.message = data.message;
+                        resultData.data = data.data;
+
+                        Console.WriteLine(data);
+                    }
+                    catch (Newtonsoft.Json.JsonException ex)
+                    {
+                        resultData.status = false;
+                        resultData.message = ex.Message;
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                resultData.status = false;
+                resultData.message = ex.Message;
+            }
+
+            return resultData;
+        }
         public async Task<HttpData> GetCheckinList(string date = null,string status = null)
         {
 

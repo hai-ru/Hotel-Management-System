@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -229,9 +230,69 @@ namespace Hotel_Management_System.Controllers
         }
 
 
-        private void searchButton_Click(object sender, EventArgs e)
+        private async void updateButton_Click(object sender, EventArgs e)
         {
-            clearFields();
+            if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
+    roomIdCMBox.SelectedIndex != -1)
+            {
+                // Extract values from form fields
+                var selectedGuest = guestIdCMBox.SelectedItem as Guest;
+                var selectedRoom = roomIdCMBox.SelectedItem as Room;
+
+                string contact_id = selectedGuest?.Id.ToString();
+                string lamainap = (DateTime.Parse(checkoutPicker.Text) - DateTime.Parse(checkinPicker.Text)).Days.ToString();
+                string room_product_id = selectedRoom?.ProductId.ToString();
+                // Trim non-numeric characters from amountField.Text and depositField.Text
+                string harga_total = string.Concat(amountField.Text.Where(char.IsDigit));
+                string payment_amount = string.Concat(depositField.Text.Where(char.IsDigit));
+                string deposit = string.Concat(depositTextBox1.Text.Where(char.IsDigit));
+
+                string notes = noteTextBox.Text;
+
+                if (paymentComboBox.SelectedItem == null)
+                {
+                    MessageBox.Show("Silahkan pilih metode pembayaran yang di lakukan");
+                    return;
+                }
+
+                string payment_method = paymentComboBox.SelectedItem.ToString();
+                string ota = otaComboBox.SelectedItem == null ? "" : otaComboBox.SelectedItem.ToString();
+
+                // Call StoreCheckin method
+                HttpData result = await conn.StoreCheckin(contact_id, lamainap, room_product_id, harga_total, payment_amount, payment_method, ota, deposit, notes);
+
+                // Handle the response
+                if (result.status)
+                {
+                    MessageBox.Show("Booking inserted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // Perform additional actions such as clearing fields, updating UI, etc.
+                    clearFields();
+                    guestIdCMBox.Items.Clear();
+                    populateGuestComboBoxAsync();
+                    refreshTable();
+
+                    // Create a new WebBrowser instance
+                    WebBrowser myWebBrowser = new WebBrowser();
+                    myWebBrowser.DocumentCompleted += myWebBrowser_DocumentCompleted;
+
+                    // Get the HTML content from the response
+                    string htmlContent = result.data.receipt.html_content;
+
+                    // Set the HTML content directly to the WebBrowser
+                    myWebBrowser.DocumentText = htmlContent;
+
+                    // Print the content
+                    myWebBrowser.Print();
+                }
+                else
+                {
+                    MessageBox.Show(result.message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("All fields must be filled.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void guna2CircleButton1_Click(object sender, EventArgs e)
@@ -284,6 +345,87 @@ namespace Hotel_Management_System.Controllers
             }
         }
 
+        private void bookingTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                var row = bookingTable.SelectedRows[0];
+                depositTextBox1.Text = row.Cells[2].Value.ToString();
+                amountField.Text = row.Cells[3].Value.ToString();
+                depositField.Text = row.Cells[4].Value.ToString();
+                string guestName = row.Cells[11].Value.ToString();
+                string roomName = row.Cells[10].Value.ToString();
+                string methodName = row.Cells[6].Value.ToString();
+                string otaName = row.Cells[7].Value.ToString();
+
+                string checkinDateVal = row.Cells[8].Value.ToString(); // the format is dd/MM/yyyy
+                string checkoutDateVal = row.Cells[12].Value.ToString(); // the format is dd/MM/yyyy
+
+                // Convert the date format from dd/MM/yyyy to DateTime
+                DateTime checkinDate = DateTime.ParseExact(checkinDateVal, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                DateTime checkoutDate = DateTime.ParseExact(checkoutDateVal, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+
+                // Set the date pickers
+                checkinPicker.Value = checkinDate;
+                checkoutPicker.Value = checkoutDate;
+
+                // Find and select the guest
+                var selectedGuest = guests.FirstOrDefault(guest => guest.Name == guestName);
+                if (selectedGuest != null)
+                {
+                    guestIdCMBox.SelectedItem = selectedGuest; // Assuming guestIdCMBox is data-bound to guest IDs
+                }
+                else
+                {
+                    // Handle the case where the guest is not found (optional)
+                    MessageBox.Show("Guest not found");
+                }
+
+                // Find and select the room
+                var selectedRoom = rooms.FirstOrDefault(room => room.Name == roomName);
+                if (selectedRoom != null)
+                {
+                    roomIdCMBox.SelectedItem = selectedRoom;
+                }
+                else
+                {
+                    MessageBox.Show("Room not found");
+                }
+
+                // Find and select the payment method
+                var selectedMethod = paymentMethods.FirstOrDefault(payment => payment.label == methodName);
+                if (selectedMethod != null)
+                {
+                    paymentComboBox.SelectedItem = selectedMethod;
+                }
+                else
+                {
+                    MessageBox.Show("Method not found");
+                }
+
+                // Find and select the OTA
+                var selectedOta = otas.FirstOrDefault(ota => ota.label == otaName);
+                if (selectedOta != null)
+                {
+                    otaComboBox.SelectedItem = selectedOta;
+                }
+                else
+                {
+                    MessageBox.Show("OTA not found");
+                }
+            }
+            catch (FormatException ex)
+            {
+                MessageBox.Show("Date format is incorrect. Please check the date format in the data source.");
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred while processing the data.");
+                Console.WriteLine(ex.Message);
+            }
+        }
+
 
         private async void addButton_Click(object sender, EventArgs e)
         {
@@ -294,7 +436,7 @@ namespace Hotel_Management_System.Controllers
                 var selectedGuest = guestIdCMBox.SelectedItem as Guest; 
                 var selectedRoom = roomIdCMBox.SelectedItem as Room;
 
-                string contact_id = selectedGuest?.id.ToString();
+                string contact_id = selectedGuest?.Id.ToString();
                 string lamainap = (DateTime.Parse(checkoutPicker.Text) - DateTime.Parse(checkinPicker.Text)).Days.ToString();
                 string room_product_id = selectedRoom?.ProductId.ToString();
                 // Trim non-numeric characters from amountField.Text and depositField.Text
@@ -311,9 +453,11 @@ namespace Hotel_Management_System.Controllers
                 string payment_method = paymentComboBox.SelectedItem.ToString();
                 string ota = otaComboBox.SelectedItem == null ? "" : otaComboBox.SelectedItem.ToString();
 
+                string notes = noteTextBox.Text;
+
 
                 // Call StoreCheckin method
-                HttpData result = await conn.StoreCheckin(contact_id, lamainap, room_product_id, harga_total, payment_amount, payment_method, ota, deposit);
+                HttpData result = await conn.StoreCheckin(contact_id, lamainap, room_product_id, harga_total, payment_amount, payment_method, ota, deposit, notes);
 
                 // Handle the response
                 if (result.status)
@@ -445,33 +589,6 @@ namespace Hotel_Management_System.Controllers
         {
             amountField.Text = getAmount().ToString();
             addButton.Enabled = true;
-        }
-
-        private void updateButton_Click(object sender, EventArgs e)
-        {
-            //if (bookingIdField.Text == "")
-            //{
-            //    MessageBox.Show("Please enter id to update record.", "Missing Info", MessageBoxButtons.OK);
-            //}
-            //else
-            //{
-            //    query = "UPDATE Bookings.Booking SET CheckInDate = '" + checkinPicker.Text + "', CheckOutDate = '" + checkoutPicker.Text + "' WHERE BookingId = " + int.Parse(bookingIdField.Text);
-            //    dc.setData(query, "Record updated successfully.");
-            //    clearFields();
-            //    populateTable();
-            //}
-        }
-
-        private void bookingTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            //fetchBookingRecord(1);
-            //durasi_menginap = int.Parse( bookingTable.SelectedRows[0].Cells[6].Value.ToString() );
-            //string pelanggan = bookingTable.SelectedRows[0].Cells[8].Value.ToString();
-            //int dataIndex = Array.FindIndex(guests, c => c.text.ToString().Contains(pelanggan));
-            //guestIdCMBox.SelectedIndex = dataIndex;
-            //string no_kamar = bookingTable.SelectedRows[0].Cells[7].Value.ToString();
-            //int indexKamar = Array.FindIndex(rooms, c => c.Name.ToString() == no_kamar);
-            //roomIdCMBox.SelectedIndex = indexKamar;
         }
 
         private void fetchBookingRecord(int i)
@@ -801,12 +918,18 @@ namespace Hotel_Management_System.Controllers
 
         public class Guest
         {
-            public string id;
-            public string text;
+            [JsonProperty("ID")]
+            public int Id { get; set; }
+
+            [JsonProperty("NAME")]
+            public string Name { get; set; }
+
+            [JsonProperty("BRAND NAME")]
+            public string Type { get; set; }
 
             public override string ToString()
             {
-                return text; // Display the guest name in combobox
+                return Name; // Display the guest name in combobox
             }
         }
 
