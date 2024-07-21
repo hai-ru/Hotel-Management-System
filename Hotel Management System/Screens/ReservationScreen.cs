@@ -128,8 +128,13 @@ namespace Hotel_Management_System.Screens
         private void ReservationScreen_Load(object sender, EventArgs e)
         {
             FilterTableCheckinDate.Value = DateTime.Today;
+            checkinPicker.Value = DateTime.Today;
+            checkoutPicker.Value = DateTime.Today.AddDays(1);
+
+
+
             populateGuestComboBoxAsync();
-            refreshTable(FilterTableCheckinDate.Value.ToString("yyyy-MM-dd"));
+            refreshTable();
             populateOTAComboBoxAsync();
             populatePaymentMethodComboBoxAsync();
         }
@@ -139,8 +144,30 @@ namespace Hotel_Management_System.Screens
 
         }
 
+        private Boolean ValidationCheckinCheckout()
+        {
+            if(checkinPicker.Value < DateTime.Today)
+            {
+                MessageBox.Show("Tgl checkin tidak boleh kurang dari hari ini...");
+                return false;
+            }
+            
+            if(checkoutPicker.Value <= checkinPicker.Value)
+            {
+                MessageBox.Show("Tgl checkout tidak boleh kurang atau sama dengan hari ini...");
+                return false;
+            }
+
+            return true;
+        }
+
         private async void addButton_Click(object sender, EventArgs e)
         {
+            if (!ValidationCheckinCheckout())
+            {
+                return;
+            }
+
             if (guestSelect.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
                otaComboBox.SelectedIndex != 1)
             {
@@ -264,6 +291,11 @@ namespace Hotel_Management_System.Screens
 
         private async void updateButton_Click(object sender, EventArgs e)
         {
+            if (!ValidationCheckinCheckout())
+            {
+                return;
+            }
+
             if (guestSelect.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
                  otaComboBox.SelectedIndex != 1)
             {
