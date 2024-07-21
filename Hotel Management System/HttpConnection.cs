@@ -223,15 +223,23 @@ namespace Hotel_Management_System
                     string token = Properties.Settings.Default.Token;
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    dynamic content = null;
+                    //dynamic content = null;
 
-                    if (date != null)
+                    //if (date != null && date != "")
+                    //{
+                    //    var valContent = new Dictionary<string, string>();
+                    //    valContent.Add("date", date);
+                    //}
+
+                    string link = BaseUrl + "/hotel/reservasi/list";
+
+                    if (date != null && date != "")
                     {
-                        var valContent = new Dictionary<string, string>();
-                        valContent.Add("date", date);
+                        link += "?date=" + date;
                     }
 
-                    HttpResponseMessage response = await client.GetAsync(BaseUrl + "/hotel/reservasi/list");
+
+                    HttpResponseMessage response = await client.GetAsync(link);
 
                     var responseContent = await response.Content.ReadAsStringAsync();
                     try

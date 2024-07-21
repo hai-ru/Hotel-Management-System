@@ -69,7 +69,7 @@ namespace Hotel_Management_System.Screens
             otaComboBox.SelectedIndex = -1;
         }
 
-        private async void refreshTable(string date = null)
+        private async void refreshTable(string date = "")
         {
             HttpData result = await conn.GetReservationList(date);
             if (!result.status)
@@ -359,6 +359,16 @@ namespace Hotel_Management_System.Screens
         private void deleteButton_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void FilterTableCheckinDate_ValueChanged(object sender, EventArgs e)
+        {
+            refreshTable(FilterTableCheckinDate.Value.ToString("yyyy-MM-dd"));
+        }
+
+        private void guna2Button1_Click(object sender, EventArgs e)
+        {
+            refreshTable();
         }
     }
 }
