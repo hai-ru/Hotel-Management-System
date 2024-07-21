@@ -350,16 +350,16 @@ namespace Hotel_Management_System.Controllers
             try
             {
                 var row = bookingTable.SelectedRows[0];
-                depositTextBox1.Text = row.Cells[2].Value.ToString();
-                amountField.Text = row.Cells[3].Value.ToString();
-                depositField.Text = row.Cells[4].Value.ToString();
-                string guestName = row.Cells[11].Value.ToString();
-                string roomName = row.Cells[10].Value.ToString();
-                string methodName = row.Cells[6].Value.ToString();
-                string otaName = row.Cells[7].Value.ToString();
+                depositTextBox1.Text = row.Cells[1].Value.ToString();
+                amountField.Text = row.Cells[2].Value.ToString();
+                depositField.Text = row.Cells[3].Value.ToString();
+                string guestName = row.Cells[10].Value.ToString();
+                string roomName = row.Cells[9].Value.ToString();
+                string methodName = row.Cells[5].Value.ToString();
+                string otaName = row.Cells[6].Value.ToString();
 
-                string checkinDateVal = row.Cells[8].Value.ToString(); // the format is dd/MM/yyyy
-                string checkoutDateVal = row.Cells[12].Value.ToString(); // the format is dd/MM/yyyy
+                string checkinDateVal = row.Cells[7].Value.ToString(); // the format is dd/MM/yyyy
+                string checkoutDateVal = row.Cells[11].Value.ToString(); // the format is dd/MM/yyyy
 
                 // Convert the date format from dd/MM/yyyy to DateTime
                 DateTime checkinDate = DateTime.ParseExact(checkinDateVal, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
