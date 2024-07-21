@@ -164,6 +164,12 @@
     <Compile Include="Screens\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\HistoryScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\HistoryScreen.Designer.cs">
+      <DependentUpon>HistoryScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Screens\ReservationScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -278,6 +284,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\HistoryScreen.resx">
+      <DependentUpon>HistoryScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\ReservationScreen.resx">
       <DependentUpon>ReservationScreen.cs</DependentUpon>

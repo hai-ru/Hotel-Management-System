@@ -100,5 +100,10 @@ namespace Hotel_Management_System
         {
             loadForm(new ReservationScreen());
         }
+
+        private void guna2Button7_Click(object sender, EventArgs e)
+        {
+            loadForm(new HistoryScreen());
+        }
     }
 }
