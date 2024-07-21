@@ -65,7 +65,7 @@ namespace Hotel_Management_System.Screens
             checkinPicker.Text = "";
             checkoutPicker.Text = "";
             amountField.Text = "";
-            paymentComboBox.SelectedIndex = -1;
+            //paymentComboBox.SelectedIndex = -1;
             otaComboBox.SelectedIndex = -1;
         }
 
@@ -114,15 +114,15 @@ namespace Hotel_Management_System.Screens
 
             // Deserialize JSON string directly to Payment array
             paymentMethods = JsonConvert.DeserializeObject<PaymentMethod[]>(result.data.ToString());
-            paymentComboBox.Items.Clear();
+            //paymentComboBox.Items.Clear();
 
-            // Bind rooms to roomIdCMBox
-            paymentComboBox.DisplayMember = "label"; // Set the DisplayMember to "label" property
+            //// Bind rooms to roomIdCMBox
+            //paymentComboBox.DisplayMember = "label"; // Set the DisplayMember to "label" property
 
-            foreach (PaymentMethod paymentMethod in paymentMethods)
-            {
-                paymentComboBox.Items.Add(paymentMethod); // Add payment to combo box
-            }
+            //foreach (PaymentMethod paymentMethod in paymentMethods)
+            //{
+            //    paymentComboBox.Items.Add(paymentMethod); // Add payment to combo box
+            //}
         }
 
         private void ReservationScreen_Load(object sender, EventArgs e)
@@ -142,7 +142,7 @@ namespace Hotel_Management_System.Screens
         private async void addButton_Click(object sender, EventArgs e)
         {
             if (guestSelect.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
-               paymentComboBox.SelectedIndex != 1 && otaComboBox.SelectedIndex != 1)
+               otaComboBox.SelectedIndex != 1)
             {
                 // Extract values from form fields
                 var selectedGuest = guestSelect.SelectedItem as Guest;
@@ -152,13 +152,14 @@ namespace Hotel_Management_System.Screens
                 // Trim non-numeric characters from amountField.Text and depositField.Text
                 string harga_total = string.Concat(amountField.Text.Where(char.IsDigit));
 
-                if (paymentComboBox.SelectedItem == null)
-                {
-                    MessageBox.Show("Silahkan pilih metode pembayaran yang di lakukan");
-                    return;
-                }
+                //if (paymentComboBox.SelectedItem == null)
+                //{
+                //    MessageBox.Show("Silahkan pilih metode pembayaran yang di lakukan");
+                //    return;
+                //}
 
-                string payment_method = paymentComboBox.SelectedItem.ToString();
+                //string payment_method = paymentComboBox.SelectedItem.ToString();
+
                 string ota = otaComboBox.SelectedItem == null ? "" : otaComboBox.SelectedItem.ToString();
 
 
@@ -264,7 +265,7 @@ namespace Hotel_Management_System.Screens
         private async void updateButton_Click(object sender, EventArgs e)
         {
             if (guestSelect.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
-      paymentComboBox.SelectedIndex != 1 && otaComboBox.SelectedIndex != 1)
+                 otaComboBox.SelectedIndex != 1)
             {
                 // Extract values from form fields
                 var selectedGuest = guestSelect.SelectedItem as Guest;
@@ -274,13 +275,14 @@ namespace Hotel_Management_System.Screens
                 // Trim non-numeric characters from amountField.Text and depositField.Text
                 string harga_total = string.Concat(amountField.Text.Where(char.IsDigit));
 
-                if (paymentComboBox.SelectedItem == null)
-                {
-                    MessageBox.Show("Silahkan pilih metode pembayaran yang di lakukan");
-                    return;
-                }
+                //if (paymentComboBox.SelectedItem == null)
+                //{
+                //    MessageBox.Show("Silahkan pilih metode pembayaran yang di lakukan");
+                //    return;
+                //}
 
-                string payment_method = paymentComboBox.SelectedItem.ToString();
+                //string payment_method = paymentComboBox.SelectedItem.ToString();
+
                 string ota = otaComboBox.SelectedItem == null ? "" : otaComboBox.SelectedItem.ToString();
 
 
