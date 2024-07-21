@@ -211,12 +211,12 @@ namespace Hotel_Management_System.Screens
             {
                 var row = bookingTable.SelectedRows[0];
                 amountField.Text = row.Cells[1].Value.ToString();
-                string guestId = row.Cells[5].Value.ToString();
+                string guestId = row.Cells[3].Value.ToString();
                 //string methodName = row.Cells[6].Value.ToString();
-                string otaName = row.Cells[8].Value.ToString();
+                string otaName = row.Cells[2].Value.ToString();
 
-                string checkinDateVal = row.Cells[2].Value.ToString();
-                string checkoutDateVal = row.Cells[3].Value.ToString(); 
+                string checkinDateVal = row.Cells[7].Value.ToString();
+                string checkoutDateVal = row.Cells[8].Value.ToString(); 
 
                 // Convert the date to DateTime
                 DateTime checkinDate = DateTime.Parse(checkinDateVal);

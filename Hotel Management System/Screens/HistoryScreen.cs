@@ -316,5 +316,11 @@ namespace Hotel_Management_System.Screens
         {
 
         }
+
+        private void guna2Button1_Click(object sender, EventArgs e)
+        {
+            Form2 form2 = new Form2("https://development.norapos.com");
+            form2.Show();
+        }
     }
 }

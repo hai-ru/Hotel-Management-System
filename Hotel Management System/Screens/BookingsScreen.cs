@@ -984,6 +984,11 @@ namespace Hotel_Management_System.Controllers
 
         private void guna2Button1_Click(object sender, EventArgs e)
         {
+            if(roomIdCMBox.SelectedItem == null)
+            {
+                MessageBox.Show("Silahkan pilih data pada tabel terlebih dahulu");
+                return;
+            }
             var selectedRoom = roomIdCMBox.SelectedItem as Room;
             Boolean res = onity.createCard(selectedRoom.SubSku, durasi_menginap);
             if (res)
@@ -1052,5 +1057,7 @@ namespace Hotel_Management_System.Controllers
                 }
             }
         }
+
+       
     }
 }
