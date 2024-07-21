@@ -19,7 +19,7 @@ namespace Hotel_Management_System.Controllers
         DatabaseConnection dc = new DatabaseConnection();
         String query;
 
-        DateTime filterDate = DateTime.Today;
+        //DateTime filterDate = DateTime.Today;
 
         HttpConnection conn = new HttpConnection();
 
@@ -94,14 +94,13 @@ namespace Hotel_Management_System.Controllers
         private void CheckoutScreen_Load(object sender, EventArgs e)
         {
             DateTime today = DateTime.Today;
-            filterDate = today;
             FilterTableCheckoutDate.Value = today;
-            refreshTable();
+            refreshTable(null);
         }
 
-        private async void refreshTable()
+        private async void refreshTable(string date = null)
         {
-            string date = filterDate.ToString("yyyy-MM-dd");
+            //string date = filterDate.ToString("yyyy-MM-dd");
             HttpData result = await conn.GetCheckinList(date);
             if (!result.status)
             {
@@ -199,11 +198,11 @@ namespace Hotel_Management_System.Controllers
             //populateTable();
             //fetchData(1);
             paymentIdField.Text = checkoutTable.SelectedRows[0].Cells[0].Value.ToString();
-            namaField.Text = checkoutTable.SelectedRows[0].Cells[8].Value.ToString();
-            depositField.Text = checkoutTable.SelectedRows[0].Cells[2].Value.ToString();
-            totalTagihanField.Text = checkoutTable.SelectedRows[0].Cells[3].Value.ToString();
-            telahbayarTextBox1.Text = checkoutTable.SelectedRows[0].Cells[4].Value.ToString();
-            sisaField.Text = checkoutTable.SelectedRows[0].Cells[5].Value.ToString();
+            namaField.Text = checkoutTable.SelectedRows[0].Cells[10].Value.ToString();
+            depositField.Text = checkoutTable.SelectedRows[0].Cells[1].Value.ToString();
+            totalTagihanField.Text = checkoutTable.SelectedRows[0].Cells[2].Value.ToString();
+            telahbayarTextBox1.Text = checkoutTable.SelectedRows[0].Cells[3].Value.ToString();
+            sisaField.Text = checkoutTable.SelectedRows[0].Cells[4].Value.ToString();
             payButton.Enabled = true;
         }
 
@@ -251,8 +250,8 @@ namespace Hotel_Management_System.Controllers
 
         private void FilterTableCheckoutDate_ValueChanged(object sender, EventArgs e)
         {
-            filterDate = FilterTableCheckoutDate.Value;
-            refreshTable();
+            string date = FilterTableCheckoutDate.Value.ToString("yyyy-MM-dd");
+            refreshTable(date);
         }
 
         private void label5_Click(object sender, EventArgs e)
@@ -327,6 +326,11 @@ namespace Hotel_Management_System.Controllers
                     textBox.SelectionStart = Math.Max(0, Math.Min(newCursorPosition, newTextLength));
                 }
             }
+        }
+
+        private void guna2Button1_Click(object sender, EventArgs e)
+        {
+            refreshTable(null);
         }
     }
 }

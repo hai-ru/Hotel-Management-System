@@ -27,6 +27,7 @@ namespace Hotel_Management_System.Controllers
         OnityConnection onity = new OnityConnection();
 
         Guest[] guests = new Guest[] { };
+        Reservation[] reservasi = new Reservation[] { };
         Room[] rooms = new Room[] { };
         Ota[] otas = new Ota[] { };
         PaymentMethod[] paymentMethods = new PaymentMethod[] { };
@@ -91,6 +92,28 @@ namespace Hotel_Management_System.Controllers
             }
         }
 
+        private async void populateReservasiComboBoxAsync()
+        {
+            HttpData result = await conn.GetReservationList();
+            if (!result.status)
+            {
+                MessageBox.Show(result.message);
+                return;
+            }
+
+            // Deserialize JSON string directly to Guest array
+            reservasi = JsonConvert.DeserializeObject<Reservation[]>(result.data.ToString());
+            reservasiCb.Items.Clear();
+
+            // Bind rooms to roomIdCMBox
+            reservasiCb.DisplayMember = "text"; // Set the DisplayMember to "text" property
+
+            foreach (Reservation data in reservasi)
+            {
+                reservasiCb.Items.Add(data); // Add guest to combo box
+            }
+        }
+
         private async void populateOTAComboBoxAsync()
         {
             HttpData result = await conn.GetOTAList();
@@ -151,7 +174,7 @@ namespace Hotel_Management_System.Controllers
 
         private async void populateRoomAsync()
         {
-            HttpData result = await conn.GetRoomList();
+            HttpData result = await conn.GetRoomList(true);
             if (!result.status)
             {
                 MessageBox.Show(result.message);
@@ -204,11 +227,18 @@ namespace Hotel_Management_System.Controllers
         private void BookingsScreen_Load(object sender, EventArgs e)
         {
             FilterTableCheckinDate.Value = DateTime.Today;
+
+            checkinPicker.Value = DateTime.Today;
+
+            checkoutPicker.Value = DateTime.Today.AddDays(1);
+
+
             populateGuestComboBoxAsync();
             populateRoomAsync();
-            refreshTable(FilterTableCheckinDate.Value.ToString("yyyy-MM-dd"));
+            refreshTable(null);
             populateOTAComboBoxAsync();
             populatePaymentMethodComboBoxAsync();
+            populateReservasiComboBoxAsync();
         }
 
         private async void refreshTable(string date = null)
@@ -303,12 +333,19 @@ namespace Hotel_Management_System.Controllers
 
         private void clearFields()
         {
-            //bookingIdField.Text = "";
+            bookingIdField.Text = "";
             guestIdCMBox.SelectedIndex = -1;
             checkinPicker.Text = "";
             checkoutPicker.Text = "";
             roomIdCMBox.SelectedIndex = -1;
             amountField.Text = "";
+            depositField.Text = "";
+            depositTextBox1.Text = "";
+            noteTextBox.Text = "";
+            otaComboBox.SelectedIndex = -1;
+            paymentComboBox.SelectedIndex = -1;
+            reservasiCb.SelectedIndex = -1;
+            addButton.Enabled = true;
         }
 
         //private void addButton_Click(object sender, EventArgs e)
@@ -350,16 +387,18 @@ namespace Hotel_Management_System.Controllers
             try
             {
                 var row = bookingTable.SelectedRows[0];
-                depositTextBox1.Text = row.Cells[2].Value.ToString();
-                amountField.Text = row.Cells[3].Value.ToString();
-                depositField.Text = row.Cells[4].Value.ToString();
-                string guestName = row.Cells[11].Value.ToString();
-                string roomName = row.Cells[10].Value.ToString();
-                string methodName = row.Cells[6].Value.ToString();
-                string otaName = row.Cells[7].Value.ToString();
+                depositTextBox1.Text = row.Cells[1].Value.ToString();
+                amountField.Text = row.Cells[2].Value.ToString();
+                depositField.Text = row.Cells[3].Value.ToString();
+                noteTextBox.Text = row.Cells[12].Value.ToString();
 
-                string checkinDateVal = row.Cells[8].Value.ToString(); // the format is dd/MM/yyyy
-                string checkoutDateVal = row.Cells[12].Value.ToString(); // the format is dd/MM/yyyy
+                string guestName = row.Cells[10].Value.ToString();
+                string roomName = row.Cells[9].Value.ToString();
+                string methodName = row.Cells[5].Value.ToString();
+                string otaName = row.Cells[6].Value.ToString();
+
+                string checkinDateVal = row.Cells[7].Value.ToString(); // the format is dd/MM/yyyy
+                string checkoutDateVal = row.Cells[11].Value.ToString(); // the format is dd/MM/yyyy
 
                 // Convert the date format from dd/MM/yyyy to DateTime
                 DateTime checkinDate = DateTime.ParseExact(checkinDateVal, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
@@ -411,8 +450,10 @@ namespace Hotel_Management_System.Controllers
                 }
                 else
                 {
-                    MessageBox.Show("OTA not found");
+                    //MessageBox.Show("OTA not found");
                 }
+
+                addButton.Enabled = false;
             }
             catch (FormatException ex)
             {
@@ -432,12 +473,23 @@ namespace Hotel_Management_System.Controllers
             if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
                 roomIdCMBox.SelectedIndex != -1)
                 {
+
+
+                var durasi = (DateTime.Parse(checkoutPicker.Text) - DateTime.Parse(checkinPicker.Text)).Days;
+                if (durasi <= 0)
+                {
+                    MessageBox.Show("Tanggal checkout tidak boleh kurang dari hari ini");
+                    return;
+                }
+
                 // Extract values from form fields
                 var selectedGuest = guestIdCMBox.SelectedItem as Guest; 
                 var selectedRoom = roomIdCMBox.SelectedItem as Room;
 
                 string contact_id = selectedGuest?.Id.ToString();
-                string lamainap = (DateTime.Parse(checkoutPicker.Text) - DateTime.Parse(checkinPicker.Text)).Days.ToString();
+
+                string lamainap = durasi.ToString();
+
                 string room_product_id = selectedRoom?.ProductId.ToString();
                 // Trim non-numeric characters from amountField.Text and depositField.Text
                 string harga_total = string.Concat(amountField.Text.Where(char.IsDigit));
@@ -455,9 +507,13 @@ namespace Hotel_Management_System.Controllers
 
                 string notes = noteTextBox.Text;
 
+                var selectedReservasi = reservasiCb.SelectedItem as Reservation;
+
+                string reservation_id = selectedReservasi?.Id.ToString() ?? "";
+
 
                 // Call StoreCheckin method
-                HttpData result = await conn.StoreCheckin(contact_id, lamainap, room_product_id, harga_total, payment_amount, payment_method, ota, deposit, notes);
+                HttpData result = await conn.StoreCheckin(contact_id, lamainap, room_product_id, harga_total, payment_amount, payment_method, ota, deposit, notes, reservation_id);
 
                 // Handle the response
                 if (result.status)
@@ -469,18 +525,21 @@ namespace Hotel_Management_System.Controllers
                     populateGuestComboBoxAsync();
                     refreshTable();
 
-                    // Create a new WebBrowser instance
-                    WebBrowser myWebBrowser = new WebBrowser();
-                    myWebBrowser.DocumentCompleted += myWebBrowser_DocumentCompleted;
+                    populateReservasiComboBoxAsync();
+                    populateRoomAsync();
 
-                    // Get the HTML content from the response
-                    string htmlContent = result.data.receipt.html_content;
+                    //// Create a new WebBrowser instance
+                    //WebBrowser myWebBrowser = new WebBrowser();
+                    //myWebBrowser.DocumentCompleted += myWebBrowser_DocumentCompleted;
 
-                    // Set the HTML content directly to the WebBrowser
-                    myWebBrowser.DocumentText = htmlContent;
+                    //// Get the HTML content from the response
+                    //string htmlContent = result.data.receipt.html_content;
 
-                    // Print the content
-                    myWebBrowser.Print();
+                    //// Set the HTML content directly to the WebBrowser
+                    //myWebBrowser.DocumentText = htmlContent;
+
+                    //// Print the content
+                    //myWebBrowser.Print();
                 }
                 else
                 {
@@ -846,11 +905,13 @@ namespace Hotel_Management_System.Controllers
                 // Assuming unit_price is a numeric type like decimal, parse it accordingly
                 if (decimal.TryParse(selectedRoom.SellingPrice, out decimal price))
                 {
-                    amountField.Text = price.ToString(); // Set amountField to room's unit price
-                    amountField.ReadOnly = false;
-
-                    // Call CalculateAmount to update total amount based on selected room and dates
-                    CalculateAmount();
+                    if(reservasiCb.SelectedItem == null)
+                    {
+                        amountField.Text = price.ToString(); // Set amountField to room's unit price
+                        amountField.ReadOnly = false;
+                        // Call CalculateAmount to update total amount based on selected room and dates
+                        CalculateAmount();
+                    }
                 }
                 else
                 {
@@ -873,12 +934,14 @@ namespace Hotel_Management_System.Controllers
 
         private void checkinPicker_ValueChanged(object sender, EventArgs e)
         {
+            if (reservasiCb.SelectedItem == null)
             CalculateAmount();
         }
 
         private void checkoutPicker_ValueChanged(object sender, EventArgs e)
         {
-            CalculateAmount();
+            if (reservasiCb.SelectedItem == null)
+                CalculateAmount();
         }
 
         private void CalculateAmount()
@@ -933,6 +996,40 @@ namespace Hotel_Management_System.Controllers
             }
         }
 
+        public class Reservation
+        {
+            [JsonProperty("ID")]
+            public int Id { get; set; }
+
+            [JsonProperty("NAMA")]
+            public string Name { get; set; }
+
+            [JsonProperty("CHECK IN")]
+            public string Checkin { get; set; }
+
+            [JsonProperty("CHECK OUT")]
+            public string Checkout { get; set; }
+
+
+            [JsonProperty("LAMA MENGINAP")]
+            public int Durasi { get; set; }
+
+            [JsonProperty("CID")]
+            public int Contact_id { get; set; }
+
+            [JsonProperty("OTA")]
+            public string Ota { get; set; }
+
+            [JsonProperty("HARGA")]
+            public int Harga { get; set; }
+
+            public override string ToString()
+            {
+                string id = "(" + Id.ToString() + ")";
+                return Name+" "+id; // Display the guest name in combobox
+            }
+        }
+
         public class Room
         {
             [JsonProperty("id")]
@@ -941,22 +1038,27 @@ namespace Hotel_Management_System.Controllers
             [JsonProperty("ROOM NAME")]
             public string Name { get; set; }
 
-            [JsonProperty("BRAND NAME")]
+            [JsonProperty("TIPE KAMAR")]
             public string Type { get; set; }
 
             [JsonProperty("selling_price")]
             public string SellingPrice { get; set; }
 
-            [JsonProperty("unit_price")]
+            [JsonProperty("PRICE")]
             public string UnitPrice { get; set; }
 
-            [JsonProperty("sub_sku")]
-            public string SubSku { get; set; }
+            [JsonProperty("TODAY AVAILABLE")]
+            public string available { get; set; }
+
+            [JsonProperty("SKU")]
+            public string sku { get; set; }
 
             // Optional: You can keep the ToString method for displaying the room name
             public override string ToString()
             {
-                return Name; // Display the room name in combobox
+                string status = available == "1" ? "V" : "O";
+
+                return Name+" - "+Type+" ("+status+")"; // Display the room name in combobox
             }
         }
 
@@ -990,7 +1092,7 @@ namespace Hotel_Management_System.Controllers
                 return;
             }
             var selectedRoom = roomIdCMBox.SelectedItem as Room;
-            Boolean res = onity.createCard(selectedRoom.SubSku, durasi_menginap);
+            Boolean res = onity.createCard(selectedRoom.sku, durasi_menginap);
             if (res)
             {
                 MessageBox.Show("Berhasil");
@@ -1058,6 +1160,69 @@ namespace Hotel_Management_System.Controllers
             }
         }
 
-       
+        private void reservasiCb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (reservasiCb.SelectedItem is Reservation selectedReservasi)
+            {
+                // Assuming unit_price is a numeric type like decimal, parse it accordingly
+                if (selectedReservasi != null)
+                {
+                    amountField.Text = selectedReservasi.Harga.ToString(); // Set amountField to room's unit price
+                    amountField.ReadOnly = false;
+
+                    // Find and select the guest
+                    var selectedGuest = guests.FirstOrDefault(guest => selectedReservasi.Contact_id == guest.Id);
+                    if (selectedGuest != null)
+                    {
+                        guestIdCMBox.SelectedItem = selectedGuest; // Assuming guestIdCMBox is data-bound to guest IDs
+                    }
+                    else
+                    {
+                        // Handle the case where the guest is not found (optional)
+                        MessageBox.Show("Guest not found");
+                    }
+
+                    checkinPicker.Value = DateTime.Parse(selectedReservasi.Checkin);
+                    checkoutPicker.Value = DateTime.Parse(selectedReservasi.Checkout);
+
+                    // Find and select the guest
+                    var otaSelected = otas.FirstOrDefault(ota => selectedReservasi.Ota == ota.label);
+                    if (otaSelected != null)
+                    {
+                        otaComboBox.SelectedItem = otaSelected; // Assuming guestIdCMBox is data-bound to guest IDs
+                    }
+                    else
+                    {
+                        // Handle the case where the guest is not found (optional)
+                        //MessageBox.Show("OTA not found");
+                    }
+
+                    amountField.Text = selectedReservasi.Harga.ToString();
+
+                    // Call CalculateAmount to update total amount based on selected room and dates
+                    CalculateAmount();
+                }
+                else
+                {
+                    amountField.Text = "0"; // Handle default case if parsing fails
+                    amountField.ReadOnly = false;
+                }
+            }
+            else
+            {
+                amountField.Text = "0";
+                amountField.ReadOnly = false;
+            }
+        }
+
+        private void guna2Button3_Click(object sender, EventArgs e)
+        {
+            clearFields();
+        }
+
+        private void guna2Button4_Click(object sender, EventArgs e)
+        {
+            refreshTable(null);
+        }
     }
 }

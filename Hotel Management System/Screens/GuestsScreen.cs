@@ -80,6 +80,7 @@ namespace Hotel_Management_System.Controllers
             cityField.Text = "";
             provinsiField.Text = "";
             nikField.Text = "";
+            updateButton.Enabled = false;
         }
 
         private async void refreshTable(string search = "")
@@ -97,6 +98,7 @@ namespace Hotel_Management_System.Controllers
         private async void GuestsScreen_Load(object sender, EventArgs e)
         {
             refreshTable();
+            updateButton.Enabled = false;
         }
 
         private void searchButton_Click(object sender, EventArgs e)
@@ -149,6 +151,8 @@ namespace Hotel_Management_System.Controllers
 
             MessageBox.Show(result.message);
             refreshTable();
+            clearFields();
+            updateButton.Enabled = false;
         }
 
         private void retrieveData(int id)
@@ -216,8 +220,10 @@ namespace Hotel_Management_System.Controllers
                    guestIdField.Text
                );
 
-                    MessageBox.Show(result.message);
-                    refreshTable();
+                MessageBox.Show(result.message);
+                refreshTable();
+                clearFields();
+                updateButton.Enabled = false;
             }
         }
 
@@ -245,6 +251,7 @@ namespace Hotel_Management_System.Controllers
             cityField.Text = row.Cells[4].Value.ToString();
             provinsiField.Text = row.Cells[5].Value.ToString();
             //MessageBox.Show(row);
+            updateButton.Enabled = true;
         }
 
         private void numberField_TextChanged(object sender, EventArgs e)

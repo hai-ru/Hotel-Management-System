@@ -159,7 +159,7 @@ namespace Hotel_Management_System
             return resultData;
         }
 
-        public async Task<HttpData> GetRoomList()
+        public async Task<HttpData> GetRoomList(Boolean not_for_sell = false)
         {
             HttpData resultData = new HttpData();
 
@@ -173,8 +173,18 @@ namespace Hotel_Management_System
                     string token = Properties.Settings.Default.Token;
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    string jsonPayload = "{\"business_type\":\"hotel\"}";
-                    HttpContent content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+                    //string jsonPayload = "{\"business_type\":\"hotel\"}";
+
+                    //HttpContent content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+                    var valContent = new Dictionary<string, string>();
+                    valContent.Add("business_type", "hotel");
+                    if (not_for_sell)
+                    {
+                        valContent.Add("not_for_selling", "1");
+                    }
+
+                    var content = new FormUrlEncodedContent(valContent);
 
                     HttpResponseMessage response = await client.PostAsync(BaseUrl + "/products/list", content);
 
@@ -467,7 +477,7 @@ namespace Hotel_Management_System
 
             return resultData;
         }
-        public async Task<HttpData> StoreCheckin(string contact_id, string lamainap, string room_product_id, string harga_total, string payment_amount, string payment_method, string ota, string deposit, string staff_note="")
+        public async Task<HttpData> StoreCheckin(string contact_id, string lamainap, string room_product_id, string harga_total, string payment_amount, string payment_method, string ota, string deposit, string staff_note="", string reservation_id = "")
         {
             HttpData resultData = new HttpData();
 
@@ -487,6 +497,7 @@ namespace Hotel_Management_System
                     // Construct JSON payload
                     var payload = new
                     {
+                        reservation_id = reservation_id ?? "",
                         hotel = 1,
                         print = 1,
                         is_direct_sale = 1,
@@ -499,21 +510,21 @@ namespace Hotel_Management_System
                         price_group = 0,
                         sell_price_tax = "includes",
                         products = new[] {
-                    new {
-                        quantity = 1,
-                        product_id = room_product_id,
-                        name = "Room 101",
-                        type = "single",
-                        enable_stock = 0,
-                        product_type = "single",
-                        variation_id = 17469,
-                        selling_price = "200.000",
-                        unit_price = "200000.0000",
-                        unit_price_inc_tax = "200000.0000",
-                        sub_sku = "101",
-                        unit = "Unit"
-                    }
-                },
+                            new {
+                                quantity = 1,
+                                product_id = room_product_id,
+                                name = "Room 101",
+                                type = "single",
+                                enable_stock = 0,
+                                product_type = "single",
+                                variation_id = 17469,
+                                selling_price = "200.000",
+                                unit_price = "200000.0000",
+                                unit_price_inc_tax = "200000.0000",
+                                sub_sku = "101",
+                                unit = "Unit"
+                            }
+                        },
                         discount_type = "percentage",
                         discount_amount = 0.00,
                         rp_redeemed = 0,
@@ -527,26 +538,26 @@ namespace Hotel_Management_System
                         shipping_charges = 0.00,
                         advance_balance = 0.0000,
                         payment = new[] {
-                    new {
-                        amount = payment_amount,
-                        method = "cash",
-                        card_number = "",
-                        card_holder_name = "",
-                        card_transaction_number = "",
-                        card_type = "",
-                        card_month = "",
-                        card_year = "",
-                        card_security = "",
-                        cheque_number = "",
-                        bank_account_number = "",
-                        transaction_no_1 = "",
-                        transaction_no_2 = "",
-                        transaction_no_3 = "",
-                        note = ""
-                    }
-                },
+                            new {
+                                amount = payment_amount,
+                                method = "cash",
+                                card_number = "",
+                                card_holder_name = "",
+                                card_transaction_number = "",
+                                card_type = "",
+                                card_month = "",
+                                card_year = "",
+                                card_security = "",
+                                cheque_number = "",
+                                bank_account_number = "",
+                                transaction_no_1 = "",
+                                transaction_no_2 = "",
+                                transaction_no_3 = "",
+                                note = ""
+                            }
+                        },
                         sale_note = "",
-                        staff_note,
+                        staff_note = staff_note,
                         change_return = 0.00,
                         additional_notes = "",
                         is_suspend = 0,
