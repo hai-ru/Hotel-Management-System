@@ -266,7 +266,7 @@ namespace Hotel_Management_System.Controllers
     roomIdCMBox.SelectedIndex != -1)
             {
                 // Extract values from form fields
-                string checkinId = idTextBox.Text;
+                string checkinId = bookingIdField.Text;
 
                 var selectedRoom = roomIdCMBox.SelectedItem as Room;
 
