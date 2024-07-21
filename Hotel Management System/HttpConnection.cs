@@ -612,7 +612,7 @@ namespace Hotel_Management_System
 
             return resultData;
         }
-        public async Task<HttpData> UpdateCheckin(string id, string amount, string productId, string notes, string service_custom_field_3)
+        public async Task<HttpData> UpdateCheckin(string id, string amount, string product_id, string notes, string service_custom_field_3)
         {
             HttpData resultData = new HttpData();
 
@@ -635,16 +635,17 @@ namespace Hotel_Management_System
                     {
                         id,
                         amount,
-                        productId,
+                        product_id,
                         notes,
                         service_custom_field_3
                     };
 
                     var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
 
-                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/hotel/reservasi/store", content);
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/checkin/update", content);
 
                     var responseContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(responseContent);
                     try
                     {
                         dynamic data = JsonConvert.DeserializeObject(responseContent);

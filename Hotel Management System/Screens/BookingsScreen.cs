@@ -266,15 +266,15 @@ namespace Hotel_Management_System.Controllers
     roomIdCMBox.SelectedIndex != -1)
             {
                 // Extract values from form fields
-                var selectedGuest = guestIdCMBox.SelectedItem as Guest;
+                string checkinId = idTextBox.Text;
+
                 var selectedRoom = roomIdCMBox.SelectedItem as Room;
 
-                string contact_id = selectedGuest?.Id.ToString();
-                string lamainap = (DateTime.Parse(checkoutPicker.Text) - DateTime.Parse(checkinPicker.Text)).Days.ToString();
+
                 string room_product_id = selectedRoom?.ProductId.ToString();
                 // Trim non-numeric characters from amountField.Text and depositField.Text
                 string harga_total = string.Concat(amountField.Text.Where(char.IsDigit));
-                string payment_amount = string.Concat(depositField.Text.Where(char.IsDigit));
+
                 string deposit = string.Concat(depositTextBox1.Text.Where(char.IsDigit));
 
                 string notes = noteTextBox.Text;
@@ -285,16 +285,13 @@ namespace Hotel_Management_System.Controllers
                     return;
                 }
 
-                string payment_method = paymentComboBox.SelectedItem.ToString();
-                string ota = otaComboBox.SelectedItem == null ? "" : otaComboBox.SelectedItem.ToString();
-
                 // Call StoreCheckin method
-                HttpData result = await conn.StoreCheckin(contact_id, lamainap, room_product_id, harga_total, payment_amount, payment_method, ota, deposit, notes);
+                HttpData result = await conn.UpdateCheckin(checkinId, harga_total, room_product_id, notes, deposit);
 
                 // Handle the response
                 if (result.status)
                 {
-                    MessageBox.Show("Booking inserted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Booking updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     // Perform additional actions such as clearing fields, updating UI, etc.
                     clearFields();
                     guestIdCMBox.Items.Clear();
