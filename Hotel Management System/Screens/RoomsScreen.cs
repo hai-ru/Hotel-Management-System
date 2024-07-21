@@ -59,11 +59,53 @@ namespace Hotel_Management_System.Controllers
         {
             if (roomsTable.Columns[e.ColumnIndex].Name == "TODAY AVAILABLE" && e.Value != null)
             {
+
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
                 if (e.Value.ToString() == "0")
                 {
                     e.CellStyle.BackColor = Color.Red;
                 }
                 if (e.Value.ToString() == "1")
+                {
+                    e.CellStyle.BackColor = Color.GreenYellow;
+                }
+            }
+
+            if (roomsTable.Columns[e.ColumnIndex].Name == "NOT FOR SELL" && e.Value != null)
+            {
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+                if (e.Value.ToString() == "1")
+                {
+                    e.CellStyle.BackColor = Color.Red;
+                    e.CellStyle.ForeColor = Color.White;
+                }
+                if (e.Value.ToString() == "0")
+                {
+                    e.CellStyle.BackColor = Color.GreenYellow;
+                }
+            }
+
+            if (roomsTable.Columns[e.ColumnIndex].Name == "KEBERSIHAN" && e.Value != null)
+            {
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+                if (e.Value.ToString() == "VD")
+                {
+                    e.CellStyle.BackColor = Color.DarkRed;
+                    e.CellStyle.ForeColor = Color.White;
+                }
+                if (e.Value.ToString() == "VC")
+                {
+                    e.CellStyle.BackColor = Color.Yellow;
+                }
+                if (e.Value.ToString() == "OD")
+                {
+                    e.CellStyle.BackColor = Color.Red;
+                    e.CellStyle.ForeColor = Color.White;
+                }
+                if (e.Value.ToString() == "OC")
                 {
                     e.CellStyle.BackColor = Color.GreenYellow;
                 }

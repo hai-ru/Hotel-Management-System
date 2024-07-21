@@ -79,11 +79,12 @@ namespace Hotel_Management_System.Controllers
             alamatField.Text = "";
             cityField.Text = "";
             provinsiField.Text = "";
+            nikField.Text = "";
         }
 
-        private async void refreshTable()
+        private async void refreshTable(string search = "")
         {
-            HttpData result = await conn.GetCustomerList();
+            HttpData result = await conn.GetCustomerList(search);
             if (!result.status)
             {
                 MessageBox.Show(result.message);
@@ -105,9 +106,9 @@ namespace Hotel_Management_System.Controllers
 
         private void guna2CircleButton1_Click(object sender, EventArgs e)
         {
-            if (guestIdField.Text == "") return;
-            int id = int.Parse(guestIdField.Text);
-            retrieveData(id);
+            //if (guestIdField.Text == "") return;
+            //int id = int.Parse(guestIdField.Text);
+            refreshTable(serachBoxField.Text);
         }
 
         private bool regChecker()
@@ -140,6 +141,7 @@ namespace Hotel_Management_System.Controllers
                 "insert",
                 namaField.Text,
                 numberField.Text,
+                nikField.Text,
                 alamatField.Text,
                 cityField.Text,
                 provinsiField.Text
@@ -207,6 +209,7 @@ namespace Hotel_Management_System.Controllers
                    "update",
                    namaField.Text,
                    numberField.Text,
+                   nikField.Text,
                    alamatField.Text,
                    cityField.Text,
                    provinsiField.Text,
@@ -236,6 +239,7 @@ namespace Hotel_Management_System.Controllers
             //name = Regex.Replace(name, @"^[a-zA-Z]+$",String.Empty);
             //string s2 = Regex.Replace(name, @"[^A-Z]+", String.Empty);
             namaField.Text = name;
+            nikField.Text = row.Cells[6].Value.ToString();
             numberField.Text = row.Cells[2].Value.ToString();
             alamatField.Text = row.Cells[3].Value.ToString();
             cityField.Text = row.Cells[4].Value.ToString();
@@ -256,6 +260,14 @@ namespace Hotel_Management_System.Controllers
         private void label3_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void searchBoxField_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                refreshTable(serachBoxField.Text);
+            }
         }
     }
 }

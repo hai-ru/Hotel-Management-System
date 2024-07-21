@@ -247,7 +247,7 @@ namespace Hotel_Management_System
 
             return resultData;
         }
-        public async Task<HttpData> GetCustomerList()
+        public async Task<HttpData> GetCustomerList(string search = "")
         {
 
             HttpData resultData = new HttpData();
@@ -264,6 +264,7 @@ namespace Hotel_Management_System
 
                     var valContent = new Dictionary<string, string>();
                     valContent.Add("hotel", "1");
+                    valContent.Add("q", search);
 
                     var content = new FormUrlEncodedContent(valContent);
 
@@ -298,6 +299,7 @@ namespace Hotel_Management_System
             string type, 
             string name, 
             string phone, 
+            string nik,
             string address_line_1 = null,
             string city = null,
             string state= null,
@@ -335,6 +337,7 @@ namespace Hotel_Management_System
                     valContent.Add("address_line_1", address_line_1 ?? "");
                     valContent.Add("city", city ?? "");
                     valContent.Add("state", state ?? "");
+                    valContent.Add("nik", nik ?? "");
 
                     switch (type)
                     {
