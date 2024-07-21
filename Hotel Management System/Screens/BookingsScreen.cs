@@ -272,17 +272,17 @@ namespace Hotel_Management_System.Controllers
                     refreshTable();
 
                     // Create a new WebBrowser instance
-                    WebBrowser myWebBrowser = new WebBrowser();
-                    myWebBrowser.DocumentCompleted += myWebBrowser_DocumentCompleted;
+                    //WebBrowser myWebBrowser = new WebBrowser();
+                    //myWebBrowser.DocumentCompleted += myWebBrowser_DocumentCompleted;
 
-                    // Get the HTML content from the response
-                    string htmlContent = result.data.receipt.html_content;
+                    //// Get the HTML content from the response
+                    //string htmlContent = result.data.receipt.html_content;
 
-                    // Set the HTML content directly to the WebBrowser
-                    myWebBrowser.DocumentText = htmlContent;
+                    //// Set the HTML content directly to the WebBrowser
+                    //myWebBrowser.DocumentText = htmlContent;
 
-                    // Print the content
-                    myWebBrowser.Print();
+                    //// Print the content
+                    //myWebBrowser.Print();
                 }
                 else
                 {
