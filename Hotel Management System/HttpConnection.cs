@@ -963,7 +963,7 @@ namespace Hotel_Management_System
         }
 
 
-        public async Task<HttpData> StoreCheckout(string id, string amount, string notes, string depositReturn)
+        public async Task<HttpData> StoreCheckout(string id, string amount, string notes, string depositReturn, string misc_note, string misc_cost)
         {
 
             HttpData resultData = new HttpData();
@@ -983,6 +983,8 @@ namespace Hotel_Management_System
                     valContent.Add("amount", amount);
                     valContent.Add("notes", notes);
                     valContent.Add("deposit_return", depositReturn);
+                    valContent.Add("misc_note", misc_note);
+                    valContent.Add("misc_cost", misc_cost);
 
                     var content = new FormUrlEncodedContent(valContent);
 

@@ -54,6 +54,10 @@
             this.label9 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.guna2Button1 = new Guna.UI2.WinForms.Guna2Button();
+            this.msc_costTextBox1 = new Guna.UI2.WinForms.Guna2TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.msc_notesTextBox2 = new Guna.UI2.WinForms.Guna2TextBox();
+            this.label11 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.checkoutTable)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -134,7 +138,7 @@
             this.payButton.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.payButton.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.payButton.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.payButton.Location = new System.Drawing.Point(15, 555);
+            this.payButton.Location = new System.Drawing.Point(13, 683);
             this.payButton.Name = "payButton";
             this.payButton.Size = new System.Drawing.Size(351, 35);
             this.payButton.TabIndex = 84;
@@ -149,7 +153,7 @@
             this.searchButton.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.searchButton.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.searchButton.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.searchButton.Location = new System.Drawing.Point(16, 597);
+            this.searchButton.Location = new System.Drawing.Point(14, 725);
             this.searchButton.Name = "searchButton";
             this.searchButton.Size = new System.Drawing.Size(351, 35);
             this.searchButton.TabIndex = 87;
@@ -185,7 +189,7 @@
             this.checkoutTable.RowHeadersVisible = false;
             this.checkoutTable.RowHeadersWidth = 51;
             this.checkoutTable.RowTemplate.Height = 35;
-            this.checkoutTable.Size = new System.Drawing.Size(939, 611);
+            this.checkoutTable.Size = new System.Drawing.Size(939, 740);
             this.checkoutTable.TabIndex = 116;
             this.checkoutTable.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White;
             this.checkoutTable.ThemeStyle.AlternatingRowsStyle.Font = null;
@@ -443,6 +447,10 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.msc_notesTextBox2);
+            this.groupBox1.Controls.Add(this.label11);
+            this.groupBox1.Controls.Add(this.msc_costTextBox1);
+            this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.namaField);
             this.groupBox1.Controls.Add(this.telahbayarTextBox1);
             this.groupBox1.Controls.Add(this.label2);
@@ -463,7 +471,7 @@
             this.groupBox1.Controls.Add(this.totalTagihanField);
             this.groupBox1.Location = new System.Drawing.Point(965, 32);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(383, 657);
+            this.groupBox1.Size = new System.Drawing.Size(383, 769);
             this.groupBox1.TabIndex = 134;
             this.groupBox1.TabStop = false;
             // 
@@ -482,12 +490,77 @@
             this.guna2Button1.Text = "TAMPILKAN SEMUA";
             this.guna2Button1.Click += new System.EventHandler(this.guna2Button1_Click);
             // 
+            // msc_costTextBox1
+            // 
+            this.msc_costTextBox1.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.msc_costTextBox1.DefaultText = "";
+            this.msc_costTextBox1.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.msc_costTextBox1.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.msc_costTextBox1.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.msc_costTextBox1.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.msc_costTextBox1.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.msc_costTextBox1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.msc_costTextBox1.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.msc_costTextBox1.Location = new System.Drawing.Point(13, 575);
+            this.msc_costTextBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.msc_costTextBox1.Name = "msc_costTextBox1";
+            this.msc_costTextBox1.PasswordChar = '\0';
+            this.msc_costTextBox1.PlaceholderText = "";
+            this.msc_costTextBox1.SelectedText = "";
+            this.msc_costTextBox1.Size = new System.Drawing.Size(354, 36);
+            this.msc_costTextBox1.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
+            this.msc_costTextBox1.TabIndex = 135;
+            this.msc_costTextBox1.TextChanged += new System.EventHandler(this.msc_costTextBox1_TextChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.label10.Location = new System.Drawing.Point(12, 552);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(163, 19);
+            this.label10.TabIndex = 134;
+            this.label10.Text = "Miscellaneous Cost";
+            // 
+            // msc_notesTextBox2
+            // 
+            this.msc_notesTextBox2.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.msc_notesTextBox2.DefaultText = "";
+            this.msc_notesTextBox2.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.msc_notesTextBox2.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.msc_notesTextBox2.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.msc_notesTextBox2.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.msc_notesTextBox2.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.msc_notesTextBox2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.msc_notesTextBox2.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.msc_notesTextBox2.Location = new System.Drawing.Point(12, 640);
+            this.msc_notesTextBox2.Margin = new System.Windows.Forms.Padding(4);
+            this.msc_notesTextBox2.Name = "msc_notesTextBox2";
+            this.msc_notesTextBox2.PasswordChar = '\0';
+            this.msc_notesTextBox2.PlaceholderText = "";
+            this.msc_notesTextBox2.SelectedText = "";
+            this.msc_notesTextBox2.Size = new System.Drawing.Size(354, 36);
+            this.msc_notesTextBox2.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
+            this.msc_notesTextBox2.TabIndex = 137;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.label11.Location = new System.Drawing.Point(11, 617);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(172, 19);
+            this.label11.TabIndex = 136;
+            this.label11.Text = "Miscellaneous Notes";
+            // 
             // CheckoutScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
-            this.ClientSize = new System.Drawing.Size(1361, 693);
+            this.ClientSize = new System.Drawing.Size(1361, 813);
             this.Controls.Add(this.guna2Button1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.FilterTableCheckoutDate);
@@ -531,5 +604,9 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.GroupBox groupBox1;
         private Guna.UI2.WinForms.Guna2Button guna2Button1;
+        private Guna.UI2.WinForms.Guna2TextBox msc_notesTextBox2;
+        private System.Windows.Forms.Label label11;
+        private Guna.UI2.WinForms.Guna2TextBox msc_costTextBox1;
+        private System.Windows.Forms.Label label10;
     }
 }
