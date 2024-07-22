@@ -208,6 +208,7 @@ namespace Hotel_Management_System
             }
             return resultData;
         }
+
         public async Task<HttpData> GetReservationList(string date = null)
         {
 
@@ -265,6 +266,67 @@ namespace Hotel_Management_System
 
             return resultData;
         }
+
+
+        public async Task<HttpData> GetHistoryList(string date = null)
+        {
+
+            HttpData resultData = new HttpData();
+
+            resultData.status = false;
+            resultData.message = "";
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string token = Properties.Settings.Default.Token;
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    //dynamic content = null;
+
+                    //if (date != null && date != "")
+                    //{
+                    //    var valContent = new Dictionary<string, string>();
+                    //    valContent.Add("date", date);
+                    //}
+
+                    string link = BaseUrl + "/hotel/transaction/list?status=all&hotel=1";
+
+                    if (date != null && date != "")
+                    {
+                        link += "&date=" + date;
+                    }
+
+
+                    HttpResponseMessage response = await client.GetAsync(link);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+
+                        dynamic data = JsonConvert.DeserializeObject(responseContent);
+                        resultData.status = data.status;
+                        resultData.data = data.data;
+
+                    }
+                    catch (Newtonsoft.Json.JsonException ex)
+                    {
+                        resultData.status = false;
+                        resultData.message = ex.Message;
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                resultData.status = false;
+                resultData.message = ex.Message;
+            }
+
+            return resultData;
+        }
+
+
         public async Task<HttpData> GetCustomerList(string search = "")
         {
 

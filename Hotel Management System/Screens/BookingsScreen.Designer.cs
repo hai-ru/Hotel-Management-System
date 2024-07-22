@@ -30,9 +30,9 @@ namespace Hotel_Management_System.Controllers
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.guestIdCMBox = new Guna.UI2.WinForms.Guna2ComboBox();
@@ -108,7 +108,7 @@ namespace Hotel_Management_System.Controllers
             this.guestIdCMBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
             this.guestIdCMBox.ItemHeight = 30;
             this.guestIdCMBox.Location = new System.Drawing.Point(11, 145);
-            this.guestIdCMBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.guestIdCMBox.Margin = new System.Windows.Forms.Padding(2);
             this.guestIdCMBox.Name = "guestIdCMBox";
             this.guestIdCMBox.Size = new System.Drawing.Size(331, 36);
             this.guestIdCMBox.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
@@ -160,7 +160,7 @@ namespace Hotel_Management_System.Controllers
             this.checkinPicker.ForeColor = System.Drawing.Color.Gainsboro;
             this.checkinPicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.checkinPicker.Location = new System.Drawing.Point(10, 204);
-            this.checkinPicker.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkinPicker.Margin = new System.Windows.Forms.Padding(2);
             this.checkinPicker.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
             this.checkinPicker.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
             this.checkinPicker.Name = "checkinPicker";
@@ -180,7 +180,7 @@ namespace Hotel_Management_System.Controllers
             this.checkoutPicker.ForeColor = System.Drawing.Color.Gainsboro;
             this.checkoutPicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.checkoutPicker.Location = new System.Drawing.Point(185, 204);
-            this.checkoutPicker.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkoutPicker.Margin = new System.Windows.Forms.Padding(2);
             this.checkoutPicker.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
             this.checkoutPicker.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
             this.checkoutPicker.Name = "checkoutPicker";
@@ -233,7 +233,7 @@ namespace Hotel_Management_System.Controllers
             this.addButton.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.addButton.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.addButton.Location = new System.Drawing.Point(15, 639);
-            this.addButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.addButton.Margin = new System.Windows.Forms.Padding(2);
             this.addButton.Name = "addButton";
             this.addButton.Size = new System.Drawing.Size(154, 45);
             this.addButton.TabIndex = 80;
@@ -251,7 +251,7 @@ namespace Hotel_Management_System.Controllers
             this.roomIdCMBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
             this.roomIdCMBox.ItemHeight = 30;
             this.roomIdCMBox.Location = new System.Drawing.Point(13, 267);
-            this.roomIdCMBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.roomIdCMBox.Margin = new System.Windows.Forms.Padding(2);
             this.roomIdCMBox.Name = "roomIdCMBox";
             this.roomIdCMBox.Size = new System.Drawing.Size(331, 36);
             this.roomIdCMBox.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
@@ -272,26 +272,26 @@ namespace Hotel_Management_System.Controllers
             // 
             // bookingTable
             // 
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
-            this.bookingTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.bookingTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
+            this.bookingTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.bookingTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.bookingTable.ColumnHeadersHeight = 40;
             this.bookingTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.bookingTable.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.bookingTable.DefaultCellStyle = dataGridViewCellStyle3;
             this.bookingTable.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
             this.bookingTable.Location = new System.Drawing.Point(32, 54);
             this.bookingTable.Name = "bookingTable";
@@ -365,7 +365,7 @@ namespace Hotel_Management_System.Controllers
             this.guna2Button1.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.guna2Button1.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.guna2Button1.Location = new System.Drawing.Point(12, 688);
-            this.guna2Button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.guna2Button1.Margin = new System.Windows.Forms.Padding(2);
             this.guna2Button1.Name = "guna2Button1";
             this.guna2Button1.Size = new System.Drawing.Size(154, 40);
             this.guna2Button1.TabIndex = 121;
@@ -381,7 +381,7 @@ namespace Hotel_Management_System.Controllers
             this.guna2Button2.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.guna2Button2.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.guna2Button2.Location = new System.Drawing.Point(185, 688);
-            this.guna2Button2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.guna2Button2.Margin = new System.Windows.Forms.Padding(2);
             this.guna2Button2.Name = "guna2Button2";
             this.guna2Button2.Size = new System.Drawing.Size(155, 40);
             this.guna2Button2.TabIndex = 122;
@@ -420,7 +420,7 @@ namespace Hotel_Management_System.Controllers
             this.paymentComboBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
             this.paymentComboBox.ItemHeight = 30;
             this.paymentComboBox.Location = new System.Drawing.Point(14, 430);
-            this.paymentComboBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.paymentComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.paymentComboBox.Name = "paymentComboBox";
             this.paymentComboBox.Size = new System.Drawing.Size(331, 36);
             this.paymentComboBox.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
@@ -451,7 +451,7 @@ namespace Hotel_Management_System.Controllers
             this.otaComboBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
             this.otaComboBox.ItemHeight = 30;
             this.otaComboBox.Location = new System.Drawing.Point(13, 488);
-            this.otaComboBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.otaComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.otaComboBox.Name = "otaComboBox";
             this.otaComboBox.Size = new System.Drawing.Size(331, 36);
             this.otaComboBox.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
@@ -578,7 +578,7 @@ namespace Hotel_Management_System.Controllers
             this.guna2Button3.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.guna2Button3.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.guna2Button3.Location = new System.Drawing.Point(185, 639);
-            this.guna2Button3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.guna2Button3.Margin = new System.Windows.Forms.Padding(2);
             this.guna2Button3.Name = "guna2Button3";
             this.guna2Button3.Size = new System.Drawing.Size(155, 45);
             this.guna2Button3.TabIndex = 133;
@@ -589,7 +589,7 @@ namespace Hotel_Management_System.Controllers
             // 
             this.groupBox1.Controls.Add(this.groupBox2);
             this.groupBox1.Location = new System.Drawing.Point(958, 54);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(384, 791);
             this.groupBox1.TabIndex = 134;
@@ -626,9 +626,9 @@ namespace Hotel_Management_System.Controllers
             this.groupBox2.Controls.Add(this.otaComboBox);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Location = new System.Drawing.Point(14, 15);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox2.Size = new System.Drawing.Size(370, 733);
             this.groupBox2.TabIndex = 135;
             this.groupBox2.TabStop = false;
@@ -656,7 +656,7 @@ namespace Hotel_Management_System.Controllers
             this.reservasiCb.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
             this.reservasiCb.ItemHeight = 30;
             this.reservasiCb.Location = new System.Drawing.Point(10, 86);
-            this.reservasiCb.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.reservasiCb.Margin = new System.Windows.Forms.Padding(2);
             this.reservasiCb.Name = "reservasiCb";
             this.reservasiCb.Size = new System.Drawing.Size(332, 36);
             this.reservasiCb.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
@@ -671,10 +671,10 @@ namespace Hotel_Management_System.Controllers
             this.guna2Button4.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.guna2Button4.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.guna2Button4.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.guna2Button4.Location = new System.Drawing.Point(772, 26);
-            this.guna2Button4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.guna2Button4.Location = new System.Drawing.Point(702, 26);
+            this.guna2Button4.Margin = new System.Windows.Forms.Padding(2);
             this.guna2Button4.Name = "guna2Button4";
-            this.guna2Button4.Size = new System.Drawing.Size(168, 22);
+            this.guna2Button4.Size = new System.Drawing.Size(238, 22);
             this.guna2Button4.TabIndex = 135;
             this.guna2Button4.Text = "TAMPILKAN SEMUA";
             this.guna2Button4.Click += new System.EventHandler(this.guna2Button4_Click);
