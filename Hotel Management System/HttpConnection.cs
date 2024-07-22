@@ -268,7 +268,7 @@ namespace Hotel_Management_System
         }
 
 
-        public async Task<HttpData> GetHistoryList(string date = null)
+        public async Task<HttpData> GetTipeKamarList()
         {
 
             HttpData resultData = new HttpData();
@@ -283,13 +283,51 @@ namespace Hotel_Management_System
                     string token = Properties.Settings.Default.Token;
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    //dynamic content = null;
+                    string link = BaseUrl + "/brands/list";
 
-                    //if (date != null && date != "")
-                    //{
-                    //    var valContent = new Dictionary<string, string>();
-                    //    valContent.Add("date", date);
-                    //}
+                    HttpResponseMessage response = await client.GetAsync(link);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+
+                        dynamic data = JsonConvert.DeserializeObject(responseContent);
+                        resultData.status = data.status;
+                        resultData.data = data.data;
+
+                    }
+                    catch (Newtonsoft.Json.JsonException ex)
+                    {
+                        resultData.status = false;
+                        resultData.message = ex.Message;
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                resultData.status = false;
+                resultData.message = ex.Message;
+            }
+
+            return resultData;
+        }
+
+
+
+        public async Task<HttpData> GetHistoryList(string date = null)
+        {
+
+            HttpData resultData = new HttpData();
+
+            resultData.status = false;
+            resultData.message = "";
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string token = Properties.Settings.Default.Token;
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                     string link = BaseUrl + "/hotel/transaction/list?status=all&history=1";
 
@@ -740,7 +778,18 @@ namespace Hotel_Management_System
 
             return resultData;
         }
-        public async Task<HttpData> StoreReservation(string harga, string checkin, string checkout, string durasi, string contact_id, string ota)
+        public async Task<HttpData> StoreReservation(
+            string harga, 
+            string checkin, 
+            string checkout, 
+            string durasi, 
+            string contact_id, 
+            string ota,
+            string brand_id,
+            string brand_name,
+            string deposit = null,
+            string metode_pembayaran = null
+        )
         {
             HttpData resultData = new HttpData();
 
@@ -754,9 +803,6 @@ namespace Hotel_Management_System
                     string token = Properties.Settings.Default.Token;
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    // Calculate deposit from payment_amount - harga_total
-                    //int deposit = int.Parse(payment_amount) - int.Parse(harga_total);
-
                     // Construct JSON payload
                     var payload = new
                     {
@@ -766,7 +812,11 @@ namespace Hotel_Management_System
                         checkout,
                         durasi,
                         contact_id,
-                        ota
+                        ota,
+                        brand_id,
+                        brand_name,
+                        deposit = deposit == "" ? null : deposit,
+                        metode_pembayaran = metode_pembayaran == "" ? null : metode_pembayaran,
                     };
 
                     var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");

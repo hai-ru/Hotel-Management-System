@@ -1081,6 +1081,17 @@ namespace Hotel_Management_System.Controllers
             }
         }
 
+        public class TipeKamar
+        {
+            public int id;
+            public string name;
+
+            public override string ToString()
+            {
+                return name;
+            }
+        }
+
         private void guna2Button1_Click(object sender, EventArgs e)
         {
             if(roomIdCMBox.SelectedItem == null)
