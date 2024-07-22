@@ -1020,6 +1020,16 @@ namespace Hotel_Management_System.Controllers
             [JsonProperty("HARGA")]
             public int Harga { get; set; }
 
+            [JsonProperty("TIPE KAMAR")]
+            public string tipe { get; set; }
+
+
+            [JsonProperty("PEMBAYARAN")]
+            public string metode_pembayaran { get; set; }
+
+            [JsonProperty("DEPOSIT")]
+            public int deposit { get; set; }
+
             public override string ToString()
             {
                 string id = "(" + Id.ToString() + ")";
@@ -1206,6 +1216,20 @@ namespace Hotel_Management_System.Controllers
                     }
 
                     amountField.Text = selectedReservasi.Harga.ToString();
+
+                    depositTextBox1.Text = selectedReservasi.deposit.ToString();
+
+                    // Find and select the guest
+                    var paymentSelected = paymentMethods.FirstOrDefault(data => selectedReservasi.metode_pembayaran == data.label);
+                    if (paymentSelected != null)
+                    {
+                        paymentComboBox.SelectedItem = paymentSelected; // Assuming guestIdCMBox is data-bound to guest IDs
+                    }
+
+                    if (selectedReservasi.tipe != null && selectedReservasi.tipe != "")
+                    {
+                        noteTextBox.Text = selectedReservasi.tipe;
+                    }
 
                     // Call CalculateAmount to update total amount based on selected room and dates
                     CalculateAmount();
