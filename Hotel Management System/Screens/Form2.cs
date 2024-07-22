@@ -40,7 +40,13 @@ namespace Hotel_Management_System.Screens
 
         private void button1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(html);
+            try
+            {
+                this.webBrowser1.Print();
+            }catch(Exception error)
+            {
+                MessageBox.Show(error.Message);
+            }
         }
     }
 }

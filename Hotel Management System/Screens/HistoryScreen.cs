@@ -55,7 +55,7 @@ namespace Hotel_Management_System.Screens
             try
             {
                 var row = bookingTable.SelectedRows[0];
-                guna2TextBox1.Text = row.Cells[0].Value.ToString();
+                idField.Text = row.Cells[0].Value.ToString();
             }
             catch (FormatException ex)
             {
@@ -71,7 +71,14 @@ namespace Hotel_Management_System.Screens
 
         private void guna2Button1_Click(object sender, EventArgs e)
         {
-            Form2 form2 = new Form2("https://development.norapos.com");
+            string id = idField.Text;
+            if(id == "")
+            {
+                MessageBox.Show("Pilih data id disamping terlebih dahulu...");
+                return;
+            }
+            string link = "https://development.norapos.com/api/hotel/print?bill=1&id="+id;
+            Form2 form2 = new Form2(link);
             form2.Show();
         }
 

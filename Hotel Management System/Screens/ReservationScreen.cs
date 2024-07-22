@@ -238,6 +238,7 @@ namespace Hotel_Management_System.Screens
             try
             {
                 var row = bookingTable.SelectedRows[0];
+                idField.Text = row.Cells[0].Value.ToString();
                 amountField.Text = row.Cells[1].Value.ToString();
                 string guestId = row.Cells[3].Value.ToString();
                 //string methodName = row.Cells[6].Value.ToString();
@@ -276,6 +277,10 @@ namespace Hotel_Management_System.Screens
                 {
                     MessageBox.Show("OTA not found");
                 }
+
+                updateButton.Enabled = true;
+                deleteButton.Enabled = true;
+                PrintButton2.Enabled = true;
             }
             catch (FormatException ex)
             {
@@ -369,6 +374,19 @@ namespace Hotel_Management_System.Screens
         private void guna2Button1_Click(object sender, EventArgs e)
         {
             refreshTable();
+        }
+
+        private void guna2Button2_Click(object sender, EventArgs e)
+        {
+            string id = idField.Text;
+            string link = "https://development.norapos.com/api/hotel/print?id="+id;
+            Form2 form2 = new Form2(link);
+            form2.Show();
+        }
+
+        private void guna2Button2_Click_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

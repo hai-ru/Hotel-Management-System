@@ -291,7 +291,7 @@ namespace Hotel_Management_System
                     //    valContent.Add("date", date);
                     //}
 
-                    string link = BaseUrl + "/hotel/transaction/list?status=all&hotel=1";
+                    string link = BaseUrl + "/hotel/transaction/list?status=all&history=1";
 
                     if (date != null && date != "")
                     {
