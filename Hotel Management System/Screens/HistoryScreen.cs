@@ -27,9 +27,9 @@ namespace Hotel_Management_System.Screens
         }
 
 
-        private async void refreshTable(string date = null)
+        private async void refreshTable(string date = null,string search_name = "")
         {
-            HttpData result = await conn.GetHistoryList(date);
+            HttpData result = await conn.GetHistoryList(date,search_name);
             if (!result.status)
             {
                 MessageBox.Show(result.message);
@@ -91,6 +91,19 @@ namespace Hotel_Management_System.Screens
         private void guna2Button2_Click(object sender, EventArgs e)
         {
             refreshTable();
+        }
+
+        private void searchBoxField_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                refreshTable(null,serachBoxField.Text);
+            }
+        }
+
+        private void serachBoxField_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

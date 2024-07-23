@@ -41,6 +41,7 @@ namespace Hotel_Management_System.Screens
             this.idField = new Guna.UI2.WinForms.Guna2TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.guna2Button2 = new Guna.UI2.WinForms.Guna2Button();
+            this.serachBoxField = new Guna.UI2.WinForms.Guna2TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.bookingTable)).BeginInit();
             this.SuspendLayout();
             // 
@@ -49,7 +50,7 @@ namespace Hotel_Management_System.Screens
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Cooper Black", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.label1.Location = new System.Drawing.Point(27, 21);
+            this.label1.Location = new System.Drawing.Point(27, 29);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(369, 27);
             this.label1.TabIndex = 35;
@@ -129,11 +130,11 @@ namespace Hotel_Management_System.Screens
             this.FilterTableCheckinDate.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.FilterTableCheckinDate.ForeColor = System.Drawing.Color.Gainsboro;
             this.FilterTableCheckinDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.FilterTableCheckinDate.Location = new System.Drawing.Point(402, 20);
+            this.FilterTableCheckinDate.Location = new System.Drawing.Point(393, 29);
             this.FilterTableCheckinDate.MaxDate = new System.DateTime(9998, 12, 31, 0, 0, 0, 0);
             this.FilterTableCheckinDate.MinDate = new System.DateTime(1753, 1, 1, 0, 0, 0, 0);
             this.FilterTableCheckinDate.Name = "FilterTableCheckinDate";
-            this.FilterTableCheckinDate.Size = new System.Drawing.Size(152, 36);
+            this.FilterTableCheckinDate.Size = new System.Drawing.Size(119, 27);
             this.FilterTableCheckinDate.TabIndex = 120;
             this.FilterTableCheckinDate.Value = new System.DateTime(2024, 7, 11, 0, 0, 0, 0);
             this.FilterTableCheckinDate.ValueChanged += new System.EventHandler(this.FilterTableCheckinDate_ValueChanged);
@@ -192,12 +193,33 @@ namespace Hotel_Management_System.Screens
             this.guna2Button2.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.guna2Button2.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.guna2Button2.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.guna2Button2.Location = new System.Drawing.Point(734, 29);
+            this.guna2Button2.Location = new System.Drawing.Point(788, 29);
             this.guna2Button2.Name = "guna2Button2";
-            this.guna2Button2.Size = new System.Drawing.Size(261, 28);
+            this.guna2Button2.Size = new System.Drawing.Size(207, 28);
             this.guna2Button2.TabIndex = 130;
             this.guna2Button2.Text = "TAMPILKAN SEMUA";
             this.guna2Button2.Click += new System.EventHandler(this.guna2Button2_Click);
+            // 
+            // serachBoxField
+            // 
+            this.serachBoxField.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.serachBoxField.DefaultText = "";
+            this.serachBoxField.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.serachBoxField.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.serachBoxField.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.serachBoxField.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.serachBoxField.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.serachBoxField.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.serachBoxField.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.serachBoxField.Location = new System.Drawing.Point(582, 29);
+            this.serachBoxField.Name = "serachBoxField";
+            this.serachBoxField.PasswordChar = '\0';
+            this.serachBoxField.PlaceholderText = "";
+            this.serachBoxField.SelectedText = "";
+            this.serachBoxField.Size = new System.Drawing.Size(200, 28);
+            this.serachBoxField.TabIndex = 131;
+            this.serachBoxField.TextChanged += new System.EventHandler(this.serachBoxField_TextChanged);
+            this.serachBoxField.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchBoxField_KeyDown);
             // 
             // HistoryScreen
             // 
@@ -205,6 +227,7 @@ namespace Hotel_Management_System.Screens
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(1133, 678);
+            this.Controls.Add(this.serachBoxField);
             this.Controls.Add(this.guna2Button2);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.idField);
@@ -235,5 +258,6 @@ namespace Hotel_Management_System.Screens
         private Guna.UI2.WinForms.Guna2TextBox idField;
         private System.Windows.Forms.Label label2;
         private Guna.UI2.WinForms.Guna2Button guna2Button2;
+        private Guna.UI2.WinForms.Guna2TextBox serachBoxField;
     }
 }

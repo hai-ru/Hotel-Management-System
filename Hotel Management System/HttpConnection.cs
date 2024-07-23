@@ -314,7 +314,7 @@ namespace Hotel_Management_System
 
 
 
-        public async Task<HttpData> GetHistoryList(string date = null)
+        public async Task<HttpData> GetHistoryList(string date = null, string contact_name = null)
         {
 
             HttpData resultData = new HttpData();
@@ -334,6 +334,11 @@ namespace Hotel_Management_System
                     if (date != null && date != "")
                     {
                         link += "&date=" + date;
+                    }
+
+                    if (contact_name != null && contact_name != "")
+                    {
+                        link += "&contact_name=" + contact_name;
                     }
 
 
@@ -924,7 +929,7 @@ namespace Hotel_Management_System
 
                     dynamic content = null;
 
-                    if (date != null)
+                    if (date != null && date != "")
                     {
                         var valContent = new Dictionary<string, string>();
                         valContent.Add("date", date);

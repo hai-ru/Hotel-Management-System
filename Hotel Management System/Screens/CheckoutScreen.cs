@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -111,10 +112,28 @@ namespace Hotel_Management_System.Controllers
             DataTable MyTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
             checkoutTable.DataSource = MyTable;
 
+            checkoutTable.CellFormatting += Table_CellFormatting;
+
 
         }
 
-        private void bookingIdCMBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void Table_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (checkoutTable.Columns[e.ColumnIndex].Name == "CHECKOUT" && e.Value != null)
+            {
+
+                DateTime date = DateTime.ParseExact(e.Value.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                var diff = date - DateTime.Today;
+                if(diff.TotalDays == 0)
+                {
+                    e.CellStyle.BackColor = Color.Red;
+                    e.CellStyle.ForeColor = Color.White;
+                }
+
+            }
+        }
+
+            private void bookingIdCMBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             //int id = int.Parse(bookingIdCMBox.Text);
             //SqlConnection con = dc.getConnection();
