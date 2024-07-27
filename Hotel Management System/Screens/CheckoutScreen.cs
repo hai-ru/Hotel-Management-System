@@ -95,8 +95,8 @@ namespace Hotel_Management_System.Controllers
 
         private void CheckoutScreen_Load(object sender, EventArgs e)
         {
-            DateTime today = DateTime.Today;
-            FilterTableCheckoutDate.Value = today;
+            //DateTime today = DateTime.Today;
+            //FilterTableCheckoutDate.Value = today;
             refreshTable(null);
         }
 
@@ -172,6 +172,8 @@ namespace Hotel_Management_System.Controllers
 
             MessageBox.Show(result.message);
             refreshTable();
+
+            loadingText.Visible = false;
         }
 
 

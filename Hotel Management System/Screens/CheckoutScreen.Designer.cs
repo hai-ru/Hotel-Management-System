@@ -1,4 +1,6 @@
-﻿namespace Hotel_Management_System.Controllers
+﻿using System;
+
+namespace Hotel_Management_System.Controllers
 {
     partial class CheckoutScreen
     {
@@ -231,7 +233,7 @@
             this.FilterTableCheckoutDate.Name = "FilterTableCheckoutDate";
             this.FilterTableCheckoutDate.Size = new System.Drawing.Size(152, 36);
             this.FilterTableCheckoutDate.TabIndex = 121;
-            this.FilterTableCheckoutDate.Value = new System.DateTime(2022, 5, 26, 1, 51, 32, 432);
+            this.FilterTableCheckoutDate.Value = DateTime.Today;
             this.FilterTableCheckoutDate.ValueChanged += new System.EventHandler(this.FilterTableCheckoutDate_ValueChanged);
             // 
             // namaField

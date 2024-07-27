@@ -156,6 +156,8 @@ namespace Hotel_Management_System.Controllers
             refreshTable();
             clearFields();
             updateButton.Enabled = false;
+
+            loadingText.Visible= false;
         }
 
         private void retrieveData(int id)

@@ -354,7 +354,7 @@ namespace Hotel_Management_System.Controllers
             this.FilterTableCheckinDate.Name = "FilterTableCheckinDate";
             this.FilterTableCheckinDate.Size = new System.Drawing.Size(152, 36);
             this.FilterTableCheckinDate.TabIndex = 120;
-            this.FilterTableCheckinDate.Value = new System.DateTime(2024, 7, 11, 0, 0, 0, 0);
+            this.FilterTableCheckinDate.Value = DateTime.Today;
             this.FilterTableCheckinDate.ValueChanged += new System.EventHandler(this.FilterTableCheckinDate_ValueChanged);
             // 
             // guna2Button1

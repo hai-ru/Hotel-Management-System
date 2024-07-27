@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
+using static Hotel_Management_System.Controllers.BookingsScreen;
 
 namespace Hotel_Management_System.Controllers
 {
@@ -228,7 +229,7 @@ namespace Hotel_Management_System.Controllers
 
         private void BookingsScreen_Load(object sender, EventArgs e)
         {
-            FilterTableCheckinDate.Value = DateTime.Today;
+            //FilterTableCheckinDate.Value = DateTime.Today;
 
             checkinPicker.Value = DateTime.Today;
 
@@ -471,6 +472,7 @@ namespace Hotel_Management_System.Controllers
 
         private async void addButton_Click(object sender, EventArgs e)
         {
+            addButton.Enabled = false;
             loadingText.Visible = true;
             if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
                 roomIdCMBox.SelectedIndex != -1)
@@ -526,7 +528,7 @@ namespace Hotel_Management_System.Controllers
                     guestIdCMBox.Items.Clear();
                     populateGuestComboBoxAsync();
                     refreshTable();
-
+                    addButton.Enabled = true;
                     populateReservasiComboBoxAsync();
                     populateRoomAsync();
 
@@ -546,11 +548,15 @@ namespace Hotel_Management_System.Controllers
                 else
                 {
                     MessageBox.Show(result.message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    loadingText.Visible = false;
+                    addButton.Enabled = true;
                 }
             }
             else
             {
                 MessageBox.Show("All fields must be filled.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                loadingText.Visible = false;
+                addButton.Enabled = true;
             }
         }
 
@@ -1107,21 +1113,61 @@ namespace Hotel_Management_System.Controllers
             }
         }
 
-        private void guna2Button1_Click(object sender, EventArgs e)
+        private async void guna2Button1_Click(object sender, EventArgs e)
         {
-            if(roomIdCMBox.SelectedItem == null)
+            if (roomIdCMBox.SelectedItem == null)
             {
                 MessageBox.Show("Silahkan pilih data pada tabel terlebih dahulu");
                 return;
             }
+
             var selectedRoom = roomIdCMBox.SelectedItem as Room;
-            Boolean res = onity.createCard(selectedRoom.sku, durasi_menginap);
-            if (res)
+            var selectedGuest = guestIdCMBox.SelectedItem as Guest;
+
+            if (selectedRoom == null || selectedGuest == null)
             {
-                MessageBox.Show("Berhasil");
+                MessageBox.Show("Silahkan pilih data yang valid pada tabel.");
                 return;
             }
-            MessageBox.Show("Periksa Koneksi Onity encoder IP dan Port.");
+
+            string contact_id = selectedGuest.Id.ToString();
+            string checkin = checkinPicker.Text;
+            string checkout = checkoutPicker.Text;
+            string room_product_id = selectedRoom.ProductId.ToString();
+
+            var createCardTask = Task.Run(() => onity.createCard(selectedRoom.sku, durasi_menginap));
+            var logCreateCardTask = conn.LogCreateCard(contact_id, checkin, checkout, room_product_id);
+
+            var createCardResult = await createCardTask;
+
+            if (createCardResult)
+            {
+                MessageBox.Show("Berhasil");
+
+                var logResult = await logCreateCardTask;
+
+                if (logResult.status)
+                {
+                    MessageBox.Show("Card written successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    clearFields();
+                    guestIdCMBox.Items.Clear();
+                    populateGuestComboBoxAsync();
+                    refreshTable();
+                    addButton.Enabled = true;
+                    populateReservasiComboBoxAsync();
+                    populateRoomAsync();
+                }
+                else
+                {
+                    MessageBox.Show(logResult.message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    loadingText.Visible = false;
+                    addButton.Enabled = true;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Periksa Koneksi Onity encoder IP dan Port.");
+            }
         }
 
         private void guna2Button2_Click(object sender, EventArgs e)

@@ -193,6 +193,7 @@ namespace Hotel_Management_System.Screens
 
         private async void addButton_Click(object sender, EventArgs e)
         {
+            addButton.Enabled = false;
             loadingText.Visible = true;
             if (!ValidationCheckinCheckout())
             {
@@ -246,7 +247,7 @@ namespace Hotel_Management_System.Screens
                     guestSelect.Items.Clear();
                     populateGuestComboBoxAsync();
                     refreshTable();
-
+                    addButton.Enabled = true;
                     //// Create a new WebBrowser instance
                     //WebBrowser myWebBrowser = new WebBrowser();
                     ////myWebBrowser.DocumentCompleted += myWebBrowser_DocumentCompleted;
@@ -263,11 +264,15 @@ namespace Hotel_Management_System.Screens
                 else
                 {
                     MessageBox.Show(result.message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    loadingText.Visible = false;
+                    addButton.Enabled = true;
                 }
             }
             else
             {
                 MessageBox.Show("Semua input harus terisi.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                loadingText.Visible = false;
+                addButton.Enabled = true;
             }
         }
 
@@ -397,11 +402,13 @@ namespace Hotel_Management_System.Screens
                 else
                 {
                     MessageBox.Show(result.message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    loadingText.Visible = false;
                 }
             }
             else
             {
                 MessageBox.Show("Semua input harus terisi.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                loadingText.Visible = false;
             }
         }
 

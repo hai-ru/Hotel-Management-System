@@ -508,6 +508,62 @@ namespace Hotel_Management_System
             return resultData;
         }
 
+        public async Task<HttpData> LogCreateCard(
+        string nama,
+        string checkin,
+        string checkout,
+        string product_id)
+        {
+
+            HttpData resultData = new HttpData();
+
+            resultData.status = false;
+            resultData.message = "";
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string token = Properties.Settings.Default.Token;
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    var valContent = new Dictionary<string, string>();
+                    valContent.Add("token", token);
+                    valContent.Add("nama", nama);
+                    valContent.Add("checkin", checkin);
+                    valContent.Add("checkout", checkout);
+                    valContent.Add("product_id", product_id);
+
+                    var content = new FormUrlEncodedContent(valContent);
+
+                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/card", content);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+
+                        dynamic data = JsonConvert.DeserializeObject(responseContent);
+                        resultData.status = data.status;
+                        resultData.message = data.message;
+                        resultData.data = data.data;
+
+                    }
+                    catch (Newtonsoft.Json.JsonException ex)
+                    {
+                        resultData.status = false;
+                        resultData.message = ex.Message;
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                resultData.status = false;
+                resultData.message = ex.Message;
+            }
+
+            return resultData;
+        }
+
         public async Task<HttpData> GetOTAList()
         {
 
