@@ -1131,12 +1131,13 @@ namespace Hotel_Management_System.Controllers
             }
 
             string contact_id = selectedGuest.Id.ToString();
+            string contact_name = selectedGuest.Name.ToString();
             string checkin = checkinPicker.Text;
             string checkout = checkoutPicker.Text;
             string room_product_id = selectedRoom.ProductId.ToString();
 
             var createCardTask = Task.Run(() => onity.createCard(selectedRoom.sku, durasi_menginap));
-            var logCreateCardTask = conn.LogCreateCard(contact_id, checkin, checkout, room_product_id);
+            var logCreateCardTask = conn.LogCreateCard(contact_name, checkin, checkout, room_product_id, contact_id);
 
             var createCardResult = await createCardTask;
 

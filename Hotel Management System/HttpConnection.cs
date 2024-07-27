@@ -512,7 +512,8 @@ namespace Hotel_Management_System
         string nama,
         string checkin,
         string checkout,
-        string product_id)
+        string product_id,
+        string contact_id)
         {
 
             HttpData resultData = new HttpData();
@@ -533,6 +534,7 @@ namespace Hotel_Management_System
                     valContent.Add("checkin", checkin);
                     valContent.Add("checkout", checkout);
                     valContent.Add("product_id", product_id);
+                    valContent.Add("contact_id", contact_id);
 
                     var content = new FormUrlEncodedContent(valContent);
 
