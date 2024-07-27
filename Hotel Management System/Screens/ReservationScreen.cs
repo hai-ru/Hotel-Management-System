@@ -195,8 +195,13 @@ namespace Hotel_Management_System.Screens
                 return;
             }
 
-            if (guestSelect.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
-               this.otaCb.SelectedIndex != 1)
+            if (
+                guestSelect.SelectedIndex != -1 && 
+                amountField.Text != "" && 
+                checkinPicker.Text != "" && 
+                checkoutPicker.Text != "" &&
+               this.otaCb.SelectedIndex != 1
+            )
             {
                 // Extract values from form fields
                 var selectedGuest = guestSelect.SelectedItem as Guest;

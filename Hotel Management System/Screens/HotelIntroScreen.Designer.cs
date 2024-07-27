@@ -43,7 +43,7 @@
             this.bgPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.bgPanel.Location = new System.Drawing.Point(0, 0);
             this.bgPanel.Name = "bgPanel";
-            this.bgPanel.Size = new System.Drawing.Size(1318, 747);
+            this.bgPanel.Size = new System.Drawing.Size(1320, 742);
             this.bgPanel.TabIndex = 13;
             // 
             // webLabel
