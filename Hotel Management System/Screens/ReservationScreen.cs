@@ -29,6 +29,7 @@ namespace Hotel_Management_System.Screens
         Room[] rooms = new Room[] { };
         Ota[] otas = new Ota[] { };
         PaymentMethod[] paymentMethods = new PaymentMethod[] { };
+        TipeKamar[] tipeKamars= new TipeKamar[] { };
 
         private int durasi_menginap = 1;
         public ReservationScreen()
@@ -66,10 +67,10 @@ namespace Hotel_Management_System.Screens
             checkoutPicker.Text = "";
             amountField.Text = "";
             //paymentComboBox.SelectedIndex = -1;
-            otaComboBox.SelectedIndex = -1;
+            this.otaCb.SelectedIndex = -1;
         }
 
-        private async void refreshTable(string date = null)
+        private async void refreshTable(string date = "")
         {
             HttpData result = await conn.GetReservationList(date);
             if (!result.status)
@@ -92,14 +93,36 @@ namespace Hotel_Management_System.Screens
 
             // Deserialize JSON string directly to OTA array
             otas = JsonConvert.DeserializeObject<Ota[]>(result.data.ToString());
-            otaComboBox.Items.Clear();
+            this.otaCb.Items.Clear();
 
             // Bind rooms to roomIdCMBox
-            otaComboBox.DisplayMember = "label"; // Set the DisplayMember to "text" property
+            //otaComboBox.DisplayMember = "label"; // Set the DisplayMember to "text" property
 
             foreach (Ota ota in otas)
             {
-                otaComboBox.Items.Add(ota); // Add ota to combo box
+                this.otaCb.Items.Add(ota); // Add ota to combo box
+            }
+        }
+
+        private async void populateTipeKamarComboBoxAsync()
+        {
+            HttpData result = await conn.GetTipeKamarList();
+            if (!result.status)
+            {
+                MessageBox.Show(result.message);
+                return;
+            }
+
+            // Deserialize JSON string directly to OTA array
+            tipeKamars = JsonConvert.DeserializeObject<TipeKamar[]>(result.data.ToString());
+            tipeKamarCb.Items.Clear();
+
+            // Bind rooms to roomIdCMBox
+            tipeKamarCb.DisplayMember = "name"; // Set the DisplayMember to "text" property
+
+            foreach (TipeKamar tipe in tipeKamars)
+            {
+                tipeKamarCb.Items.Add(tipe); // Add ota to combo box
             }
         }
 
@@ -114,35 +137,71 @@ namespace Hotel_Management_System.Screens
 
             // Deserialize JSON string directly to Payment array
             paymentMethods = JsonConvert.DeserializeObject<PaymentMethod[]>(result.data.ToString());
-            //paymentComboBox.Items.Clear();
+            paymentComboBox.Items.Clear();
 
-            //// Bind rooms to roomIdCMBox
-            //paymentComboBox.DisplayMember = "label"; // Set the DisplayMember to "label" property
+            // Bind rooms to roomIdCMBox
+            paymentComboBox.DisplayMember = "label"; // Set the DisplayMember to "label" property
 
-            //foreach (PaymentMethod paymentMethod in paymentMethods)
-            //{
-            //    paymentComboBox.Items.Add(paymentMethod); // Add payment to combo box
-            //}
+            foreach (PaymentMethod paymentMethod in paymentMethods)
+            {
+                paymentComboBox.Items.Add(paymentMethod); // Add payment to combo box
+            }
         }
 
         private void ReservationScreen_Load(object sender, EventArgs e)
         {
             FilterTableCheckinDate.Value = DateTime.Today;
+            checkinPicker.Value = DateTime.Today;
+            checkoutPicker.Value = DateTime.Today.AddDays(1);
+
+
+
             populateGuestComboBoxAsync();
-            refreshTable(FilterTableCheckinDate.Value.ToString("yyyy-MM-dd"));
+            refreshTable();
+
             populateOTAComboBoxAsync();
+
             populatePaymentMethodComboBoxAsync();
+            populateTipeKamarComboBoxAsync();
         }
+
 
         private void guestIdCMBox_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
 
+        private Boolean ValidationCheckinCheckout()
+        {
+            if(checkinPicker.Value < DateTime.Today)
+            {
+                MessageBox.Show("Tgl checkin tidak boleh kurang dari hari ini...");
+                return false;
+            }
+            
+            if(checkoutPicker.Value <= checkinPicker.Value)
+            {
+                MessageBox.Show("Tgl checkout tidak boleh kurang atau sama dengan hari ini...");
+                return false;
+            }
+
+            return true;
+        }
+
         private async void addButton_Click(object sender, EventArgs e)
         {
-            if (guestSelect.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
-               otaComboBox.SelectedIndex != 1)
+            if (!ValidationCheckinCheckout())
+            {
+                return;
+            }
+
+            if (
+                guestSelect.SelectedIndex != -1 && 
+                amountField.Text != "" && 
+                checkinPicker.Text != "" && 
+                checkoutPicker.Text != "" &&
+               this.otaCb.SelectedIndex != 1
+            )
             {
                 // Extract values from form fields
                 var selectedGuest = guestSelect.SelectedItem as Guest;
@@ -152,19 +211,26 @@ namespace Hotel_Management_System.Screens
                 // Trim non-numeric characters from amountField.Text and depositField.Text
                 string harga_total = string.Concat(amountField.Text.Where(char.IsDigit));
 
-                //if (paymentComboBox.SelectedItem == null)
-                //{
-                //    MessageBox.Show("Silahkan pilih metode pembayaran yang di lakukan");
-                //    return;
-                //}
+                if (tipeKamarCb.SelectedItem == null)
+                {
+                    MessageBox.Show("Silahkan pilih tipe kamar");
+                    return;
+                }
 
-                //string payment_method = paymentComboBox.SelectedItem.ToString();
+                string ota = this.otaCb.SelectedItem == null ? "" : this.otaCb.SelectedItem.ToString();
 
-                string ota = otaComboBox.SelectedItem == null ? "" : otaComboBox.SelectedItem.ToString();
+                var selectedTipeKamar = tipeKamarCb.SelectedItem as TipeKamar;
+                var paymentSelected = paymentComboBox.SelectedItem as PaymentMethod;
 
 
                 // Call StoreCheckin method
-                HttpData result = await conn.StoreReservation(harga_total, checkinPicker.Text.ToString(), checkoutPicker.Text.ToString(), lamainap, contact_id, ota);
+                HttpData result = await conn.StoreReservation(harga_total, checkinPicker.Text.ToString(), checkoutPicker.Text.ToString(), lamainap, contact_id, 
+                    ota,
+                    selectedTipeKamar.id.ToString(),
+                    selectedTipeKamar.name,
+                    depositTextBox1.Text,
+                    paymentSelected == null? "" : paymentSelected.value
+                );
 
 
                 // Handle the response
@@ -211,6 +277,7 @@ namespace Hotel_Management_System.Screens
             try
             {
                 var row = bookingTable.SelectedRows[0];
+                idField.Text = row.Cells[0].Value.ToString();
                 amountField.Text = row.Cells[1].Value.ToString();
                 string guestId = row.Cells[3].Value.ToString();
                 //string methodName = row.Cells[6].Value.ToString();
@@ -243,12 +310,16 @@ namespace Hotel_Management_System.Screens
                 var selectedOta = otas.FirstOrDefault(ota => ota.label == otaName);
                 if (selectedOta != null)
                 {
-                    otaComboBox.SelectedItem = selectedOta;
+                    this.otaCb.SelectedItem = selectedOta;
                 }
                 else
                 {
                     MessageBox.Show("OTA not found");
                 }
+
+                updateButton.Enabled = true;
+                deleteButton.Enabled = true;
+                PrintButton2.Enabled = true;
             }
             catch (FormatException ex)
             {
@@ -264,8 +335,13 @@ namespace Hotel_Management_System.Screens
 
         private async void updateButton_Click(object sender, EventArgs e)
         {
+            if (!ValidationCheckinCheckout())
+            {
+                return;
+            }
+
             if (guestSelect.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
-                 otaComboBox.SelectedIndex != 1)
+                 this.otaCb.SelectedIndex != 1)
             {
                 // Extract values from form fields
                 var selectedGuest = guestSelect.SelectedItem as Guest;
@@ -283,7 +359,7 @@ namespace Hotel_Management_System.Screens
 
                 //string payment_method = paymentComboBox.SelectedItem.ToString();
 
-                string ota = otaComboBox.SelectedItem == null ? "" : otaComboBox.SelectedItem.ToString();
+                string ota = this.otaCb.SelectedItem == null ? "" : this.otaCb.SelectedItem.ToString();
 
 
                 // Call StoreCheckin method
@@ -325,6 +401,29 @@ namespace Hotel_Management_System.Screens
         }
 
         private void deleteButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void FilterTableCheckinDate_ValueChanged(object sender, EventArgs e)
+        {
+            refreshTable(FilterTableCheckinDate.Value.ToString("yyyy-MM-dd"));
+        }
+
+        private void guna2Button1_Click(object sender, EventArgs e)
+        {
+            refreshTable();
+        }
+
+        private void guna2Button2_Click(object sender, EventArgs e)
+        {
+            string id = idField.Text;
+            string link = "https://development.norapos.com/api/hotel/print?id="+id;
+            Form2 form2 = new Form2(link);
+            form2.Show();
+        }
+
+        private void guna2Button2_Click_1(object sender, EventArgs e)
         {
 
         }

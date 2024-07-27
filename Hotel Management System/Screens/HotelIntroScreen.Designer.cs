@@ -31,22 +31,19 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HotelIntroScreen));
             this.bgPanel = new System.Windows.Forms.Panel();
             this.webLabel = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.descripLabel = new System.Windows.Forms.Label();
             this.hotelName = new System.Windows.Forms.Label();
             this.emailLabel = new System.Windows.Forms.Label();
             this.contactLabel = new System.Windows.Forms.Label();
-            this.streetLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // bgPanel
             // 
             this.bgPanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("bgPanel.BackgroundImage")));
             this.bgPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.bgPanel.Location = new System.Drawing.Point(554, 94);
+            this.bgPanel.Location = new System.Drawing.Point(0, 0);
             this.bgPanel.Name = "bgPanel";
-            this.bgPanel.Size = new System.Drawing.Size(505, 359);
+            this.bgPanel.Size = new System.Drawing.Size(1320, 742);
             this.bgPanel.TabIndex = 13;
             // 
             // webLabel
@@ -58,26 +55,6 @@
             this.webLabel.Name = "webLabel";
             this.webLabel.Size = new System.Drawing.Size(0, 19);
             this.webLabel.TabIndex = 12;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(76, 425);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(90, 16);
-            this.label5.TabIndex = 11;
-            this.label5.Text = "Contact Us: ";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(77, 392);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(103, 16);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "Reservations:";
             // 
             // descripLabel
             // 
@@ -115,27 +92,16 @@
             this.contactLabel.Size = new System.Drawing.Size(0, 16);
             this.contactLabel.TabIndex = 19;
             // 
-            // streetLabel
-            // 
-            this.streetLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.streetLabel.Location = new System.Drawing.Point(77, 305);
-            this.streetLabel.Name = "streetLabel";
-            this.streetLabel.Size = new System.Drawing.Size(146, 77);
-            this.streetLabel.TabIndex = 16;
-            // 
             // HotelIntroScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
-            this.ClientSize = new System.Drawing.Size(1133, 560);
+            this.ClientSize = new System.Drawing.Size(1316, 743);
             this.Controls.Add(this.contactLabel);
-            this.Controls.Add(this.streetLabel);
             this.Controls.Add(this.emailLabel);
             this.Controls.Add(this.bgPanel);
             this.Controls.Add(this.webLabel);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.descripLabel);
             this.Controls.Add(this.hotelName);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -153,12 +119,9 @@
 
         private System.Windows.Forms.Panel bgPanel;
         private System.Windows.Forms.Label webLabel;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label descripLabel;
         private System.Windows.Forms.Label hotelName;
         private System.Windows.Forms.Label emailLabel;
         private System.Windows.Forms.Label contactLabel;
-        private System.Windows.Forms.Label streetLabel;
     }
 }
