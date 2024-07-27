@@ -97,5 +97,10 @@ namespace Hotel_Management_System.Screens
         {
             // Handle click event if needed
         }
+
+        private void bgPanel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

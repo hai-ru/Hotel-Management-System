@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
-            this.mainPanel = new Guna.UI2.WinForms.Guna2Panel();
             this.guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
             this.guna2Button7 = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Button2 = new Guna.UI2.WinForms.Guna2Button();
@@ -41,19 +40,9 @@
             this.guna2CircleButton2 = new Guna.UI2.WinForms.Guna2CircleButton();
             this.guna2CircleButton1 = new Guna.UI2.WinForms.Guna2CircleButton();
             this.guna2ImageRadioButton1 = new Guna.UI2.WinForms.Guna2ImageRadioButton();
+            this.mainPanel = new Guna.UI2.WinForms.Guna2Panel();
             this.guna2Panel2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // mainPanel
-            // 
-            this.mainPanel.BackColor = System.Drawing.Color.Gainsboro;
-            this.mainPanel.BorderColor = System.Drawing.Color.Transparent;
-            this.mainPanel.BorderRadius = 30;
-            this.mainPanel.FillColor = System.Drawing.Color.Transparent;
-            this.mainPanel.Location = new System.Drawing.Point(24, 84);
-            this.mainPanel.Name = "mainPanel";
-            this.mainPanel.Size = new System.Drawing.Size(1291, 835);
-            this.mainPanel.TabIndex = 0;
             // 
             // guna2Panel2
             // 
@@ -247,6 +236,18 @@
             this.guna2ImageRadioButton1.TabIndex = 1;
             this.guna2ImageRadioButton1.CheckedChanged += new System.EventHandler(this.guna2ImageRadioButton1_CheckedChanged);
             // 
+            // mainPanel
+            // 
+            this.mainPanel.BackColor = System.Drawing.Color.Gainsboro;
+            this.mainPanel.BorderColor = System.Drawing.Color.Transparent;
+            this.mainPanel.BorderRadius = 30;
+            this.mainPanel.FillColor = System.Drawing.Color.Transparent;
+            this.mainPanel.Location = new System.Drawing.Point(24, 84);
+            this.mainPanel.Name = "mainPanel";
+            this.mainPanel.Size = new System.Drawing.Size(1291, 600);
+            this.mainPanel.TabIndex = 0;
+            this.mainPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.mainPanel_Paint);
+            // 
             // Dashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -255,7 +256,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.ClientSize = new System.Drawing.Size(1381, 931);
+            this.ClientSize = new System.Drawing.Size(1370, 749);
             this.Controls.Add(this.guna2CircleButton2);
             this.Controls.Add(this.guna2CircleButton1);
             this.Controls.Add(this.guna2ImageRadioButton1);
@@ -272,8 +273,6 @@
         }
 
         #endregion
-
-        private Guna.UI2.WinForms.Guna2Panel mainPanel;
         private Guna.UI2.WinForms.Guna2Panel guna2Panel2;
         private Guna.UI2.WinForms.Guna2ImageRadioButton guna2ImageRadioButton1;
         private Guna.UI2.WinForms.Guna2Button guna2Button5;
@@ -285,5 +284,6 @@
         private Guna.UI2.WinForms.Guna2Button guna2Button1;
         private Guna.UI2.WinForms.Guna2Button guna2Button2;
         private Guna.UI2.WinForms.Guna2Button guna2Button7;
+        private Guna.UI2.WinForms.Guna2Panel mainPanel;
     }
 }

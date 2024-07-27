@@ -39,12 +39,14 @@
             // 
             // bgPanel
             // 
+            this.bgPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.bgPanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("bgPanel.BackgroundImage")));
-            this.bgPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.bgPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.bgPanel.Location = new System.Drawing.Point(0, 0);
             this.bgPanel.Name = "bgPanel";
-            this.bgPanel.Size = new System.Drawing.Size(1320, 742);
+            this.bgPanel.Size = new System.Drawing.Size(1293, 620);
             this.bgPanel.TabIndex = 13;
+            this.bgPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.bgPanel_Paint);
             // 
             // webLabel
             // 
@@ -97,7 +99,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
-            this.ClientSize = new System.Drawing.Size(1316, 743);
+            this.ClientSize = new System.Drawing.Size(1293, 615);
             this.Controls.Add(this.contactLabel);
             this.Controls.Add(this.emailLabel);
             this.Controls.Add(this.bgPanel);
