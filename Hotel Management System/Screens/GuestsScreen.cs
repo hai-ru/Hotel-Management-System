@@ -38,6 +38,7 @@ namespace Hotel_Management_System.Controllers
         {
             InitializeComponent();
             guestIdField.ReadOnly = false;
+            loadingText.Visible = false;
             //checkIfEmployee();
         }
 
@@ -85,6 +86,7 @@ namespace Hotel_Management_System.Controllers
 
         private async void refreshTable(string search = "")
         {
+            loadingText.Visible = true;
             HttpData result = await conn.GetCustomerList(search);
             if (!result.status)
             {
@@ -93,6 +95,7 @@ namespace Hotel_Management_System.Controllers
             }
             DataTable MyTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
             guestTable.DataSource = MyTable;
+            loadingText.Visible = false;
         }
 
         private async void GuestsScreen_Load(object sender, EventArgs e)
@@ -132,13 +135,13 @@ namespace Hotel_Management_System.Controllers
 
         private async void addButton_Click(object sender, EventArgs e)
         {
+            loadingText.Visible = true;
             bool regCheck = regChecker();
             if (regCheck == false)
             {
                 return;
             }
 
-            //add logic here
             HttpData result = await conn.StoreCustomer(
                 "insert",
                 namaField.Text,
@@ -198,6 +201,7 @@ namespace Hotel_Management_System.Controllers
 
         private async void updateButton_Click(object sender, EventArgs e)
         {
+            loadingText.Visible = true;
             if (guestIdField.Text == "")
             {
                 MessageBox.Show("Please enter id to update record.", "Missing Info", MessageBoxButtons.OK);

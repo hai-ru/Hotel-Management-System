@@ -42,6 +42,7 @@ namespace Hotel_Management_System.Screens
             this.label2 = new System.Windows.Forms.Label();
             this.guna2Button2 = new Guna.UI2.WinForms.Guna2Button();
             this.serachBoxField = new Guna.UI2.WinForms.Guna2TextBox();
+            this.loadingText = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.bookingTable)).BeginInit();
             this.SuspendLayout();
             // 
@@ -221,12 +222,25 @@ namespace Hotel_Management_System.Screens
             this.serachBoxField.TextChanged += new System.EventHandler(this.serachBoxField_TextChanged);
             this.serachBoxField.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchBoxField_KeyDown);
             // 
+            // loadingText
+            // 
+            this.loadingText.AutoSize = true;
+            this.loadingText.BackColor = System.Drawing.Color.White;
+            this.loadingText.Font = new System.Drawing.Font("Cooper Black", 24F);
+            this.loadingText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.loadingText.Location = new System.Drawing.Point(479, 321);
+            this.loadingText.Name = "loadingText";
+            this.loadingText.Size = new System.Drawing.Size(174, 36);
+            this.loadingText.TabIndex = 136;
+            this.loadingText.Text = "Loading...";
+            // 
             // HistoryScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(1133, 678);
+            this.Controls.Add(this.loadingText);
             this.Controls.Add(this.serachBoxField);
             this.Controls.Add(this.guna2Button2);
             this.Controls.Add(this.label2);
@@ -259,5 +273,6 @@ namespace Hotel_Management_System.Screens
         private System.Windows.Forms.Label label2;
         private Guna.UI2.WinForms.Guna2Button guna2Button2;
         private Guna.UI2.WinForms.Guna2TextBox serachBoxField;
+        private System.Windows.Forms.Label loadingText;
     }
 }

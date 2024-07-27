@@ -21,6 +21,7 @@ namespace Hotel_Management_System.Controllers
             InitializeComponent();
             //roomIdField.ReadOnly = false;
             //costField.ReadOnly = true;
+            loadingText.Visible = false;
         }
 
         private void populateTable()
@@ -44,15 +45,18 @@ namespace Hotel_Management_System.Controllers
 
         private async void refreshTable()
         {
+            loadingText.Visible = true;
             HttpData result = await conn.GetRoomList();
             if (!result.status)
             {
+                loadingText.Visible=false;
                 MessageBox.Show(result.message);
                 return;
             }
             DataTable MyTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
             roomsTable.DataSource = MyTable;
             roomsTable.CellFormatting += roomsTable_CellFormatting;
+            loadingText.Visible = false;
         }
 
         private void roomsTable_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -399,6 +403,11 @@ namespace Hotel_Management_System.Controllers
         {
             //typeCmbox.Items.Clear();
             populateTypeComboBox();
+        }
+
+        private void loadingText_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

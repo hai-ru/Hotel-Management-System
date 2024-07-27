@@ -43,6 +43,8 @@ namespace Hotel_Management_System.Controllers
             //bookingIdField.ReadOnly = false;
             checkIfEmployee();
             //addButton.Enabled = false;
+            loadingText.Visible = false;
+            kosongText.Visible = false;
         }
 
         private void checkIfEmployee()
@@ -243,6 +245,7 @@ namespace Hotel_Management_System.Controllers
 
         private async void refreshTable(string date = null)
         {
+            loadingText.Visible = true;
             HttpData result = await conn.GetCheckinList(date);
             if (!result.status)
             {
@@ -251,6 +254,7 @@ namespace Hotel_Management_System.Controllers
             }
             System.Data.DataTable MyTable = JsonConvert.DeserializeObject<System.Data.DataTable>(result.data.ToString());
             bookingTable.DataSource = MyTable;
+            loadingText.Visible = false;
         }
 
         private void FilterTableCheckinDate_ValueChanged(object sender, EventArgs e)
@@ -467,6 +471,7 @@ namespace Hotel_Management_System.Controllers
 
         private async void addButton_Click(object sender, EventArgs e)
         {
+            loadingText.Visible = true;
             if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
                 roomIdCMBox.SelectedIndex != -1)
                 {

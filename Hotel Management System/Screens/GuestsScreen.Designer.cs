@@ -53,6 +53,7 @@
             this.serachBoxField = new Guna.UI2.WinForms.Guna2TextBox();
             this.nikField = new Guna.UI2.WinForms.Guna2TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.loadingText = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.guestTable)).BeginInit();
             this.SuspendLayout();
             // 
@@ -94,7 +95,7 @@
             this.guestIdField.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.guestIdField.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.guestIdField.Location = new System.Drawing.Point(763, 63);
-            this.guestIdField.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.guestIdField.Margin = new System.Windows.Forms.Padding(4);
             this.guestIdField.Name = "guestIdField";
             this.guestIdField.PasswordChar = '\0';
             this.guestIdField.PlaceholderText = "";
@@ -138,7 +139,7 @@
             this.namaField.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.namaField.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.namaField.Location = new System.Drawing.Point(762, 124);
-            this.namaField.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.namaField.Margin = new System.Windows.Forms.Padding(4);
             this.namaField.Name = "namaField";
             this.namaField.PasswordChar = '\0';
             this.namaField.PlaceholderText = "";
@@ -159,7 +160,7 @@
             this.numberField.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.numberField.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.numberField.Location = new System.Drawing.Point(764, 246);
-            this.numberField.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numberField.Margin = new System.Windows.Forms.Padding(4);
             this.numberField.Name = "numberField";
             this.numberField.PasswordChar = '\0';
             this.numberField.PlaceholderText = "";
@@ -192,7 +193,7 @@
             this.alamatField.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.alamatField.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.alamatField.Location = new System.Drawing.Point(763, 306);
-            this.alamatField.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.alamatField.Margin = new System.Windows.Forms.Padding(4);
             this.alamatField.Name = "alamatField";
             this.alamatField.PasswordChar = '\0';
             this.alamatField.PlaceholderText = "";
@@ -224,7 +225,7 @@
             this.cityField.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cityField.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.cityField.Location = new System.Drawing.Point(946, 377);
-            this.cityField.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cityField.Margin = new System.Windows.Forms.Padding(4);
             this.cityField.Name = "cityField";
             this.cityField.PasswordChar = '\0';
             this.cityField.PlaceholderText = "";
@@ -256,7 +257,7 @@
             this.provinsiField.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.provinsiField.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.provinsiField.Location = new System.Drawing.Point(763, 377);
-            this.provinsiField.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.provinsiField.Margin = new System.Windows.Forms.Padding(4);
             this.provinsiField.Name = "provinsiField";
             this.provinsiField.PasswordChar = '\0';
             this.provinsiField.PlaceholderText = "";
@@ -387,7 +388,7 @@
             this.serachBoxField.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.serachBoxField.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.serachBoxField.Location = new System.Drawing.Point(373, 22);
-            this.serachBoxField.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.serachBoxField.Margin = new System.Windows.Forms.Padding(4);
             this.serachBoxField.Name = "serachBoxField";
             this.serachBoxField.PasswordChar = '\0';
             this.serachBoxField.PlaceholderText = "";
@@ -409,7 +410,7 @@
             this.nikField.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.nikField.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.nikField.Location = new System.Drawing.Point(763, 181);
-            this.nikField.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.nikField.Margin = new System.Windows.Forms.Padding(4);
             this.nikField.Name = "nikField";
             this.nikField.PasswordChar = '\0';
             this.nikField.PlaceholderText = "";
@@ -431,12 +432,25 @@
             this.label3.Text = "NIK";
             this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
+            // loadingText
+            // 
+            this.loadingText.AutoSize = true;
+            this.loadingText.BackColor = System.Drawing.Color.White;
+            this.loadingText.Font = new System.Drawing.Font("Cooper Black", 24F);
+            this.loadingText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.loadingText.Location = new System.Drawing.Point(303, 321);
+            this.loadingText.Name = "loadingText";
+            this.loadingText.Size = new System.Drawing.Size(174, 36);
+            this.loadingText.TabIndex = 121;
+            this.loadingText.Text = "Loading...";
+            // 
             // GuestsScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(1133, 560);
+            this.Controls.Add(this.loadingText);
             this.Controls.Add(this.nikField);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.serachBoxField);
@@ -468,8 +482,6 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
-            //this.
-
         }
 
         #endregion
@@ -495,5 +507,6 @@
         private Guna.UI2.WinForms.Guna2TextBox serachBoxField;
         private Guna.UI2.WinForms.Guna2TextBox nikField;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label loadingText;
     }
 }

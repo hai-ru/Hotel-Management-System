@@ -68,6 +68,8 @@ namespace Hotel_Management_System.Controllers
             this.label14 = new System.Windows.Forms.Label();
             this.reservasiCb = new Guna.UI2.WinForms.Guna2ComboBox();
             this.guna2Button4 = new Guna.UI2.WinForms.Guna2Button();
+            this.loadingText = new System.Windows.Forms.Label();
+            this.kosongText = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.bookingTable)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -677,12 +679,38 @@ namespace Hotel_Management_System.Controllers
             this.guna2Button4.Text = "TAMPILKAN SEMUA";
             this.guna2Button4.Click += new System.EventHandler(this.guna2Button4_Click);
             // 
+            // loadingText
+            // 
+            this.loadingText.AutoSize = true;
+            this.loadingText.BackColor = System.Drawing.Color.White;
+            this.loadingText.Font = new System.Drawing.Font("Cooper Black", 24F);
+            this.loadingText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.loadingText.Location = new System.Drawing.Point(460, 302);
+            this.loadingText.Name = "loadingText";
+            this.loadingText.Size = new System.Drawing.Size(174, 36);
+            this.loadingText.TabIndex = 136;
+            this.loadingText.Text = "Loading...";
+            // 
+            // kosongText
+            // 
+            this.kosongText.AutoSize = true;
+            this.kosongText.BackColor = System.Drawing.Color.White;
+            this.kosongText.Font = new System.Drawing.Font("Cooper Black", 24F);
+            this.kosongText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.kosongText.Location = new System.Drawing.Point(432, 338);
+            this.kosongText.Name = "kosongText";
+            this.kosongText.Size = new System.Drawing.Size(219, 36);
+            this.kosongText.TabIndex = 137;
+            this.kosongText.Text = "Data Kosong";
+            // 
             // BookingsScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(1274, 607);
+            this.Controls.Add(this.kosongText);
+            this.Controls.Add(this.loadingText);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.guna2Button4);
             this.Controls.Add(this.groupBox1);
@@ -741,5 +769,7 @@ namespace Hotel_Management_System.Controllers
         private System.Windows.Forms.Label label14;
         private Guna.UI2.WinForms.Guna2ComboBox reservasiCb;
         private Guna.UI2.WinForms.Guna2Button guna2Button4;
+        private System.Windows.Forms.Label loadingText;
+        private System.Windows.Forms.Label kosongText;
     }
 }

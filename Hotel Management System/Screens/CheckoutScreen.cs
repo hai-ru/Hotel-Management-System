@@ -29,6 +29,7 @@ namespace Hotel_Management_System.Controllers
             InitializeComponent();
             //paymentIdField.ReadOnly = false;
             checkIfEmployee();
+            loadingText.Visible = false;
         }
 
         private void checkIfEmployee()
@@ -101,6 +102,7 @@ namespace Hotel_Management_System.Controllers
 
         private async void refreshTable(string date = null)
         {
+            loadingText.Visible = true;
             //string date = filterDate.ToString("yyyy-MM-dd");
             HttpData result = await conn.GetCheckinList(date);
             if (!result.status)
@@ -113,8 +115,7 @@ namespace Hotel_Management_System.Controllers
             checkoutTable.DataSource = MyTable;
 
             checkoutTable.CellFormatting += Table_CellFormatting;
-
-
+            loadingText.Visible = false;
         }
 
         private void Table_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -149,6 +150,7 @@ namespace Hotel_Management_System.Controllers
 
         private async void payButton_Click(object sender, EventArgs e)
         {
+            loadingText.Visible = true;
             string sisa = string.Concat(sisaField.Text.Where(char.IsDigit));
             string depositReturn = string.Concat(depositReturnField.Text.Where(char.IsDigit));
 

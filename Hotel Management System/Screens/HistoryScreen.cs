@@ -24,11 +24,13 @@ namespace Hotel_Management_System.Screens
         public HistoryScreen()
         {
             InitializeComponent();
+            loadingText.Visible = false;
         }
 
 
         private async void refreshTable(string date = null,string search_name = "")
         {
+            loadingText.Visible = true;
             HttpData result = await conn.GetHistoryList(date,search_name);
             if (!result.status)
             {
@@ -37,6 +39,7 @@ namespace Hotel_Management_System.Screens
             }
             System.Data.DataTable MyTable = JsonConvert.DeserializeObject<System.Data.DataTable>(result.data.ToString());
             bookingTable.DataSource = MyTable;
+            loadingText.Visible = false;
         }
 
         private void ReservationScreen_Load(object sender, EventArgs e)

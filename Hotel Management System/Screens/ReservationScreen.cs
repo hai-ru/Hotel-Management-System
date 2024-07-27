@@ -35,6 +35,7 @@ namespace Hotel_Management_System.Screens
         public ReservationScreen()
         {
             InitializeComponent();
+            loadingText.Visible = false;
         }
 
         private async void populateGuestComboBoxAsync()
@@ -72,6 +73,7 @@ namespace Hotel_Management_System.Screens
 
         private async void refreshTable(string date = "")
         {
+            loadingText.Visible = true;
             HttpData result = await conn.GetReservationList(date);
             if (!result.status)
             {
@@ -80,6 +82,7 @@ namespace Hotel_Management_System.Screens
             }
             System.Data.DataTable MyTable = JsonConvert.DeserializeObject<System.Data.DataTable>(result.data.ToString());
             bookingTable.DataSource = MyTable;
+            loadingText.Visible = false;
         }
 
         private async void populateOTAComboBoxAsync()
@@ -190,6 +193,7 @@ namespace Hotel_Management_System.Screens
 
         private async void addButton_Click(object sender, EventArgs e)
         {
+            loadingText.Visible = true;
             if (!ValidationCheckinCheckout())
             {
                 return;
@@ -335,6 +339,7 @@ namespace Hotel_Management_System.Screens
 
         private async void updateButton_Click(object sender, EventArgs e)
         {
+            loadingText.Visible = true;
             if (!ValidationCheckinCheckout())
             {
                 return;
