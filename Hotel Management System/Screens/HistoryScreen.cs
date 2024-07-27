@@ -44,7 +44,7 @@ namespace Hotel_Management_System.Screens
 
         private void ReservationScreen_Load(object sender, EventArgs e)
         {
-            FilterTableCheckinDate.Value = DateTime.Today;
+            //FilterTableCheckinDate.Value = DateTime.Today;
             refreshTable();
         }
 
