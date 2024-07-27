@@ -135,6 +135,7 @@ namespace Hotel_Management_System.Controllers
 
         private async void addButton_Click(object sender, EventArgs e)
         {
+            addButton.Enabled = false;
             loadingText.Visible = true;
             bool regCheck = regChecker();
             if (regCheck == false)
@@ -158,6 +159,7 @@ namespace Hotel_Management_System.Controllers
             updateButton.Enabled = false;
 
             loadingText.Visible= false;
+            addButton.Enabled = true;
         }
 
         private void retrieveData(int id)
