@@ -44,7 +44,6 @@ namespace Hotel_Management_System.Controllers
             this.label8 = new System.Windows.Forms.Label();
             this.amountField = new Guna.UI2.WinForms.Guna2TextBox();
             this.addButton = new Guna.UI2.WinForms.Guna2Button();
-            this.roomIdCMBox = new Guna.UI2.WinForms.Guna2ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.bookingTable = new Guna.UI2.WinForms.Guna2DataGridView();
             this.label9 = new System.Windows.Forms.Label();
@@ -65,11 +64,12 @@ namespace Hotel_Management_System.Controllers
             this.guna2Button3 = new Guna.UI2.WinForms.Guna2Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.NoKamarcomboBox = new System.Windows.Forms.ComboBox();
             this.label14 = new System.Windows.Forms.Label();
-            this.reservasiCb = new Guna.UI2.WinForms.Guna2ComboBox();
             this.guna2Button4 = new Guna.UI2.WinForms.Guna2Button();
             this.loadingText = new System.Windows.Forms.Label();
             this.kosongText = new System.Windows.Forms.Label();
+            this.reservasiCb = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.bookingTable)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -77,11 +77,11 @@ namespace Hotel_Management_System.Controllers
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Cooper Black", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.label1.Location = new System.Drawing.Point(27, 21);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(120, 27);
+            this.label1.Size = new System.Drawing.Size(106, 29);
             this.label1.TabIndex = 35;
             this.label1.Text = "Check In";
             this.label1.Click += new System.EventHandler(this.label1_Click);
@@ -89,12 +89,12 @@ namespace Hotel_Management_System.Controllers
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.label4.Location = new System.Drawing.Point(9, 60);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(105, 19);
+            this.label4.Size = new System.Drawing.Size(95, 20);
             this.label4.TabIndex = 44;
             this.label4.Text = "Nama Tamu";
             // 
@@ -118,34 +118,34 @@ namespace Hotel_Management_System.Controllers
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.label3.Location = new System.Drawing.Point(767, 140);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(0, 19);
+            this.label3.Size = new System.Drawing.Size(0, 20);
             this.label3.TabIndex = 67;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.label5.Location = new System.Drawing.Point(10, 128);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(82, 19);
+            this.label5.Size = new System.Drawing.Size(71, 20);
             this.label5.TabIndex = 68;
             this.label5.Text = "Check-in";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.label6.Location = new System.Drawing.Point(157, 128);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(93, 19);
+            this.label6.Size = new System.Drawing.Size(82, 20);
             this.label6.TabIndex = 69;
             this.label6.Text = "Check-out";
             // 
@@ -193,12 +193,12 @@ namespace Hotel_Management_System.Controllers
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.label8.Location = new System.Drawing.Point(8, 252);
             this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(105, 19);
+            this.label8.Size = new System.Drawing.Size(92, 20);
             this.label8.TabIndex = 74;
             this.label8.Text = "Harga Total";
             this.label8.Click += new System.EventHandler(this.label8_Click);
@@ -231,7 +231,7 @@ namespace Hotel_Management_System.Controllers
             this.addButton.BorderRadius = 20;
             this.addButton.BorderThickness = 1;
             this.addButton.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.addButton.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.addButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.addButton.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.addButton.Location = new System.Drawing.Point(4, 534);
             this.addButton.Margin = new System.Windows.Forms.Padding(2);
@@ -241,33 +241,15 @@ namespace Hotel_Management_System.Controllers
             this.addButton.Text = "ADD";
             this.addButton.Click += new System.EventHandler(this.addButton_Click);
             // 
-            // roomIdCMBox
-            // 
-            this.roomIdCMBox.BackColor = System.Drawing.Color.Transparent;
-            this.roomIdCMBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.roomIdCMBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.roomIdCMBox.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.roomIdCMBox.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.roomIdCMBox.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.roomIdCMBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
-            this.roomIdCMBox.ItemHeight = 30;
-            this.roomIdCMBox.Location = new System.Drawing.Point(9, 211);
-            this.roomIdCMBox.Margin = new System.Windows.Forms.Padding(2);
-            this.roomIdCMBox.Name = "roomIdCMBox";
-            this.roomIdCMBox.Size = new System.Drawing.Size(278, 36);
-            this.roomIdCMBox.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
-            this.roomIdCMBox.TabIndex = 89;
-            this.roomIdCMBox.SelectedIndexChanged += new System.EventHandler(this.roomIdCMBox_SelectedIndexChanged);
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.label7.Location = new System.Drawing.Point(6, 191);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(96, 19);
+            this.label7.Size = new System.Drawing.Size(83, 20);
             this.label7.TabIndex = 88;
             this.label7.Text = "No. Kamar";
             // 
@@ -328,12 +310,12 @@ namespace Hotel_Management_System.Controllers
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.label9.Location = new System.Drawing.Point(9, 309);
             this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(157, 19);
+            this.label9.Size = new System.Drawing.Size(137, 20);
             this.label9.TabIndex = 119;
             this.label9.Text = "Total Pembayaran";
             this.label9.Click += new System.EventHandler(this.label9_Click);
@@ -354,7 +336,7 @@ namespace Hotel_Management_System.Controllers
             this.FilterTableCheckinDate.Name = "FilterTableCheckinDate";
             this.FilterTableCheckinDate.Size = new System.Drawing.Size(152, 36);
             this.FilterTableCheckinDate.TabIndex = 120;
-            this.FilterTableCheckinDate.Value = DateTime.Today;
+            this.FilterTableCheckinDate.Value = new System.DateTime(2024, 8, 5, 0, 0, 0, 0);
             this.FilterTableCheckinDate.ValueChanged += new System.EventHandler(this.FilterTableCheckinDate_ValueChanged);
             // 
             // guna2Button1
@@ -363,7 +345,7 @@ namespace Hotel_Management_System.Controllers
             this.guna2Button1.BorderRadius = 20;
             this.guna2Button1.BorderThickness = 1;
             this.guna2Button1.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.guna2Button1.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.guna2Button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.guna2Button1.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.guna2Button1.Location = new System.Drawing.Point(4, 563);
             this.guna2Button1.Margin = new System.Windows.Forms.Padding(2);
@@ -379,7 +361,7 @@ namespace Hotel_Management_System.Controllers
             this.guna2Button2.BorderRadius = 20;
             this.guna2Button2.BorderThickness = 1;
             this.guna2Button2.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.guna2Button2.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.guna2Button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.guna2Button2.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.guna2Button2.Location = new System.Drawing.Point(161, 563);
             this.guna2Button2.Margin = new System.Windows.Forms.Padding(2);
@@ -431,12 +413,12 @@ namespace Hotel_Management_System.Controllers
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.label2.Location = new System.Drawing.Point(7, 366);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(171, 19);
+            this.label2.Size = new System.Drawing.Size(156, 20);
             this.label2.TabIndex = 123;
             this.label2.Text = "Metode Pembayaran";
             this.label2.Click += new System.EventHandler(this.label2_Click);
@@ -462,24 +444,24 @@ namespace Hotel_Management_System.Controllers
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.label10.Location = new System.Drawing.Point(182, 362);
             this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(107, 19);
+            this.label10.Size = new System.Drawing.Size(93, 20);
             this.label10.TabIndex = 125;
             this.label10.Text = "Agen Travel";
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.label11.Location = new System.Drawing.Point(7, 426);
             this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(72, 19);
+            this.label11.Size = new System.Drawing.Size(64, 20);
             this.label11.TabIndex = 128;
             this.label11.Text = "Deposit";
             // 
@@ -507,12 +489,12 @@ namespace Hotel_Management_System.Controllers
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.label12.Location = new System.Drawing.Point(10, 479);
             this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(73, 19);
+            this.label12.Size = new System.Drawing.Size(66, 20);
             this.label12.TabIndex = 130;
             this.label12.Text = "Catatan";
             // 
@@ -561,12 +543,12 @@ namespace Hotel_Management_System.Controllers
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.label13.Location = new System.Drawing.Point(8, 2);
             this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(29, 19);
+            this.label13.Size = new System.Drawing.Size(26, 20);
             this.label13.TabIndex = 131;
             this.label13.Text = "ID";
             // 
@@ -576,7 +558,7 @@ namespace Hotel_Management_System.Controllers
             this.guna2Button3.BorderRadius = 20;
             this.guna2Button3.BorderThickness = 1;
             this.guna2Button3.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.guna2Button3.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.guna2Button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.guna2Button3.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.guna2Button3.Location = new System.Drawing.Point(161, 534);
             this.guna2Button3.Margin = new System.Windows.Forms.Padding(2);
@@ -597,11 +579,11 @@ namespace Hotel_Management_System.Controllers
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.label14);
             this.groupBox2.Controls.Add(this.reservasiCb);
+            this.groupBox2.Controls.Add(this.NoKamarcomboBox);
+            this.groupBox2.Controls.Add(this.label14);
             this.groupBox2.Controls.Add(this.guna2Button3);
             this.groupBox2.Controls.Add(this.bookingIdField);
-            this.groupBox2.Controls.Add(this.roomIdCMBox);
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.depositField);
@@ -633,35 +615,30 @@ namespace Hotel_Management_System.Controllers
             this.groupBox2.TabIndex = 135;
             this.groupBox2.TabStop = false;
             // 
+            // NoKamarcomboBox
+            // 
+            this.NoKamarcomboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.NoKamarcomboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.NoKamarcomboBox.DropDownHeight = 150;
+            this.NoKamarcomboBox.FormattingEnabled = true;
+            this.NoKamarcomboBox.IntegralHeight = false;
+            this.NoKamarcomboBox.Location = new System.Drawing.Point(9, 214);
+            this.NoKamarcomboBox.Name = "NoKamarcomboBox";
+            this.NoKamarcomboBox.Size = new System.Drawing.Size(278, 21);
+            this.NoKamarcomboBox.TabIndex = 135;
+            this.NoKamarcomboBox.SelectedIndexChanged += new System.EventHandler(this.roomIdCMBox_SelectedIndexChanged);
+            // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.label14.Location = new System.Drawing.Point(120, 2);
+            this.label14.Location = new System.Drawing.Point(120, 11);
             this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(87, 19);
+            this.label14.Size = new System.Drawing.Size(79, 20);
             this.label14.TabIndex = 133;
             this.label14.Text = "Reservasi";
-            // 
-            // reservasiCb
-            // 
-            this.reservasiCb.BackColor = System.Drawing.Color.Transparent;
-            this.reservasiCb.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.reservasiCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.reservasiCb.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.reservasiCb.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.reservasiCb.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.reservasiCb.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
-            this.reservasiCb.ItemHeight = 30;
-            this.reservasiCb.Location = new System.Drawing.Point(124, 21);
-            this.reservasiCb.Margin = new System.Windows.Forms.Padding(2);
-            this.reservasiCb.Name = "reservasiCb";
-            this.reservasiCb.Size = new System.Drawing.Size(163, 36);
-            this.reservasiCb.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
-            this.reservasiCb.TabIndex = 134;
-            this.reservasiCb.SelectedIndexChanged += new System.EventHandler(this.reservasiCb_SelectedIndexChanged);
             // 
             // guna2Button4
             // 
@@ -669,7 +646,7 @@ namespace Hotel_Management_System.Controllers
             this.guna2Button4.BorderRadius = 20;
             this.guna2Button4.BorderThickness = 1;
             this.guna2Button4.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.guna2Button4.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.guna2Button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.guna2Button4.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.guna2Button4.Location = new System.Drawing.Point(702, 26);
             this.guna2Button4.Margin = new System.Windows.Forms.Padding(2);
@@ -683,11 +660,11 @@ namespace Hotel_Management_System.Controllers
             // 
             this.loadingText.AutoSize = true;
             this.loadingText.BackColor = System.Drawing.Color.White;
-            this.loadingText.Font = new System.Drawing.Font("Cooper Black", 24F);
+            this.loadingText.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
             this.loadingText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.loadingText.Location = new System.Drawing.Point(460, 302);
             this.loadingText.Name = "loadingText";
-            this.loadingText.Size = new System.Drawing.Size(174, 36);
+            this.loadingText.Size = new System.Drawing.Size(159, 37);
             this.loadingText.TabIndex = 136;
             this.loadingText.Text = "Loading...";
             // 
@@ -695,13 +672,21 @@ namespace Hotel_Management_System.Controllers
             // 
             this.kosongText.AutoSize = true;
             this.kosongText.BackColor = System.Drawing.Color.White;
-            this.kosongText.Font = new System.Drawing.Font("Cooper Black", 24F);
+            this.kosongText.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
             this.kosongText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.kosongText.Location = new System.Drawing.Point(432, 338);
             this.kosongText.Name = "kosongText";
-            this.kosongText.Size = new System.Drawing.Size(219, 36);
+            this.kosongText.Size = new System.Drawing.Size(203, 37);
             this.kosongText.TabIndex = 137;
             this.kosongText.Text = "Data Kosong";
+            // 
+            // reservasiCb
+            // 
+            this.reservasiCb.FormattingEnabled = true;
+            this.reservasiCb.Location = new System.Drawing.Point(124, 36);
+            this.reservasiCb.Name = "reservasiCb";
+            this.reservasiCb.Size = new System.Drawing.Size(163, 21);
+            this.reservasiCb.TabIndex = 136;
             // 
             // BookingsScreen
             // 
@@ -745,7 +730,6 @@ namespace Hotel_Management_System.Controllers
         private System.Windows.Forms.Label label8;
         private Guna.UI2.WinForms.Guna2TextBox amountField;
         private Guna.UI2.WinForms.Guna2Button addButton;
-        private Guna.UI2.WinForms.Guna2ComboBox roomIdCMBox;
         private System.Windows.Forms.Label label7;
         private Guna.UI2.WinForms.Guna2DataGridView bookingTable;
         private System.Windows.Forms.Label label9;
@@ -767,9 +751,10 @@ namespace Hotel_Management_System.Controllers
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label14;
-        private Guna.UI2.WinForms.Guna2ComboBox reservasiCb;
         private Guna.UI2.WinForms.Guna2Button guna2Button4;
         private System.Windows.Forms.Label loadingText;
         private System.Windows.Forms.Label kosongText;
+        private System.Windows.Forms.ComboBox NoKamarcomboBox;
+        private System.Windows.Forms.ComboBox reservasiCb;
     }
 }

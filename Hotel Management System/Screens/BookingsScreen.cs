@@ -161,20 +161,6 @@ namespace Hotel_Management_System.Controllers
             }
         }
 
-        private void populateRoomId()
-        {
-            SqlConnection con = dc.getConnection();
-            con.Open();
-            query = "SELECT RoomId from Rooms.Room WHERE RoomTypeId = " + roomId + " AND Available = 'Yes' AND HotelId = " + Statics.hotelIdTKN;
-            SqlCommand cmd = new SqlCommand(query, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
-            {
-                roomIdCMBox.Items.Add(dr["RoomId"]);
-            }
-            con.Close();
-        }
-
         private async void populateRoomAsync()
         {
             HttpData result = await conn.GetRoomList(true);
@@ -188,16 +174,16 @@ namespace Hotel_Management_System.Controllers
             rooms = JsonConvert.DeserializeObject<Room[]>(result.data.ToString());
 
             // Clear existing items in roomIdCMBox
-            roomIdCMBox.Items.Clear();
+            NoKamarcomboBox.Items.Clear();
 
 
             // Bind rooms to roomIdCMBox
-            roomIdCMBox.DisplayMember = "ROOM NAME"; // Set the DisplayMember to "name" property
+            NoKamarcomboBox.DisplayMember = "ROOM NAME";
 
             foreach (Room room in rooms)
             {
                 // Add each Room object to roomIdCMBox
-                roomIdCMBox.Items.Add(room);
+                NoKamarcomboBox.Items.Add(room);
             }
         }
 
@@ -267,13 +253,15 @@ namespace Hotel_Management_System.Controllers
 
         private async void updateButton_Click(object sender, EventArgs e)
         {
-            if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
-    roomIdCMBox.SelectedIndex != -1)
+            if (
+                guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
+                NoKamarcomboBox.SelectedIndex != -1
+                )
             {
                 // Extract values from form fields
                 string checkinId = bookingIdField.Text;
 
-                var selectedRoom = roomIdCMBox.SelectedItem as Room;
+                var selectedRoom = NoKamarcomboBox.SelectedItem as Room;
 
 
                 string room_product_id = selectedRoom?.ProductId.ToString();
@@ -339,7 +327,7 @@ namespace Hotel_Management_System.Controllers
             guestIdCMBox.SelectedIndex = -1;
             checkinPicker.Text = "";
             checkoutPicker.Text = "";
-            roomIdCMBox.SelectedIndex = -1;
+            NoKamarcomboBox.SelectedIndex = -1;
             amountField.Text = "";
             depositField.Text = "";
             depositTextBox1.Text = "";
@@ -426,7 +414,7 @@ namespace Hotel_Management_System.Controllers
                 var selectedRoom = rooms.FirstOrDefault(room => room.Name == roomName);
                 if (selectedRoom != null)
                 {
-                    roomIdCMBox.SelectedItem = selectedRoom;
+                    NoKamarcomboBox.SelectedItem = selectedRoom;
                 }
                 else
                 {
@@ -475,7 +463,7 @@ namespace Hotel_Management_System.Controllers
             addButton.Enabled = false;
             loadingText.Visible = true;
             if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
-                roomIdCMBox.SelectedIndex != -1)
+                NoKamarcomboBox.SelectedIndex != -1)
                 {
 
 
@@ -488,7 +476,7 @@ namespace Hotel_Management_System.Controllers
 
                 // Extract values from form fields
                 var selectedGuest = guestIdCMBox.SelectedItem as Guest; 
-                var selectedRoom = roomIdCMBox.SelectedItem as Room;
+                var selectedRoom = NoKamarcomboBox.SelectedItem as Room;
 
                 string contact_id = selectedGuest?.Id.ToString();
 
@@ -908,7 +896,7 @@ namespace Hotel_Management_System.Controllers
 
         private void roomIdCMBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (roomIdCMBox.SelectedItem is Room selectedRoom)
+            if (NoKamarcomboBox.SelectedItem is Room selectedRoom)
             {
                 // Assuming unit_price is a numeric type like decimal, parse it accordingly
                 if (decimal.TryParse(selectedRoom.SellingPrice, out decimal price))
@@ -954,7 +942,7 @@ namespace Hotel_Management_System.Controllers
 
         private void CalculateAmount()
         {
-            Room selectedRoom = (Room)roomIdCMBox.SelectedItem;
+            Room selectedRoom = (Room)NoKamarcomboBox.SelectedItem;
             if (selectedRoom == null)
             {
                 return; // Handle case where no room is selected
@@ -1115,13 +1103,13 @@ namespace Hotel_Management_System.Controllers
 
         private async void guna2Button1_Click(object sender, EventArgs e)
         {
-            if (roomIdCMBox.SelectedItem == null)
+            if (NoKamarcomboBox.SelectedItem == null)
             {
                 MessageBox.Show("Silahkan pilih data pada tabel terlebih dahulu");
                 return;
             }
 
-            var selectedRoom = roomIdCMBox.SelectedItem as Room;
+            var selectedRoom = NoKamarcomboBox.SelectedItem as Room;
             var selectedGuest = guestIdCMBox.SelectedItem as Guest;
 
             if (selectedRoom == null || selectedGuest == null)
@@ -1308,5 +1296,6 @@ namespace Hotel_Management_System.Controllers
         {
             refreshTable(null);
         }
+
     }
 }
