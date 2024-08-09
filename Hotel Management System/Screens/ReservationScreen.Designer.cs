@@ -35,7 +35,6 @@ namespace Hotel_Management_System.Screens
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.guestSelect = new Guna.UI2.WinForms.Guna2ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -50,6 +49,8 @@ namespace Hotel_Management_System.Screens
             this.deleteButton = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Button1 = new Guna.UI2.WinForms.Guna2Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.guna2ComboBox1 = new Guna.UI2.WinForms.Guna2ComboBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.depositTextBox1 = new Guna.UI2.WinForms.Guna2TextBox();
             this.otaCb = new Guna.UI2.WinForms.Guna2ComboBox();
@@ -63,8 +64,7 @@ namespace Hotel_Management_System.Screens
             this.label2 = new System.Windows.Forms.Label();
             this.idField = new Guna.UI2.WinForms.Guna2TextBox();
             this.loadingText = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.guna2ComboBox1 = new Guna.UI2.WinForms.Guna2ComboBox();
+            this.guestSelect = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.bookingTable)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -85,28 +85,11 @@ namespace Hotel_Management_System.Screens
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.label4.Location = new System.Drawing.Point(173, 2);
+            this.label4.Location = new System.Drawing.Point(90, 5);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(105, 19);
             this.label4.TabIndex = 44;
             this.label4.Text = "Nama Tamu";
-            // 
-            // guestSelect
-            // 
-            this.guestSelect.BackColor = System.Drawing.Color.Transparent;
-            this.guestSelect.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.guestSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.guestSelect.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.guestSelect.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.guestSelect.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.guestSelect.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
-            this.guestSelect.ItemHeight = 30;
-            this.guestSelect.Location = new System.Drawing.Point(177, 25);
-            this.guestSelect.Name = "guestSelect";
-            this.guestSelect.Size = new System.Drawing.Size(164, 36);
-            this.guestSelect.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
-            this.guestSelect.TabIndex = 66;
-            this.guestSelect.SelectedIndexChanged += new System.EventHandler(this.guestIdCMBox_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -346,6 +329,7 @@ namespace Hotel_Management_System.Screens
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.guestSelect);
             this.groupBox1.Controls.Add(this.guna2ComboBox1);
             this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Controls.Add(this.label11);
@@ -362,7 +346,6 @@ namespace Hotel_Management_System.Screens
             this.groupBox1.Controls.Add(this.idField);
             this.groupBox1.Controls.Add(this.checkinPicker);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.guestSelect);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.deleteButton);
             this.groupBox1.Controls.Add(this.label6);
@@ -376,6 +359,33 @@ namespace Hotel_Management_System.Screens
             this.groupBox1.Size = new System.Drawing.Size(337, 797);
             this.groupBox1.TabIndex = 128;
             this.groupBox1.TabStop = false;
+            // 
+            // guna2ComboBox1
+            // 
+            this.guna2ComboBox1.BackColor = System.Drawing.Color.Transparent;
+            this.guna2ComboBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.guna2ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.guna2ComboBox1.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.guna2ComboBox1.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.guna2ComboBox1.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.guna2ComboBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
+            this.guna2ComboBox1.ItemHeight = 30;
+            this.guna2ComboBox1.Location = new System.Drawing.Point(162, 289);
+            this.guna2ComboBox1.Name = "guna2ComboBox1";
+            this.guna2ComboBox1.Size = new System.Drawing.Size(173, 36);
+            this.guna2ComboBox1.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
+            this.guna2ComboBox1.TabIndex = 140;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.label12.Location = new System.Drawing.Point(158, 267);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(73, 19);
+            this.label12.TabIndex = 139;
+            this.label12.Text = "Catatan";
             // 
             // label11
             // 
@@ -551,7 +561,7 @@ namespace Hotel_Management_System.Screens
             this.idField.PasswordChar = '\0';
             this.idField.PlaceholderText = "";
             this.idField.SelectedText = "";
-            this.idField.Size = new System.Drawing.Size(150, 32);
+            this.idField.Size = new System.Drawing.Size(80, 32);
             this.idField.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.idField.TabIndex = 128;
             // 
@@ -567,32 +577,16 @@ namespace Hotel_Management_System.Screens
             this.loadingText.TabIndex = 129;
             this.loadingText.Text = "Loading...";
             // 
-            // label12
+            // guestSelect
             // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Cooper Black", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.label12.Location = new System.Drawing.Point(158, 267);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(73, 19);
-            this.label12.TabIndex = 139;
-            this.label12.Text = "Catatan";
-            // 
-            // guna2ComboBox1
-            // 
-            this.guna2ComboBox1.BackColor = System.Drawing.Color.Transparent;
-            this.guna2ComboBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.guna2ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.guna2ComboBox1.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.guna2ComboBox1.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.guna2ComboBox1.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.guna2ComboBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
-            this.guna2ComboBox1.ItemHeight = 30;
-            this.guna2ComboBox1.Location = new System.Drawing.Point(162, 289);
-            this.guna2ComboBox1.Name = "guna2ComboBox1";
-            this.guna2ComboBox1.Size = new System.Drawing.Size(173, 36);
-            this.guna2ComboBox1.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
-            this.guna2ComboBox1.TabIndex = 140;
+            this.guestSelect.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.guestSelect.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.guestSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.guestSelect.FormattingEnabled = true;
+            this.guestSelect.Location = new System.Drawing.Point(90, 27);
+            this.guestSelect.Name = "guestSelect";
+            this.guestSelect.Size = new System.Drawing.Size(248, 32);
+            this.guestSelect.TabIndex = 138;
             // 
             // ReservationScreen
             // 
@@ -625,7 +619,6 @@ namespace Hotel_Management_System.Screens
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label4;
-        private Guna.UI2.WinForms.Guna2ComboBox guestSelect;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
@@ -655,5 +648,6 @@ namespace Hotel_Management_System.Screens
         private System.Windows.Forms.Label loadingText;
         private Guna.UI2.WinForms.Guna2ComboBox guna2ComboBox1;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.ComboBox guestSelect;
     }
 }

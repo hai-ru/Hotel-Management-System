@@ -986,12 +986,12 @@ namespace Hotel_Management_System.Controllers
             [JsonProperty("NAME")]
             public string Name { get; set; }
 
-            [JsonProperty("BRAND NAME")]
-            public string Type { get; set; }
+            [JsonProperty("NO HP")]
+            public string Hp { get; set; }
 
             public override string ToString()
             {
-                return Name; // Display the guest name in combobox
+                return Name+" - "+Hp; // Display the guest name in combobox
             }
         }
 

@@ -366,7 +366,7 @@ namespace Hotel_Management_System
 
 
 
-        public async Task<HttpData> GetHistoryList(string date = null, string contact_name = null)
+        public async Task<HttpData> GetHistoryList(string date = null, string contact_name = null, string start_date = "", string end_date = "")
         {
 
             HttpData resultData = new HttpData();
@@ -391,6 +391,11 @@ namespace Hotel_Management_System
                     if (contact_name != null && contact_name != "")
                     {
                         link += "&contact_name=" + contact_name;
+                    }
+
+                    if (start_date != "" && end_date != "")
+                    {
+                        link += "&start=" + start_date + "&end=" + end_date;
                     }
 
 

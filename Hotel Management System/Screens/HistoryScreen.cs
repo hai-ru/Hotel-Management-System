@@ -21,6 +21,7 @@ namespace Hotel_Management_System.Screens
         PaymentMethod[] paymentMethods = new PaymentMethod[] { };
 
         private int durasi_menginap = 1;
+
         public HistoryScreen()
         {
             InitializeComponent();
@@ -31,7 +32,11 @@ namespace Hotel_Management_System.Screens
         private async void refreshTable(string date = null,string search_name = "")
         {
             loadingText.Visible = true;
-            HttpData result = await conn.GetHistoryList(date,search_name);
+
+            string end = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
+            string start = DateTime.Now.AddDays(-3).ToString("yyyy-MM-dd");
+
+            HttpData result = await conn.GetHistoryList(date,search_name,start,end);
             if (!result.status)
             {
                 MessageBox.Show(result.message);
@@ -87,8 +92,8 @@ namespace Hotel_Management_System.Screens
 
         private void FilterTableCheckinDate_ValueChanged(object sender, EventArgs e)
         {
-            string date = FilterTableCheckinDate.Value.ToString("yyyy-MM-dd");
-            refreshTable(date);
+            //string date = FilterTableCheckinDate.Value.ToString("yyyy-MM-dd");
+            //refreshTable(date);
         }
 
         private void guna2Button2_Click(object sender, EventArgs e)
@@ -107,6 +112,32 @@ namespace Hotel_Management_System.Screens
         private void serachBoxField_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void guna2Button3_Click(object sender, EventArgs e)
+        {
+            string id = idField.Text;
+            if (id == "")
+            {
+                MessageBox.Show("Pilih data id disamping terlebih dahulu...");
+                return;
+            }
+            string link = "https://development.norapos.com/api/hotel/print?bill=1&just=room&id=" + id;
+            Form2 form2 = new Form2(link);
+            form2.Show();
+        }
+
+        private void guna2Button4_Click(object sender, EventArgs e)
+        {
+            string id = idField.Text;
+            if (id == "")
+            {
+                MessageBox.Show("Pilih data id disamping terlebih dahulu...");
+                return;
+            }
+            string link = "https://development.norapos.com/api/hotel/print?bill=1&just=misc&id=" + id;
+            Form2 form2 = new Form2(link);
+            form2.Show();
         }
     }
 }
