@@ -590,7 +590,7 @@ namespace Hotel_Management_System
                     valContent.Add("nama", nama);
                     valContent.Add("checkin", checkin);
                     valContent.Add("checkout", checkout);
-                    valContent.Add("product_id", product_id);
+                    valContent.Add("product_sku", product_id);
                     valContent.Add("contact_id", contact_id);
 
                     var content = new FormUrlEncodedContent(valContent);

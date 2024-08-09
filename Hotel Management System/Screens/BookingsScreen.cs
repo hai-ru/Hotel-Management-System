@@ -1111,16 +1111,21 @@ namespace Hotel_Management_System.Controllers
 
         private async void guna2Button1_Click(object sender, EventArgs e)
         {
-            if (NoKamarcomboBox.SelectedItem == null)
-            {
-                MessageBox.Show("Silahkan pilih data pada tabel terlebih dahulu");
-                return;
-            }
 
-            var selectedRoom = NoKamarcomboBox.SelectedItem as Room;
+            //var selectedRoom = NoKamarcomboBox.SelectedItem as Room;
+            string room_id = "";
+            try
+            {
+                var roomSplit = kamarTextbox.Text.Split('-');
+                room_id = new Regex(@"[^\d]").Replace(roomSplit[0],"");
+            }
+            catch
+            {
+                room_id = "";
+            }
             var selectedGuest = guestIdCMBox.SelectedItem as Guest;
 
-            if (selectedRoom == null || selectedGuest == null)
+            if (room_id == "" || selectedGuest == null)
             {
                 MessageBox.Show("Silahkan pilih data yang valid pada tabel.");
                 return;
@@ -1130,11 +1135,11 @@ namespace Hotel_Management_System.Controllers
             string contact_name = selectedGuest.Name.ToString();
             string checkin = checkinPicker.Text;
             string checkout = checkoutPicker.Text;
-            string room_product_id = selectedRoom.ProductId.ToString();
+            //string room_product_id = room_id;
 
             //var createCardTask = Task.Run(() => onity.createCard(selectedRoom.sku, durasi_menginap));
-            var createCardTask = Task.Run(() => onity.createCard(selectedRoom.sku, DateTime.Parse(checkoutPicker.Text)));
-            var logCreateCardTask = conn.LogCreateCard(contact_name, checkin, checkout, room_product_id, contact_id);
+            var createCardTask = Task.Run(() => onity.createCard(room_id, DateTime.Parse(checkoutPicker.Text)));
+            var logCreateCardTask = conn.LogCreateCard(contact_name, checkin, checkout, room_id, contact_id);
 
             var createCardResult = await createCardTask;
 
@@ -1164,7 +1169,7 @@ namespace Hotel_Management_System.Controllers
             }
             else
             {
-                MessageBox.Show("Periksa Koneksi Onity encoder IP dan Port.");
+                //MessageBox.Show("Periksa Koneksi Onity encoder IP dan Port.");
             }
         }
 
