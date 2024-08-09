@@ -338,6 +338,8 @@ namespace Hotel_Management_System.Controllers
             paymentComboBox.SelectedIndex = -1;
             reservasiCb.SelectedIndex = -1;
             addButton.Enabled = true;
+            NoKamarcomboBox.Visible = true;
+            kamarTextbox.Visible = false;
         }
 
         //private void addButton_Click(object sender, EventArgs e)
@@ -421,7 +423,10 @@ namespace Hotel_Management_System.Controllers
                 }
                 else
                 {
-                    MessageBox.Show("Room not found");
+                    //MessageBox.Show("Room not found");
+                    kamarTextbox.Visible = true;
+                    kamarTextbox.Text = roomName;
+                    NoKamarcomboBox.Visible = false;
                 }
 
                 // Find and select the payment method
