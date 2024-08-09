@@ -159,7 +159,7 @@ namespace Hotel_Management_System
             return resultData;
         }
 
-        public async Task<HttpData> GetRoomList(Boolean not_for_sell = false)
+        public async Task<HttpData> GetRoomList(Boolean not_for_sell = false, int brand_id = -1, string kebersihan = "")
         {
             HttpData resultData = new HttpData();
 
@@ -182,6 +182,14 @@ namespace Hotel_Management_System
                     if (not_for_sell)
                     {
                         valContent.Add("not_for_selling", "1");
+                    }
+                    if(brand_id > 0)
+                    {
+                        valContent.Add("brand_id", brand_id.ToString());
+                    }
+                    if(kebersihan != "")
+                    {
+                        valContent.Add("kebersihan", kebersihan);
                     }
 
                     var content = new FormUrlEncodedContent(valContent);
@@ -284,6 +292,50 @@ namespace Hotel_Management_System
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                     string link = BaseUrl + "/brands/list";
+
+                    HttpResponseMessage response = await client.GetAsync(link);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+
+                        dynamic data = JsonConvert.DeserializeObject(responseContent);
+                        resultData.status = data.status;
+                        resultData.data = data.data;
+
+                    }
+                    catch (Newtonsoft.Json.JsonException ex)
+                    {
+                        resultData.status = false;
+                        resultData.message = ex.Message;
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                resultData.status = false;
+                resultData.message = ex.Message;
+            }
+
+            return resultData;
+        }
+
+        public async Task<HttpData> GetTipeKebersihan()
+        {
+
+            HttpData resultData = new HttpData();
+
+            resultData.status = false;
+            resultData.message = "";
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string token = Properties.Settings.Default.Token;
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    string link = BaseUrl + "/kebersihan/list";
 
                     HttpResponseMessage response = await client.GetAsync(link);
 

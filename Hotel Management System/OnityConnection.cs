@@ -9,7 +9,7 @@ namespace Hotel_Management_System
 {
     internal class OnityConnection
     {
-        public Boolean createCard(string room,int day)
+        public Boolean createCard(string room,DateTime endDate)
         {
             try
             {
@@ -18,12 +18,15 @@ namespace Hotel_Management_System
 
                 using (var client = new Client(IP, port))
                 {
+
+                    endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 14, 0, 0);
+
                     var writeData = new WriteData
                     {
                         EncoderNumber = 1,
                         Room1 = room,
                         InitialDateTime = DateTime.Today,
-                        FinalDateTime = DateTime.Today.AddDays(day)
+                        FinalDateTime = endDate
                     };
 
                     var uid = client.Write(writeData);

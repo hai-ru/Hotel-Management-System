@@ -16,6 +16,11 @@ namespace Hotel_Management_System.Controllers
         DatabaseConnection dc = new DatabaseConnection();
         String query;
 
+        TipeKamar[] tipeKamars = new TipeKamar[] { };
+        TipeKebersihan[] tipeKebersihans = new TipeKebersihan[] { };
+
+
+
         public RoomsScreen()
         {
             InitializeComponent();
@@ -43,10 +48,10 @@ namespace Hotel_Management_System.Controllers
             populateTypeComboBox();
         }
 
-        private async void refreshTable()
+        private async void refreshTable(int brand_id = 0,string kebersihan = "")
         {
             loadingText.Visible = true;
-            HttpData result = await conn.GetRoomList();
+            HttpData result = await conn.GetRoomList(false,brand_id,kebersihan);
             if (!result.status)
             {
                 loadingText.Visible=false;
@@ -119,6 +124,52 @@ namespace Hotel_Management_System.Controllers
         private void Rooms_Load(object sender, EventArgs e)
         {
             refreshTable();
+            getTipeRoom();
+            getTipeKebersihan();
+        }
+
+        private async void getTipeRoom()
+        {
+            HttpData result = await conn.GetTipeKamarList();
+            if (!result.status)
+            {
+                MessageBox.Show(result.message);
+                return;
+            }
+
+            // Deserialize JSON string directly to OTA array
+            tipeKamars = JsonConvert.DeserializeObject<TipeKamar[]>(result.data.ToString());
+            tipeKamarCb.Items.Clear();
+
+            // Bind rooms to roomIdCMBox
+            tipeKamarCb.DisplayMember = "name"; // Set the DisplayMember to "text" property
+
+            foreach (TipeKamar tipe in tipeKamars)
+            {
+                tipeKamarCb.Items.Add(tipe); // Add ota to combo box
+            }
+        }
+
+        private async void getTipeKebersihan()
+        {
+            HttpData result = await conn.GetTipeKebersihan();
+            if (!result.status)
+            {
+                MessageBox.Show(result.message);
+                return;
+            }
+
+            // Deserialize JSON string directly to OTA array
+            tipeKebersihans = JsonConvert.DeserializeObject<TipeKebersihan[]>(result.data.ToString());
+            kebersihanFilter.Items.Clear();
+
+            // Bind rooms to roomIdCMBox
+            kebersihanFilter.DisplayMember = "name"; // Set the DisplayMember to "text" property
+
+            foreach (TipeKebersihan tipe in tipeKebersihans)
+            {
+                kebersihanFilter.Items.Add(tipe); // Add ota to combo box
+            }
         }
 
         private void guna2CircleButton1_Click(object sender, EventArgs e)
@@ -408,6 +459,66 @@ namespace Hotel_Management_System.Controllers
         private void loadingText_Click(object sender, EventArgs e)
         {
 
+        }
+
+        public class TipeKamar
+        {
+            public int id;
+            public string name;
+
+            public override string ToString()
+            {
+                return name;
+            }
+        }
+
+        public class TipeKebersihan
+        {
+            public string id;
+            public string name;
+
+            public override string ToString()
+            {
+                return name;
+            }
+        }
+
+        private void filterTable ()
+        {
+            var tipekamar = tipeKamarCb.SelectedItem as TipeKamar;
+            int id = 0;
+            if (tipekamar != null) id = tipekamar.id;
+
+            var kebersihan = kebersihanFilter.SelectedItem as TipeKebersihan;
+            string bersih_id = "";
+            if (kebersihan != null) bersih_id = kebersihan.id;
+
+            refreshTable(id, bersih_id);
+        }
+
+        private void tipeKamarCb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            filterTable();
+        }
+
+        private void kebersihanFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            filterTable();
+        }
+
+        private void printBtn_Click(object sender, EventArgs e)
+        {
+            var tipekamar = tipeKamarCb.SelectedItem as TipeKamar;
+            int id = 0;
+            if (tipekamar != null) id = tipekamar.id;
+
+            var kebersihan = kebersihanFilter.SelectedItem as TipeKebersihan;
+            string bersih_id = "";
+            if (kebersihan != null) bersih_id = kebersihan.id;
+
+            string link = "https://development.norapos.com/api/hotel/room/print?business_id=11tipe_kamar=" + id + "&kebersihan=" + bersih_id;
+            Form2 form2 = new Form2(link);
+            form2.Show();
         }
     }
 }

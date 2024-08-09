@@ -29,7 +29,7 @@ namespace Hotel_Management_System.Screens
         Room[] rooms = new Room[] { };
         Ota[] otas = new Ota[] { };
         PaymentMethod[] paymentMethods = new PaymentMethod[] { };
-        TipeKamar[] tipeKamars= new TipeKamar[] { };
+        TipeKamar[] tipeKamars = new TipeKamar[] { };
 
         private int durasi_menginap = 1;
         public ReservationScreen()

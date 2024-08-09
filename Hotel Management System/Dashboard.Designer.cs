@@ -244,7 +244,7 @@
             this.mainPanel.FillColor = System.Drawing.Color.Transparent;
             this.mainPanel.Location = new System.Drawing.Point(24, 84);
             this.mainPanel.Name = "mainPanel";
-            this.mainPanel.Size = new System.Drawing.Size(1291, 600);
+            this.mainPanel.Size = new System.Drawing.Size(1291, 653);
             this.mainPanel.TabIndex = 0;
             this.mainPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.mainPanel_Paint);
             // 
@@ -267,7 +267,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Dashboard";
             this.Load += new System.EventHandler(this.Dashboard_Load);
-            //this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(); 
             this.guna2Panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 

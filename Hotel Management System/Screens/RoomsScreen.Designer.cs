@@ -28,11 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
-            this.guna2GradientButton1 = new Guna.UI2.WinForms.Guna2GradientButton();
             this.roomsTable = new Guna.UI2.WinForms.Guna2DataGridView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -54,6 +53,10 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
             this.loadingText = new System.Windows.Forms.Label();
+            this.tipeKamarCb = new Guna.UI2.WinForms.Guna2ComboBox();
+            this.kebersihanFilter = new Guna.UI2.WinForms.Guna2ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.printBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.roomsTable)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -71,44 +74,28 @@
             this.label1.TabIndex = 33;
             this.label1.Text = "Rooms";
             // 
-            // guna2GradientButton1
-            // 
-            this.guna2GradientButton1.BorderRadius = 16;
-            this.guna2GradientButton1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.guna2GradientButton1.FillColor = System.Drawing.Color.DarkGray;
-            this.guna2GradientButton1.FillColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.guna2GradientButton1.Font = new System.Drawing.Font("Cooper Black", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.guna2GradientButton1.ForeColor = System.Drawing.Color.White;
-            this.guna2GradientButton1.Location = new System.Drawing.Point(136, 27);
-            this.guna2GradientButton1.Name = "guna2GradientButton1";
-            this.guna2GradientButton1.Size = new System.Drawing.Size(159, 34);
-            this.guna2GradientButton1.TabIndex = 114;
-            this.guna2GradientButton1.Text = "Add Room Types";
-            this.guna2GradientButton1.Visible = false;
-            this.guna2GradientButton1.Click += new System.EventHandler(this.guna2GradientButton1_Click);
-            // 
             // roomsTable
             // 
-            dataGridViewCellStyle13.BackColor = System.Drawing.Color.White;
-            this.roomsTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle13;
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle14.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.roomsTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
+            this.roomsTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.roomsTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.roomsTable.ColumnHeadersHeight = 40;
             this.roomsTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle15.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.roomsTable.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.roomsTable.DefaultCellStyle = dataGridViewCellStyle3;
             this.roomsTable.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
             this.roomsTable.Location = new System.Drawing.Point(42, 67);
             this.roomsTable.Name = "roomsTable";
@@ -336,18 +323,76 @@
             this.loadingText.Text = "Loading...";
             this.loadingText.Click += new System.EventHandler(this.loadingText_Click);
             // 
+            // tipeKamarCb
+            // 
+            this.tipeKamarCb.BackColor = System.Drawing.Color.Transparent;
+            this.tipeKamarCb.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.tipeKamarCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.tipeKamarCb.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.tipeKamarCb.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.tipeKamarCb.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.tipeKamarCb.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
+            this.tipeKamarCb.ItemHeight = 30;
+            this.tipeKamarCb.Location = new System.Drawing.Point(136, 25);
+            this.tipeKamarCb.Name = "tipeKamarCb";
+            this.tipeKamarCb.Size = new System.Drawing.Size(306, 36);
+            this.tipeKamarCb.TabIndex = 121;
+            this.tipeKamarCb.SelectedIndexChanged += new System.EventHandler(this.tipeKamarCb_SelectedIndexChanged);
+            // 
+            // kebersihanFilter
+            // 
+            this.kebersihanFilter.BackColor = System.Drawing.Color.Transparent;
+            this.kebersihanFilter.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.kebersihanFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.kebersihanFilter.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.kebersihanFilter.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.kebersihanFilter.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.kebersihanFilter.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
+            this.kebersihanFilter.ItemHeight = 30;
+            this.kebersihanFilter.Location = new System.Drawing.Point(448, 25);
+            this.kebersihanFilter.Name = "kebersihanFilter";
+            this.kebersihanFilter.Size = new System.Drawing.Size(325, 36);
+            this.kebersihanFilter.TabIndex = 122;
+            this.kebersihanFilter.SelectedIndexChanged += new System.EventHandler(this.kebersihanFilter_SelectedIndexChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.BackColor = System.Drawing.Color.White;
+            this.label10.Font = new System.Drawing.Font("Cooper Black", 24F);
+            this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.label10.Location = new System.Drawing.Point(477, 236);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(219, 36);
+            this.label10.TabIndex = 123;
+            this.label10.Text = "Data Kosong";
+            this.label10.Visible = false;
+            // 
+            // printBtn
+            // 
+            this.printBtn.Location = new System.Drawing.Point(789, 27);
+            this.printBtn.Name = "printBtn";
+            this.printBtn.Size = new System.Drawing.Size(91, 34);
+            this.printBtn.TabIndex = 124;
+            this.printBtn.Text = "PRINT";
+            this.printBtn.UseVisualStyleBackColor = true;
+            this.printBtn.Click += new System.EventHandler(this.printBtn_Click);
+            // 
             // RoomsScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(1199, 736);
+            this.Controls.Add(this.printBtn);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.kebersihanFilter);
+            this.Controls.Add(this.tipeKamarCb);
             this.Controls.Add(this.loadingText);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.roomsTable);
-            this.Controls.Add(this.guna2GradientButton1);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Location = new System.Drawing.Point(118, 123);
@@ -369,7 +414,6 @@
 
         #endregion
         private System.Windows.Forms.Label label1;
-        private Guna.UI2.WinForms.Guna2GradientButton guna2GradientButton1;
         private Guna.UI2.WinForms.Guna2DataGridView roomsTable;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label3;
@@ -391,5 +435,9 @@
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Panel panel8;
         private System.Windows.Forms.Label loadingText;
+        private Guna.UI2.WinForms.Guna2ComboBox tipeKamarCb;
+        private Guna.UI2.WinForms.Guna2ComboBox kebersihanFilter;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button printBtn;
     }
 }

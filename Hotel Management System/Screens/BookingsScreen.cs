@@ -163,7 +163,7 @@ namespace Hotel_Management_System.Controllers
 
         private async void populateRoomAsync()
         {
-            HttpData result = await conn.GetRoomList(true);
+            HttpData result = await conn.GetRoomList(true,-1,"VC");
             if (!result.status)
             {
                 MessageBox.Show(result.message);
@@ -179,6 +179,8 @@ namespace Hotel_Management_System.Controllers
 
             // Bind rooms to roomIdCMBox
             NoKamarcomboBox.DisplayMember = "ROOM NAME";
+
+            //rooms = rooms.
 
             foreach (Room room in rooms)
             {
@@ -377,6 +379,7 @@ namespace Hotel_Management_System.Controllers
             try
             {
                 var row = bookingTable.SelectedRows[0];
+                bookingIdField.Text = row.Cells[0].Value.ToString();
                 depositTextBox1.Text = row.Cells[1].Value.ToString();
                 amountField.Text = row.Cells[2].Value.ToString();
                 depositField.Text = row.Cells[3].Value.ToString();
@@ -468,11 +471,11 @@ namespace Hotel_Management_System.Controllers
 
 
                 var durasi = (DateTime.Parse(checkoutPicker.Text) - DateTime.Parse(checkinPicker.Text)).Days;
-                if (durasi <= 0)
-                {
-                    MessageBox.Show("Tanggal checkout tidak boleh kurang dari hari ini");
-                    return;
-                }
+                //if (durasi <= 0)
+                //{
+                //    MessageBox.Show("Tanggal checkout tidak boleh kurang dari hari ini");
+                //    return;
+                //}
 
                 // Extract values from form fields
                 var selectedGuest = guestIdCMBox.SelectedItem as Guest; 
@@ -1124,7 +1127,8 @@ namespace Hotel_Management_System.Controllers
             string checkout = checkoutPicker.Text;
             string room_product_id = selectedRoom.ProductId.ToString();
 
-            var createCardTask = Task.Run(() => onity.createCard(selectedRoom.sku, durasi_menginap));
+            //var createCardTask = Task.Run(() => onity.createCard(selectedRoom.sku, durasi_menginap));
+            var createCardTask = Task.Run(() => onity.createCard(selectedRoom.sku, DateTime.Parse(checkoutPicker.Text)));
             var logCreateCardTask = conn.LogCreateCard(contact_name, checkin, checkout, room_product_id, contact_id);
 
             var createCardResult = await createCardTask;
@@ -1218,7 +1222,7 @@ namespace Hotel_Management_System.Controllers
             }
         }
 
-        private void reservasiCb_SelectedIndexChanged(object sender, EventArgs e)
+        private void reservasiCb_SelectedIndexChanged_1(object sender, EventArgs e)
         {
             if (reservasiCb.SelectedItem is Reservation selectedReservasi)
             {
@@ -1297,5 +1301,12 @@ namespace Hotel_Management_System.Controllers
             refreshTable(null);
         }
 
+        private void printCard_Click(object sender, EventArgs e)
+        {
+            string id = bookingIdField.Text;
+            string link = "https://development.norapos.com/api/hotel/print?checkin=1&id=" + id;
+            Form2 form2 = new Form2(link);
+            form2.Show();
+        }
     }
 }
