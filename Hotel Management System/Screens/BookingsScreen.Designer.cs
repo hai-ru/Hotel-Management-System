@@ -64,6 +64,7 @@ namespace Hotel_Management_System.Controllers
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.printCard = new Guna.UI2.WinForms.Guna2Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.kamarTextbox = new Guna.UI2.WinForms.Guna2TextBox();
             this.guestIdCMBox = new System.Windows.Forms.ComboBox();
             this.reservasiCb = new System.Windows.Forms.ComboBox();
             this.NoKamarcomboBox = new System.Windows.Forms.ComboBox();
@@ -71,7 +72,6 @@ namespace Hotel_Management_System.Controllers
             this.guna2Button4 = new Guna.UI2.WinForms.Guna2Button();
             this.loadingText = new System.Windows.Forms.Label();
             this.kosongText = new System.Windows.Forms.Label();
-            this.kamarTextbox = new Guna.UI2.WinForms.Guna2TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.bookingTable)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -141,7 +141,6 @@ namespace Hotel_Management_System.Controllers
             this.checkinPicker.BorderRadius = 15;
             this.checkinPicker.Checked = true;
             this.checkinPicker.CustomFormat = "yyyy-MM-dd";
-            this.checkinPicker.Enabled = false;
             this.checkinPicker.FillColor = System.Drawing.Color.DimGray;
             this.checkinPicker.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.checkinPicker.ForeColor = System.Drawing.Color.Gainsboro;
@@ -619,6 +618,26 @@ namespace Hotel_Management_System.Controllers
             this.groupBox2.TabIndex = 135;
             this.groupBox2.TabStop = false;
             // 
+            // kamarTextbox
+            // 
+            this.kamarTextbox.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.kamarTextbox.DefaultText = "";
+            this.kamarTextbox.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.kamarTextbox.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.kamarTextbox.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.kamarTextbox.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.kamarTextbox.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.kamarTextbox.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.kamarTextbox.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.kamarTextbox.Location = new System.Drawing.Point(12, 204);
+            this.kamarTextbox.Name = "kamarTextbox";
+            this.kamarTextbox.PasswordChar = '\0';
+            this.kamarTextbox.PlaceholderText = "";
+            this.kamarTextbox.SelectedText = "";
+            this.kamarTextbox.Size = new System.Drawing.Size(263, 36);
+            this.kamarTextbox.TabIndex = 138;
+            this.kamarTextbox.Visible = false;
+            // 
             // guestIdCMBox
             // 
             this.guestIdCMBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
@@ -707,26 +726,6 @@ namespace Hotel_Management_System.Controllers
             this.kosongText.Size = new System.Drawing.Size(203, 37);
             this.kosongText.TabIndex = 137;
             this.kosongText.Text = "Data Kosong";
-            // 
-            // kamarTextbox
-            // 
-            this.kamarTextbox.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.kamarTextbox.DefaultText = "";
-            this.kamarTextbox.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.kamarTextbox.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.kamarTextbox.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.kamarTextbox.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.kamarTextbox.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.kamarTextbox.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.kamarTextbox.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.kamarTextbox.Location = new System.Drawing.Point(12, 204);
-            this.kamarTextbox.Name = "kamarTextbox";
-            this.kamarTextbox.PasswordChar = '\0';
-            this.kamarTextbox.PlaceholderText = "";
-            this.kamarTextbox.SelectedText = "";
-            this.kamarTextbox.Size = new System.Drawing.Size(263, 36);
-            this.kamarTextbox.TabIndex = 138;
-            this.kamarTextbox.Visible = false;
             // 
             // BookingsScreen
             // 
