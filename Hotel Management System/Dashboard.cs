@@ -24,7 +24,7 @@ namespace Hotel_Management_System
             Application.Exit();
         }
 
-        public void loadForm(Object form)
+        public void loadForm(object form)
         {
             if (this.mainPanel.Controls.Count > 0)
                 this.mainPanel.Controls.RemoveAt(0);
@@ -80,7 +80,8 @@ namespace Hotel_Management_System
 
         private void Dashboard_Load(object sender, EventArgs e)
         {
-            loadForm(new HotelIntroScreen());
+            // Load the RoomsScreen by default when the dashboard starts.
+            loadForm(new RoomsScreen());
         }
 
         private void guna2CircleButton2_Click(object sender, EventArgs e)
@@ -107,6 +108,11 @@ namespace Hotel_Management_System
         }
 
         private void mainPanel_Paint(object sender, PaintEventArgs e)
+        {
+            // Optionally add custom painting logic here.
+        }
+
+        private void guna2Panel2_Paint(object sender, PaintEventArgs e)
         {
 
         }

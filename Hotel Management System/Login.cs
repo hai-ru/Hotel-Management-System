@@ -21,6 +21,7 @@ namespace Hotel_Management_System
         public int hotelIdToken;
         public int employeeIdToken;
 
+
         public Login()
         {
             InitializeComponent();
@@ -138,6 +139,15 @@ namespace Hotel_Management_System
                 passwordTextField.UseSystemPasswordChar = true;
                 //passwordTextField.IconRight = myimage1;
             }
+        }
+
+        private void Login_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2CirclePictureBox1_Click(object sender, EventArgs e)
+        {
         }
     }
 

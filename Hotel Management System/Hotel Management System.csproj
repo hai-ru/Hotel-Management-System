@@ -385,6 +385,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="300518993_609857747443532_6076166410982488591_n-removebg-preview %281%29.ico" />
+    <None Include="Resources\kartika hotel.png" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

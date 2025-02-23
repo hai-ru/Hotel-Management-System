@@ -66,11 +66,11 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Cooper Black", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.label1.Location = new System.Drawing.Point(37, 32);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(93, 27);
+            this.label1.Size = new System.Drawing.Size(90, 29);
             this.label1.TabIndex = 33;
             this.label1.Text = "Rooms";
             // 
@@ -79,7 +79,7 @@
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
             this.roomsTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(151)))), ((int)(((byte)(48)))));
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -112,7 +112,7 @@
             this.roomsTable.ThemeStyle.AlternatingRowsStyle.SelectionForeColor = System.Drawing.Color.Empty;
             this.roomsTable.ThemeStyle.BackColor = System.Drawing.Color.White;
             this.roomsTable.ThemeStyle.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            this.roomsTable.ThemeStyle.HeaderStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.roomsTable.ThemeStyle.HeaderStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(151)))), ((int)(((byte)(48)))));
             this.roomsTable.ThemeStyle.HeaderStyle.BorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.roomsTable.ThemeStyle.HeaderStyle.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.roomsTable.ThemeStyle.HeaderStyle.ForeColor = System.Drawing.Color.White;
@@ -314,11 +314,11 @@
             // 
             this.loadingText.AutoSize = true;
             this.loadingText.BackColor = System.Drawing.Color.White;
-            this.loadingText.Font = new System.Drawing.Font("Cooper Black", 24F);
+            this.loadingText.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
             this.loadingText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.loadingText.Location = new System.Drawing.Point(499, 272);
             this.loadingText.Name = "loadingText";
-            this.loadingText.Size = new System.Drawing.Size(174, 36);
+            this.loadingText.Size = new System.Drawing.Size(159, 37);
             this.loadingText.TabIndex = 120;
             this.loadingText.Text = "Loading...";
             this.loadingText.Click += new System.EventHandler(this.loadingText_Click);
@@ -359,11 +359,11 @@
             // 
             this.label10.AutoSize = true;
             this.label10.BackColor = System.Drawing.Color.White;
-            this.label10.Font = new System.Drawing.Font("Cooper Black", 24F);
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
             this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.label10.Location = new System.Drawing.Point(477, 236);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(219, 36);
+            this.label10.Size = new System.Drawing.Size(203, 37);
             this.label10.TabIndex = 123;
             this.label10.Text = "Data Kosong";
             this.label10.Visible = false;
