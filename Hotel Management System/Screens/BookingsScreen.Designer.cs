@@ -61,8 +61,6 @@ namespace Hotel_Management_System.Controllers
             this.bookingIdField = new Guna.UI2.WinForms.Guna2TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.guna2Button3 = new Guna.UI2.WinForms.Guna2Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.printCard = new Guna.UI2.WinForms.Guna2Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.kamarTextbox = new Guna.UI2.WinForms.Guna2TextBox();
             this.guestIdCMBox = new System.Windows.Forms.ComboBox();
@@ -72,9 +70,11 @@ namespace Hotel_Management_System.Controllers
             this.guna2Button4 = new Guna.UI2.WinForms.Guna2Button();
             this.loadingText = new System.Windows.Forms.Label();
             this.kosongText = new System.Windows.Forms.Label();
+            this.printCard = new Guna.UI2.WinForms.Guna2Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.bookingTable)).BeginInit();
-            this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -390,7 +390,7 @@ namespace Hotel_Management_System.Controllers
             this.paymentComboBox.Location = new System.Drawing.Point(10, 379);
             this.paymentComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.paymentComboBox.Name = "paymentComboBox";
-            this.paymentComboBox.Size = new System.Drawing.Size(160, 36);
+            this.paymentComboBox.Size = new System.Drawing.Size(153, 36);
             this.paymentComboBox.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.paymentComboBox.TabIndex = 124;
             this.paymentComboBox.SelectedIndexChanged += new System.EventHandler(this.paymentComboBox_SelectedIndexChanged);
@@ -418,10 +418,10 @@ namespace Hotel_Management_System.Controllers
             this.otaComboBox.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.otaComboBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
             this.otaComboBox.ItemHeight = 30;
-            this.otaComboBox.Location = new System.Drawing.Point(185, 378);
+            this.otaComboBox.Location = new System.Drawing.Point(176, 378);
             this.otaComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.otaComboBox.Name = "otaComboBox";
-            this.otaComboBox.Size = new System.Drawing.Size(102, 36);
+            this.otaComboBox.Size = new System.Drawing.Size(111, 36);
             this.otaComboBox.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.otaComboBox.TabIndex = 126;
             this.otaComboBox.SelectedIndexChanged += new System.EventHandler(this.otaComboBox_SelectedIndexChanged);
@@ -431,7 +431,7 @@ namespace Hotel_Management_System.Controllers
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.label10.Location = new System.Drawing.Point(182, 355);
+            this.label10.Location = new System.Drawing.Point(174, 356);
             this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(93, 20);
@@ -552,32 +552,6 @@ namespace Hotel_Management_System.Controllers
             this.guna2Button3.TabIndex = 133;
             this.guna2Button3.Text = "CLEAR";
             this.guna2Button3.Click += new System.EventHandler(this.guna2Button3_Click);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.printCard);
-            this.groupBox1.Location = new System.Drawing.Point(945, 11);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(335, 623);
-            this.groupBox1.TabIndex = 134;
-            this.groupBox1.TabStop = false;
-            // 
-            // printCard
-            // 
-            this.printCard.BackColor = System.Drawing.Color.Transparent;
-            this.printCard.BorderRadius = 20;
-            this.printCard.BorderThickness = 1;
-            this.printCard.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(151)))), ((int)(((byte)(48)))));
-            this.printCard.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.printCard.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.printCard.Location = new System.Drawing.Point(13, 584);
-            this.printCard.Margin = new System.Windows.Forms.Padding(2);
-            this.printCard.Name = "printCard";
-            this.printCard.Size = new System.Drawing.Size(312, 25);
-            this.printCard.TabIndex = 138;
-            this.printCard.Text = "PRINT";
-            this.printCard.Click += new System.EventHandler(this.printCard_Click);
             // 
             // groupBox2
             // 
@@ -727,6 +701,32 @@ namespace Hotel_Management_System.Controllers
             this.kosongText.TabIndex = 137;
             this.kosongText.Text = "Data Kosong";
             // 
+            // printCard
+            // 
+            this.printCard.BackColor = System.Drawing.Color.Transparent;
+            this.printCard.BorderRadius = 20;
+            this.printCard.BorderThickness = 1;
+            this.printCard.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(151)))), ((int)(((byte)(48)))));
+            this.printCard.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.printCard.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.printCard.Location = new System.Drawing.Point(13, 584);
+            this.printCard.Margin = new System.Windows.Forms.Padding(2);
+            this.printCard.Name = "printCard";
+            this.printCard.Size = new System.Drawing.Size(312, 25);
+            this.printCard.TabIndex = 138;
+            this.printCard.Text = "PRINT";
+            this.printCard.Click += new System.EventHandler(this.printCard_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.printCard);
+            this.groupBox1.Location = new System.Drawing.Point(945, 11);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(335, 623);
+            this.groupBox1.TabIndex = 134;
+            this.groupBox1.TabStop = false;
+            // 
             // BookingsScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -749,9 +749,9 @@ namespace Hotel_Management_System.Controllers
             this.Text = "Booking";
             this.Load += new System.EventHandler(this.BookingsScreen_Load);
             ((System.ComponentModel.ISupportInitialize)(this.bookingTable)).EndInit();
-            this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -787,7 +787,6 @@ namespace Hotel_Management_System.Controllers
         private Guna.UI2.WinForms.Guna2TextBox bookingIdField;
         private System.Windows.Forms.Label label13;
         private Guna.UI2.WinForms.Guna2Button guna2Button3;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label14;
         private Guna.UI2.WinForms.Guna2Button guna2Button4;
@@ -796,7 +795,8 @@ namespace Hotel_Management_System.Controllers
         private System.Windows.Forms.ComboBox NoKamarcomboBox;
         private System.Windows.Forms.ComboBox reservasiCb;
         private System.Windows.Forms.ComboBox guestIdCMBox;
-        private Guna.UI2.WinForms.Guna2Button printCard;
         private Guna.UI2.WinForms.Guna2TextBox kamarTextbox;
+        private Guna.UI2.WinForms.Guna2Button printCard;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }

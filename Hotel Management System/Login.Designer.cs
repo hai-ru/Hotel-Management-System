@@ -105,9 +105,9 @@ namespace Hotel_Management_System
             this.guna2Button1.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(151)))), ((int)(((byte)(48)))));
             this.guna2Button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.guna2Button1.ForeColor = System.Drawing.Color.White;
-            this.guna2Button1.Location = new System.Drawing.Point(317, 315);
+            this.guna2Button1.Location = new System.Drawing.Point(293, 311);
             this.guna2Button1.Name = "guna2Button1";
-            this.guna2Button1.Size = new System.Drawing.Size(180, 45);
+            this.guna2Button1.Size = new System.Drawing.Size(218, 39);
             this.guna2Button1.TabIndex = 5;
             this.guna2Button1.Text = "LOGIN";
             this.guna2Button1.Click += new System.EventHandler(this.guna2Button1_Click);
@@ -133,7 +133,7 @@ namespace Hotel_Management_System
             this.errorLabel.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.errorLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.errorLabel.ForeColor = System.Drawing.Color.Red;
-            this.errorLabel.Location = new System.Drawing.Point(377, 374);
+            this.errorLabel.Location = new System.Drawing.Point(373, 366);
             this.errorLabel.Name = "errorLabel";
             this.errorLabel.Size = new System.Drawing.Size(61, 15);
             this.errorLabel.TabIndex = 7;
