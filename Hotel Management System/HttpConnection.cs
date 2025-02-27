@@ -705,7 +705,7 @@ namespace Hotel_Management_System
 
             return resultData;
         }
-        public async Task<HttpData> StoreCheckin(string contact_id, string lamainap, string room_product_id, string harga_total, string payment_amount, string payment_method, string ota, string deposit, string staff_note="", string reservation_id = "")
+        public async Task<HttpData> StoreCheckin(string contact_id, string lamainap, string room_product_id, string harga_total, string payment_amount, string payment_method, string ota, string deposit, string staff_note="", string reservation_id = "", string booking_id = "")
         {
             HttpData resultData = new HttpData();
 
@@ -808,7 +808,8 @@ namespace Hotel_Management_System
                         status = "final",
                         service_custom_field_1 = payment_method,
                         service_custom_field_2 = ota,
-                        service_custom_field_3 = deposit.ToString()
+                        service_custom_field_3 = deposit.ToString(),
+                        service_custom_field_4 = booking_id,
                     };
 
                     var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");

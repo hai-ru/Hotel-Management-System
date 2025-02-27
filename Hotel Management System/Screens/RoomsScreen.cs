@@ -48,21 +48,57 @@ namespace Hotel_Management_System.Controllers
             populateTypeComboBox();
         }
 
-        private async void refreshTable(int brand_id = 0,string kebersihan = "")
+       // private async void refreshTable(int brand_id = 0,string kebersihan = "")
+       // {
+       //     loadingText.Visible = true;
+       //     HttpData result = await conn.GetRoomList(false,brand_id,kebersihan);
+       //     if (!result.status)
+       //     {
+       //         loadingText.Visible=false;
+       //         MessageBox.Show(result.message);
+       //         return;
+       //     }
+       //     DataTable MyTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
+       //     roomsTable.DataSource = MyTable;
+       //     roomsTable.CellFormatting += roomsTable_CellFormatting;
+       //     loadingText.Visible = false;
+       // }
+
+        private async void refreshTable(int brand_id = 0, string kebersihan = "")
         {
             loadingText.Visible = true;
-            HttpData result = await conn.GetRoomList(false,brand_id,kebersihan);
+            HttpData result = await conn.GetRoomList(false, brand_id, kebersihan);
             if (!result.status)
             {
-                loadingText.Visible=false;
+                loadingText.Visible = false;
                 MessageBox.Show(result.message);
                 return;
             }
             DataTable MyTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
-            roomsTable.DataSource = MyTable;
+
+            // Use LINQ to sort rows based on custom order for KEBERSIHAN:
+            // VCI -> first, VD -> second, and the rest after.
+            var sortedRows = MyTable.AsEnumerable()
+                .OrderBy(row =>
+                {
+                    string value = row.Field<string>("KEBERSIHAN");
+                    if (value == "VCI")
+                        return 1;
+                    else if (value == "VD")
+                        return 2;
+                    else
+                        return 3;
+                })
+                .ThenBy(row => row.Field<string>("ROOM NAME")); // Optional secondary sorting
+
+            // Create a new DataTable with the sorted rows.
+            DataTable sortedTable = sortedRows.CopyToDataTable();
+
+            roomsTable.DataSource = sortedTable;
             roomsTable.CellFormatting += roomsTable_CellFormatting;
             loadingText.Visible = false;
         }
+
 
         private void roomsTable_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {

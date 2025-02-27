@@ -470,7 +470,7 @@ namespace Hotel_Management_System.Controllers
         {
             addButton.Enabled = false;
             loadingText.Visible = true;
-            if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
+            if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && bookingIdTextBox.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
                 NoKamarcomboBox.SelectedIndex != -1)
                 {
 
@@ -495,6 +495,7 @@ namespace Hotel_Management_System.Controllers
                 string harga_total = string.Concat(amountField.Text.Where(char.IsDigit));
                 string payment_amount = string.Concat(depositField.Text.Where(char.IsDigit));
                 string deposit = string.Concat(depositTextBox1.Text.Where(char.IsDigit));
+                string booking_id = bookingIdTextBox.Text.ToString();
 
                 if (paymentComboBox.SelectedItem == null)
                 {
@@ -513,7 +514,7 @@ namespace Hotel_Management_System.Controllers
 
 
                 // Call StoreCheckin method
-                HttpData result = await conn.StoreCheckin(contact_id, lamainap, room_product_id, harga_total, payment_amount, payment_method, ota, deposit, notes, reservation_id);
+                HttpData result = await conn.StoreCheckin(contact_id, lamainap, room_product_id, harga_total, payment_amount, payment_method, ota, deposit, notes, reservation_id, booking_id);
 
                 // Handle the response
                 if (result.status)
@@ -1192,7 +1193,20 @@ namespace Hotel_Management_System.Controllers
 
         private void otaComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            // Check if the selected value is "Walk In"
+            if (otaComboBox.SelectedItem != null && otaComboBox.SelectedItem.ToString() == "Walk In")
+            {
+                bookingIdTextBox.Enabled = false;
+                bookingIdTextBox.Text = string.Empty;
+                // Change the background color to the control color to simulate a greyed-out look
+                bookingIdTextBox.BackColor = SystemColors.Control;
+            }
+            else
+            {
+                // Re-enable the text box and restore the default background
+                bookingIdTextBox.Enabled = true;
+                bookingIdTextBox.BackColor = SystemColors.Window;
+            }
         }
 
         private void label8_Click(object sender, EventArgs e)
@@ -1317,6 +1331,11 @@ namespace Hotel_Management_System.Controllers
             string link = "https://development.norapos.com/api/hotel/print?checkin=1&id=" + id;
             Form2 form2 = new Form2(link);
             form2.Show();
+        }
+
+        private void label15_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

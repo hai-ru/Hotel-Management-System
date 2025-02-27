@@ -30,9 +30,9 @@ namespace Hotel_Management_System.Controllers
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -72,6 +72,8 @@ namespace Hotel_Management_System.Controllers
             this.kosongText = new System.Windows.Forms.Label();
             this.printCard = new Guna.UI2.WinForms.Guna2Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.bookingIdTextBox = new Guna.UI2.WinForms.Guna2TextBox();
+            this.label15 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.bookingTable)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -205,7 +207,7 @@ namespace Hotel_Management_System.Controllers
             this.amountField.PlaceholderText = "";
             this.amountField.ReadOnly = true;
             this.amountField.SelectedText = "";
-            this.amountField.Size = new System.Drawing.Size(276, 32);
+            this.amountField.Size = new System.Drawing.Size(152, 32);
             this.amountField.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.amountField.TabIndex = 75;
             this.amountField.TextChanged += new System.EventHandler(this.amountField_TextChanged);
@@ -240,26 +242,26 @@ namespace Hotel_Management_System.Controllers
             // 
             // bookingTable
             // 
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
-            this.bookingTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(151)))), ((int)(((byte)(48)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.bookingTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle13.BackColor = System.Drawing.Color.White;
+            this.bookingTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(151)))), ((int)(((byte)(48)))));
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle14.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.bookingTable.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle14;
             this.bookingTable.ColumnHeadersHeight = 40;
             this.bookingTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.bookingTable.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle15.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.bookingTable.DefaultCellStyle = dataGridViewCellStyle15;
             this.bookingTable.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
             this.bookingTable.Location = new System.Drawing.Point(32, 54);
             this.bookingTable.Name = "bookingTable";
@@ -372,7 +374,7 @@ namespace Hotel_Management_System.Controllers
             this.depositField.PasswordChar = '\0';
             this.depositField.PlaceholderText = "";
             this.depositField.SelectedText = "";
-            this.depositField.Size = new System.Drawing.Size(276, 32);
+            this.depositField.Size = new System.Drawing.Size(279, 32);
             this.depositField.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.depositField.TabIndex = 118;
             this.depositField.TextChanged += new System.EventHandler(this.depositField_TextChanged);
@@ -390,7 +392,7 @@ namespace Hotel_Management_System.Controllers
             this.paymentComboBox.Location = new System.Drawing.Point(10, 379);
             this.paymentComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.paymentComboBox.Name = "paymentComboBox";
-            this.paymentComboBox.Size = new System.Drawing.Size(153, 36);
+            this.paymentComboBox.Size = new System.Drawing.Size(128, 36);
             this.paymentComboBox.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.paymentComboBox.TabIndex = 124;
             this.paymentComboBox.SelectedIndexChanged += new System.EventHandler(this.paymentComboBox_SelectedIndexChanged);
@@ -400,12 +402,12 @@ namespace Hotel_Management_System.Controllers
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.label2.Location = new System.Drawing.Point(7, 357);
+            this.label2.Location = new System.Drawing.Point(4, 357);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(156, 20);
+            this.label2.Size = new System.Drawing.Size(108, 20);
             this.label2.TabIndex = 123;
-            this.label2.Text = "Metode Pembayaran";
+            this.label2.Text = "Metode Bayar";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // otaComboBox
@@ -418,10 +420,10 @@ namespace Hotel_Management_System.Controllers
             this.otaComboBox.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.otaComboBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
             this.otaComboBox.ItemHeight = 30;
-            this.otaComboBox.Location = new System.Drawing.Point(176, 378);
+            this.otaComboBox.Location = new System.Drawing.Point(146, 379);
             this.otaComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.otaComboBox.Name = "otaComboBox";
-            this.otaComboBox.Size = new System.Drawing.Size(111, 36);
+            this.otaComboBox.Size = new System.Drawing.Size(144, 36);
             this.otaComboBox.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
             this.otaComboBox.TabIndex = 126;
             this.otaComboBox.SelectedIndexChanged += new System.EventHandler(this.otaComboBox_SelectedIndexChanged);
@@ -431,7 +433,7 @@ namespace Hotel_Management_System.Controllers
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.label10.Location = new System.Drawing.Point(174, 356);
+            this.label10.Location = new System.Drawing.Point(146, 357);
             this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(93, 20);
@@ -555,6 +557,8 @@ namespace Hotel_Management_System.Controllers
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label15);
+            this.groupBox2.Controls.Add(this.bookingIdTextBox);
             this.groupBox2.Controls.Add(this.kamarTextbox);
             this.groupBox2.Controls.Add(this.guestIdCMBox);
             this.groupBox2.Controls.Add(this.reservasiCb);
@@ -727,6 +731,40 @@ namespace Hotel_Management_System.Controllers
             this.groupBox1.TabIndex = 134;
             this.groupBox1.TabStop = false;
             // 
+            // bookingIdTextBox
+            // 
+            this.bookingIdTextBox.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.bookingIdTextBox.DefaultText = "";
+            this.bookingIdTextBox.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.bookingIdTextBox.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.bookingIdTextBox.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.bookingIdTextBox.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.bookingIdTextBox.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.bookingIdTextBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bookingIdTextBox.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.bookingIdTextBox.Location = new System.Drawing.Point(169, 266);
+            this.bookingIdTextBox.Name = "bookingIdTextBox";
+            this.bookingIdTextBox.PasswordChar = '\0';
+            this.bookingIdTextBox.PlaceholderText = "";
+            this.bookingIdTextBox.ReadOnly = true;
+            this.bookingIdTextBox.SelectedText = "";
+            this.bookingIdTextBox.Size = new System.Drawing.Size(121, 32);
+            this.bookingIdTextBox.Style = Guna.UI2.WinForms.Enums.TextBoxStyle.Material;
+            this.bookingIdTextBox.TabIndex = 139;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.label15.Location = new System.Drawing.Point(165, 243);
+            this.label15.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(88, 20);
+            this.label15.TabIndex = 140;
+            this.label15.Text = "Booking ID";
+            this.label15.Click += new System.EventHandler(this.label15_Click);
+            // 
             // BookingsScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -798,5 +836,7 @@ namespace Hotel_Management_System.Controllers
         private Guna.UI2.WinForms.Guna2TextBox kamarTextbox;
         private Guna.UI2.WinForms.Guna2Button printCard;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label15;
+        private Guna.UI2.WinForms.Guna2TextBox bookingIdTextBox;
     }
 }
