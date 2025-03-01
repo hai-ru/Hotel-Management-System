@@ -5,6 +5,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using System.Linq;
+using System.Text;
 
 namespace Hotel_Management_System.Controllers
 {
@@ -48,21 +50,21 @@ namespace Hotel_Management_System.Controllers
             populateTypeComboBox();
         }
 
-       // private async void refreshTable(int brand_id = 0,string kebersihan = "")
-       // {
-       //     loadingText.Visible = true;
-       //     HttpData result = await conn.GetRoomList(false,brand_id,kebersihan);
-       //     if (!result.status)
-       //     {
-       //         loadingText.Visible=false;
-       //         MessageBox.Show(result.message);
-       //         return;
-       //     }
-       //     DataTable MyTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
-       //     roomsTable.DataSource = MyTable;
-       //     roomsTable.CellFormatting += roomsTable_CellFormatting;
-       //     loadingText.Visible = false;
-       // }
+        // private async void refreshTable(int brand_id = 0,string kebersihan = "")
+        // {
+        //     loadingText.Visible = true;
+        //     HttpData result = await conn.GetRoomList(false,brand_id,kebersihan);
+        //     if (!result.status)
+        //     {
+        //         loadingText.Visible=false;
+        //         MessageBox.Show(result.message);
+        //         return;
+        //     }
+        //     DataTable MyTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
+        //     roomsTable.DataSource = MyTable;
+        //     roomsTable.CellFormatting += roomsTable_CellFormatting;
+        //     loadingText.Visible = false;
+        // }
 
         private async void refreshTable(int brand_id = 0, string kebersihan = "")
         {
@@ -74,27 +76,60 @@ namespace Hotel_Management_System.Controllers
                 MessageBox.Show(result.message);
                 return;
             }
-            DataTable MyTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
 
-            // Use LINQ to sort rows based on custom order for KEBERSIHAN:
-            // VCI -> first, VD -> second, and the rest after.
-            var sortedRows = MyTable.AsEnumerable()
-                .OrderBy(row =>
+            DataTable myTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
+
+            // Check if any row has a "KEBERSIHAN" value of "VCI" or "VD"
+            bool canSort = myTable.AsEnumerable().Any(row =>
+            {
+                string value = row.Field<string>("KEBERSIHAN");
+                return value == "VCI" || value == "VD";
+            });
+
+            if (canSort)
+            {
+                // Sort rows: "VCI" first, "VD" second, then all others.
+                var sortedRows = myTable.AsEnumerable()
+                    .OrderBy(row =>
+                    {
+                        string value = row.Field<string>("KEBERSIHAN");
+                        if (value == "VCI")
+                            return 1;
+                        else if (value == "VD")
+                            return 2;
+                        else
+                            return 3;
+                    })
+                    .ThenBy(row => row.Field<string>("ROOM NAME")); // Optional secondary sorting
+
+                DataTable sortedTable = sortedRows.CopyToDataTable();
+                roomsTable.DataSource = sortedTable;
+            }
+            else
+            {
+                roomsTable.DataSource = myTable;
+            }
+
+            // Populate label3.Text with available room counts based on 'TIPE KAMAR'
+            // counting only rooms with KEBERSIHAN "VCI" or "VD".
+            var roomCounts = myTable.AsEnumerable()
+                .Where(row =>
                 {
-                    string value = row.Field<string>("KEBERSIHAN");
-                    if (value == "VCI")
-                        return 1;
-                    else if (value == "VD")
-                        return 2;
-                    else
-                        return 3;
+                    string cleaning = row.Field<string>("KEBERSIHAN");
+                    return cleaning == "VCI" || cleaning == "VD";
                 })
-                .ThenBy(row => row.Field<string>("ROOM NAME")); // Optional secondary sorting
+                .GroupBy(row => row.Field<string>("TIPE KAMAR"))
+                .Select(g => new { TipeKamar = g.Key, Count = g.Count() })
+                .ToList();
 
-            // Create a new DataTable with the sorted rows.
-            DataTable sortedTable = sortedRows.CopyToDataTable();
+            StringBuilder sb = new StringBuilder();
+            foreach (var rc in roomCounts)
+            {
+                // Each line will appear as "Room Type: Count"
+                sb.AppendLine($"{rc.TipeKamar}: {rc.Count}");
+            }
+            label3.Text = sb.ToString();
 
-            roomsTable.DataSource = sortedTable;
             roomsTable.CellFormatting += roomsTable_CellFormatting;
             loadingText.Visible = false;
         }
@@ -555,6 +590,16 @@ namespace Hotel_Management_System.Controllers
             string link = "https://development.norapos.com/api/hotel/room/print?business_id=11tipe_kamar=" + id + "&kebersihan=" + bersih_id;
             Form2 form2 = new Form2(link);
             form2.Show();
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
