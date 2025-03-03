@@ -327,8 +327,8 @@ namespace Hotel_Management_System.Controllers
         {
             bookingIdField.Text = "";
             guestIdCMBox.SelectedIndex = -1;
-            checkinPicker.Text = "";
-            checkoutPicker.Text = "";
+            //checkinPicker.Text = "";
+            //checkoutPicker.Text = "";
             NoKamarcomboBox.SelectedIndex = -1;
             amountField.Text = "";
             depositField.Text = "";
@@ -470,7 +470,7 @@ namespace Hotel_Management_System.Controllers
         {
             addButton.Enabled = false;
             loadingText.Visible = true;
-            if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && bookingIdTextBox.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
+            if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
                 NoKamarcomboBox.SelectedIndex != -1)
                 {
 
