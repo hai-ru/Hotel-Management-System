@@ -327,8 +327,8 @@ namespace Hotel_Management_System.Controllers
         {
             bookingIdField.Text = "";
             guestIdCMBox.SelectedIndex = -1;
-            //checkinPicker.Text = "";
-            //checkoutPicker.Text = "";
+            checkinPicker.Text = "";
+            checkoutPicker.Text = "";
             NoKamarcomboBox.SelectedIndex = -1;
             amountField.Text = "";
             depositField.Text = "";
