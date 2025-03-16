@@ -334,6 +334,7 @@ namespace Hotel_Management_System.Controllers
             depositField.Text = "";
             depositTextBox1.Text = "";
             noteTextBox.Text = "";
+            bookingIdTextBox.Text = "";
             otaComboBox.SelectedIndex = -1;
             paymentComboBox.SelectedIndex = -1;
             reservasiCb.SelectedIndex = -1;
@@ -386,6 +387,7 @@ namespace Hotel_Management_System.Controllers
                 amountField.Text = row.Cells[2].Value.ToString();
                 depositField.Text = row.Cells[3].Value.ToString();
                 noteTextBox.Text = row.Cells[12].Value.ToString();
+                bookingIdTextBox.Text = "";
 
                 string guestName = row.Cells[10].Value.ToString();
                 string roomName = row.Cells[9].Value.ToString();
@@ -1328,12 +1330,22 @@ namespace Hotel_Management_System.Controllers
         private void printCard_Click(object sender, EventArgs e)
         {
             string id = bookingIdField.Text;
-            string link = "https://development.norapos.com/api/hotel/print?checkin=1&id=" + id;
+            string link = "https://kartika-test.vercel.app/";
             Form2 form2 = new Form2(link);
             form2.Show();
         }
 
         private void label15_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void noteTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void bookingIdTextBox_TextChanged_1(object sender, EventArgs e)
         {
 
         }
