@@ -1330,7 +1330,7 @@ namespace Hotel_Management_System.Controllers
         private void printCard_Click(object sender, EventArgs e)
         {
             string id = bookingIdField.Text;
-            string link = "https://kartika-test.vercel.app/";
+            string link = "https://development.norapos.com/api/hotel/print?checkin=1&id=" + id;
             Form2 form2 = new Form2(link);
             form2.Show();
         }
