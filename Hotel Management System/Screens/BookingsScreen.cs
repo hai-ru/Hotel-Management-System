@@ -37,6 +37,15 @@ namespace Hotel_Management_System.Controllers
 
 
         private int roomId;
+        
+        // Loading states untuk prevent duplicate requests
+        private bool isLoadingGuests = false;
+        private bool isLoadingRooms = false;
+        private bool isLoadingOTA = false;
+        private bool isLoadingPayment = false;
+        private bool isLoadingReservation = false;
+        private bool isLoadingTable = false;
+        private CacheManager cache = CacheManager.Instance;
 
         public BookingsScreen()
         {
@@ -46,6 +55,8 @@ namespace Hotel_Management_System.Controllers
             //addButton.Enabled = false;
             loadingText.Visible = false;
             kosongText.Visible = false;
+            
+            // Optimasi: Jangan load data di constructor
         }
 
         private void checkIfEmployee()
@@ -75,117 +86,212 @@ namespace Hotel_Management_System.Controllers
         }
         private async void populateGuestComboBoxAsync()
         {
-            HttpData result = await conn.GetCustomerList();
-            if (!result.status)
+            if (isLoadingGuests) return;
+            
+            isLoadingGuests = true;
+            guestIdCMBox.Enabled = false;
+            
+            try
             {
-                MessageBox.Show(result.message);
-                return;
+                // Cek cache
+                guests = cache.Get<Guest[]>(CacheKeys.CUSTOMER_LIST);
+                
+                if (guests == null)
+                {
+                    HttpData result = await conn.GetCustomerList();
+                    if (!result.status)
+                    {
+                        MessageBox.Show(result.message);
+                        return;
+                    }
+
+                    guests = JsonConvert.DeserializeObject<Guest[]>(result.data.ToString());
+                    
+                    // Cache 5 menit (bisa berubah sering)
+                    cache.Set(CacheKeys.CUSTOMER_LIST, guests, TimeSpan.FromMinutes(5));
+                }
+                
+                guestIdCMBox.Items.Clear();
+                guestIdCMBox.DisplayMember = "text";
+
+                foreach (Guest guest in guests)
+                {
+                    guestIdCMBox.Items.Add(guest);
+                }
             }
-
-            // Deserialize JSON string directly to Guest array
-            guests = JsonConvert.DeserializeObject<Guest[]>(result.data.ToString());
-            guestIdCMBox.Items.Clear();
-
-            // Bind rooms to roomIdCMBox
-            guestIdCMBox.DisplayMember = "text"; // Set the DisplayMember to "text" property
-
-            foreach (Guest guest in guests)
+            catch (Exception ex)
             {
-                guestIdCMBox.Items.Add(guest); // Add guest to combo box
+                MessageBox.Show($"Error loading guests: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                isLoadingGuests = false;
+                guestIdCMBox.Enabled = true;
             }
         }
 
         private async void populateReservasiComboBoxAsync()
         {
-            HttpData result = await conn.GetReservationList();
-            if (!result.status)
+            if (isLoadingReservation) return;
+            
+            isLoadingReservation = true;
+            reservasiCb.Enabled = false;
+            
+            try
             {
-                MessageBox.Show(result.message);
-                return;
+                HttpData result = await conn.GetReservationList();
+                if (!result.status)
+                {
+                    MessageBox.Show(result.message);
+                    return;
+                }
+
+                reservasi = JsonConvert.DeserializeObject<Reservation[]>(result.data.ToString());
+                reservasiCb.Items.Clear();
+                reservasiCb.DisplayMember = "text";
+
+                foreach (Reservation data in reservasi)
+                {
+                    reservasiCb.Items.Add(data);
+                }
             }
-
-            // Deserialize JSON string directly to Guest array
-            reservasi = JsonConvert.DeserializeObject<Reservation[]>(result.data.ToString());
-            reservasiCb.Items.Clear();
-
-            // Bind rooms to roomIdCMBox
-            reservasiCb.DisplayMember = "text"; // Set the DisplayMember to "text" property
-
-            foreach (Reservation data in reservasi)
+            catch (Exception ex)
             {
-                reservasiCb.Items.Add(data); // Add guest to combo box
+                MessageBox.Show($"Error loading reservations: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                isLoadingReservation = false;
+                reservasiCb.Enabled = true;
             }
         }
 
         private async void populateOTAComboBoxAsync()
         {
-            HttpData result = await conn.GetOTAList();
-            if (!result.status)
+            if (isLoadingOTA) return;
+            
+            isLoadingOTA = true;
+            otaComboBox.Enabled = false;
+            
+            try
             {
-                MessageBox.Show(result.message);
-                return;
+                // Cek cache untuk OTA (jarang berubah)
+                otas = cache.Get<Ota[]>(CacheKeys.OTA_LIST);
+                
+                if (otas == null)
+                {
+                    HttpData result = await conn.GetOTAList();
+                    if (!result.status)
+                    {
+                        MessageBox.Show(result.message);
+                        return;
+                    }
+
+                    otas = JsonConvert.DeserializeObject<Ota[]>(result.data.ToString());
+                    
+                    // Cache 1 jam (sangat jarang berubah)
+                    cache.Set(CacheKeys.OTA_LIST, otas, TimeSpan.FromHours(1));
+                }
+                
+                otaComboBox.Items.Clear();
+                otaComboBox.DisplayMember = "label";
+
+                foreach (Ota ota in otas)
+                {
+                    otaComboBox.Items.Add(ota);
+                }
             }
-
-            // Deserialize JSON string directly to OTA array
-            otas = JsonConvert.DeserializeObject<Ota[]>(result.data.ToString());
-            otaComboBox.Items.Clear();
-
-            // Bind rooms to roomIdCMBox
-            otaComboBox.DisplayMember = "label"; // Set the DisplayMember to "text" property
-
-            foreach (Ota ota in otas)
+            catch (Exception ex)
             {
-                otaComboBox.Items.Add(ota); // Add ota to combo box
+                MessageBox.Show($"Error loading OTA: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                isLoadingOTA = false;
+                otaComboBox.Enabled = true;
             }
         }
 
         private async void populatePaymentMethodComboBoxAsync()
         {
-            HttpData result = await conn.GetPaymentList();
-            if (!result.status)
+            if (isLoadingPayment) return;
+            
+            isLoadingPayment = true;
+            paymentComboBox.Enabled = false;
+            
+            try
             {
-                MessageBox.Show(result.message);
-                return;
+                // Cek cache untuk Payment Methods (jarang berubah)
+                paymentMethods = cache.Get<PaymentMethod[]>(CacheKeys.PAYMENT_METHODS);
+                
+                if (paymentMethods == null)
+                {
+                    HttpData result = await conn.GetPaymentList();
+                    if (!result.status)
+                    {
+                        MessageBox.Show(result.message);
+                        return;
+                    }
+
+                    paymentMethods = JsonConvert.DeserializeObject<PaymentMethod[]>(result.data.ToString());
+                    
+                    // Cache 1 jam (sangat jarang berubah)
+                    cache.Set(CacheKeys.PAYMENT_METHODS, paymentMethods, TimeSpan.FromHours(1));
+                }
+                
+                paymentComboBox.Items.Clear();
+                paymentComboBox.DisplayMember = "label";
+
+                foreach (PaymentMethod paymentMethod in paymentMethods)
+                {
+                    paymentComboBox.Items.Add(paymentMethod);
+                }
             }
-
-            // Deserialize JSON string directly to Payment array
-            paymentMethods = JsonConvert.DeserializeObject<PaymentMethod[]>(result.data.ToString());
-            paymentComboBox.Items.Clear();
-
-            // Bind rooms to roomIdCMBox
-            paymentComboBox.DisplayMember = "label"; // Set the DisplayMember to "label" property
-
-            foreach (PaymentMethod paymentMethod in paymentMethods)
+            catch (Exception ex)
             {
-                paymentComboBox.Items.Add(paymentMethod); // Add payment to combo box
+                MessageBox.Show($"Error loading payment methods: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                isLoadingPayment = false;
+                paymentComboBox.Enabled = true;
             }
         }
 
         private async void populateRoomAsync()
         {
-            HttpData result = await conn.GetRoomList(true,-1,"VC");
-            if (!result.status)
+            if (isLoadingRooms) return;
+            
+            isLoadingRooms = true;
+            NoKamarcomboBox.Enabled = false;
+            
+            try
             {
-                MessageBox.Show(result.message);
-                return;
+                // Rooms tidak di-cache karena status bisa berubah cepat
+                HttpData result = await conn.GetRoomList(true,-1,"VC");
+                if (!result.status)
+                {
+                    MessageBox.Show(result.message);
+                    return;
+                }
+
+                rooms = JsonConvert.DeserializeObject<Room[]>(result.data.ToString());
+                NoKamarcomboBox.Items.Clear();
+                NoKamarcomboBox.DisplayMember = "ROOM NAME";
+
+                foreach (Room room in rooms)
+                {
+                    NoKamarcomboBox.Items.Add(room);
+                }
             }
-
-            // Deserialize JSON string directly to Room array
-            rooms = JsonConvert.DeserializeObject<Room[]>(result.data.ToString());
-
-            // Clear existing items in roomIdCMBox
-            NoKamarcomboBox.Items.Clear();
-
-
-            // Bind rooms to roomIdCMBox
-            NoKamarcomboBox.DisplayMember = "ROOM NAME";
-
-            //rooms = rooms.
-
-            foreach (Room room in rooms)
+            catch (Exception ex)
             {
-                // Add each Room object to roomIdCMBox
-                NoKamarcomboBox.Items.Add(room);
+                MessageBox.Show($"Error loading rooms: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                isLoadingRooms = false;
+                NoKamarcomboBox.Enabled = true;
             }
         }
 
@@ -215,35 +321,84 @@ namespace Hotel_Management_System.Controllers
             con.Close();
         }
 
-        private void BookingsScreen_Load(object sender, EventArgs e)
+        private async void BookingsScreen_Load(object sender, EventArgs e)
         {
             //FilterTableCheckinDate.Value = DateTime.Today;
 
             checkinPicker.Value = DateTime.Today;
-
             checkoutPicker.Value = DateTime.Today.AddDays(1);
 
-
-            populateGuestComboBoxAsync();
-            populateRoomAsync();
-            refreshTable(null);
-            populateOTAComboBoxAsync();
-            populatePaymentMethodComboBoxAsync();
-            populateReservasiComboBoxAsync();
+            // Optimasi: Load data secara parallel
+            // Group 1: Static data yang bisa di-cache (parallel)
+            // Group 2: Dynamic data (sequential)
+            
+            loadingText.Visible = true;
+            loadingText.Text = "Loading data...";
+            
+            try
+            {
+                // Load static data (OTA, Payment) parallel - cepat karena dari cache
+                await Task.WhenAll(
+                    Task.Run(() => this.Invoke(new Action(() => populateOTAComboBoxAsync()))),
+                    Task.Run(() => this.Invoke(new Action(() => populatePaymentMethodComboBoxAsync())))
+                );
+                
+                // Delay kecil biar UI responsive
+                await Task.Delay(50);
+                
+                // Load dynamic data sequential
+                await Task.Run(() => this.Invoke(new Action(() => populateGuestComboBoxAsync())));
+                await Task.Delay(50);
+                
+                await Task.Run(() => this.Invoke(new Action(() => populateRoomAsync())));
+                await Task.Delay(50);
+                
+                await Task.Run(() => this.Invoke(new Action(() => populateReservasiComboBoxAsync())));
+                await Task.Delay(50);
+                
+                // Load table terakhir (paling berat)
+                refreshTable(null);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error initializing: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                loadingText.Visible = false;
+            }
         }
 
         private async void refreshTable(string date = null)
         {
+            if (isLoadingTable) return;
+            
+            isLoadingTable = true;
             loadingText.Visible = true;
-            HttpData result = await conn.GetCheckinList(date);
-            if (!result.status)
+            loadingText.Text = "Loading bookings...";
+            bookingTable.Enabled = false;
+            
+            try
             {
-                MessageBox.Show(result.message);
-                return;
+                HttpData result = await conn.GetCheckinList(date);
+                if (!result.status)
+                {
+                    MessageBox.Show(result.message);
+                    return;
+                }
+                System.Data.DataTable MyTable = JsonConvert.DeserializeObject<System.Data.DataTable>(result.data.ToString());
+                bookingTable.DataSource = MyTable;
             }
-            System.Data.DataTable MyTable = JsonConvert.DeserializeObject<System.Data.DataTable>(result.data.ToString());
-            bookingTable.DataSource = MyTable;
-            loadingText.Visible = false;
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading bookings: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                isLoadingTable = false;
+                loadingText.Visible = false;
+                bookingTable.Enabled = true;
+            }
         }
 
         private void FilterTableCheckinDate_ValueChanged(object sender, EventArgs e)

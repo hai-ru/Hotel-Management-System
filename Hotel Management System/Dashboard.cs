@@ -116,5 +116,12 @@ namespace Hotel_Management_System
         {
 
         }
+
+        private void networkDiagnosticsButton_Click(object sender, EventArgs e)
+        {
+            // Open Network Diagnostics as popup/modal
+            NetworkDiagnosticsScreen networkScreen = new NetworkDiagnosticsScreen();
+            networkScreen.ShowDialog(this);
+        }
     }
 }

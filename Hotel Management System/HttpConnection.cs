@@ -63,31 +63,103 @@ namespace Hotel_Management_System
     {
 
         private const string BaseUrl = "https://development.norapos.com/api";
+        private const int TimeoutSeconds = 30; // Timeout 30 detik
+        private const int MaxRetries = 2; // Retry maksimal 2x
+        private static readonly HttpClient sharedClient; // Reuse HttpClient
+        
+        // Static constructor untuk initialize shared HttpClient
+        static HttpConnection()
+        {
+            sharedClient = new HttpClient
+            {
+                Timeout = TimeSpan.FromSeconds(TimeoutSeconds)
+            };
+            // Connection pooling settings
+            sharedClient.DefaultRequestHeaders.ConnectionClose = false;
+        }
+        
+        /// <summary>
+        /// Helper method untuk execute HTTP request dengan retry logic
+        /// </summary>
+        private async Task<HttpData> ExecuteWithRetry(Func<Task<HttpData>> action, string operationName)
+        {
+            int retryCount = 0;
+            Exception lastException = null;
+            
+            while (retryCount <= MaxRetries)
+            {
+                try
+                {
+                    return await action();
+                }
+                catch (TaskCanceledException ex)
+                {
+                    lastException = ex;
+                    if (retryCount < MaxRetries)
+                    {
+                        retryCount++;
+                        await Task.Delay(1000 * retryCount); // Exponential backoff
+                        continue;
+                    }
+                    return new HttpData
+                    {
+                        status = false,
+                        message = $"Request timeout after {MaxRetries} retries. Check your internet connection."
+                    };
+                }
+                catch (HttpRequestException ex)
+                {
+                    lastException = ex;
+                    if (retryCount < MaxRetries)
+                    {
+                        retryCount++;
+                        await Task.Delay(1000 * retryCount);
+                        continue;
+                    }
+                    return new HttpData
+                    {
+                        status = false,
+                        message = $"Network error: {ex.Message}"
+                    };
+                }
+                catch (Exception ex)
+                {
+                    return new HttpData
+                    {
+                        status = false,
+                        message = $"Error in {operationName}: {ex.Message}"
+                    };
+                }
+            }
+            
+            return new HttpData
+            {
+                status = false,
+                message = lastException?.Message ?? "Unknown error"
+            };
+        }
 
         public async Task<HttpData> GetAccessToken(string username, string password)
         {
-
-            HttpData resultData = new HttpData();
-
-            resultData.status = false;
-            resultData.message = "";
-
-            try
+            return await ExecuteWithRetry(async () =>
             {
-                using (HttpClient client = new HttpClient())
+                HttpData resultData = new HttpData();
+                resultData.status = false;
+                resultData.message = "";
+
+                using (HttpClient client = sharedClient)
                 {
                     var content = new FormUrlEncodedContent(new[]
                     {
-                new KeyValuePair<string, string>("username", username),
-                new KeyValuePair<string, string>("password", password)
-            });
+                        new KeyValuePair<string, string>("username", username),
+                        new KeyValuePair<string, string>("password", password)
+                    });
 
                     HttpResponseMessage response = await client.PostAsync(BaseUrl+"/login", content);
 
                     var responseContent = await response.Content.ReadAsStringAsync();
                     try
                     {
-
                         dynamic data = JsonConvert.DeserializeObject(responseContent);
 
                         resultData.data = data;
@@ -99,7 +171,6 @@ namespace Hotel_Management_System
                         {
                             resultData.message = data.message;
                         }
-
                     }
                     catch (Newtonsoft.Json.JsonException ex)
                     {
@@ -107,41 +178,33 @@ namespace Hotel_Management_System
                         resultData.message = ex.Message;
                     }
                 }
-            }
-            catch (HttpRequestException ex)
-            {
-                resultData.status = false;
-                resultData.message = ex.Message;
-            }
 
-            return resultData;
+                return resultData;
+            }, "GetAccessToken");
         }
 
         public async Task<HttpData> GetHotelDetails()
         {
-
-            HttpData resultData = new HttpData();
-
-            resultData.status = false;
-            resultData.message = "";
-
-            try
+            return await ExecuteWithRetry(async () =>
             {
-                using (HttpClient client = new HttpClient())
+                HttpData resultData = new HttpData();
+                resultData.status = false;
+                resultData.message = "";
+
+                string token = Properties.Settings.Default.Token;
+                
+                using (var request = new HttpRequestMessage(HttpMethod.Post, BaseUrl + "/business"))
                 {
-                    string token = Properties.Settings.Default.Token;
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-                    HttpResponseMessage response = await client.PostAsync(BaseUrl+ "/business", null);
-
+                    request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    
+                    HttpResponseMessage response = await sharedClient.SendAsync(request);
                     var responseContent = await response.Content.ReadAsStringAsync();
+                    
                     try
                     {
-
                         dynamic data = JsonConvert.DeserializeObject(responseContent);
                         resultData.status = data.status;
                         resultData.data = data.data;
-
                     }
                     catch (Newtonsoft.Json.JsonException ex)
                     {
@@ -149,54 +212,46 @@ namespace Hotel_Management_System
                         resultData.message = ex.Message;
                     }
                 }
-            }
-            catch (HttpRequestException ex)
-            {
-                resultData.status = false;
-                resultData.message = ex.Message;
-            }
 
-            return resultData;
+                return resultData;
+            }, "GetHotelDetails");
         }
 
         public async Task<HttpData> GetRoomList(Boolean not_for_sell = false, int brand_id = -1, string kebersihan = "")
         {
-            HttpData resultData = new HttpData();
-
-            resultData.status = false;
-            resultData.message = "";
-
-            try
+            return await ExecuteWithRetry(async () =>
             {
-                using (HttpClient client = new HttpClient())
+                HttpData resultData = new HttpData();
+                resultData.status = false;
+                resultData.message = "";
+
+                string token = Properties.Settings.Default.Token;
+
+                var valContent = new Dictionary<string, string>();
+                valContent.Add("business_type", "hotel");
+                if (not_for_sell)
                 {
-                    string token = Properties.Settings.Default.Token;
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    valContent.Add("not_for_selling", "1");
+                }
+                if(brand_id > 0)
+                {
+                    valContent.Add("brand_id", brand_id.ToString());
+                }
+                if(kebersihan != "")
+                {
+                    valContent.Add("kebersihan", kebersihan);
+                }
 
-                    //string jsonPayload = "{\"business_type\":\"hotel\"}";
-
-                    //HttpContent content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-
-                    var valContent = new Dictionary<string, string>();
-                    valContent.Add("business_type", "hotel");
-                    if (not_for_sell)
-                    {
-                        valContent.Add("not_for_selling", "1");
-                    }
-                    if(brand_id > 0)
-                    {
-                        valContent.Add("brand_id", brand_id.ToString());
-                    }
-                    if(kebersihan != "")
-                    {
-                        valContent.Add("kebersihan", kebersihan);
-                    }
-
-                    var content = new FormUrlEncodedContent(valContent);
-
-                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/products/list", content);
-
-                    var responseContent = await response.Content.ReadAsStringAsync() ;
+                var content = new FormUrlEncodedContent(valContent);
+                
+                using (var request = new HttpRequestMessage(HttpMethod.Post, BaseUrl + "/products/list"))
+                {
+                    request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    request.Content = content;
+                    
+                    HttpResponseMessage response = await sharedClient.SendAsync(request);
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    
                     try
                     {
                         dynamic data = JsonConvert.DeserializeObject(responseContent);
@@ -209,12 +264,9 @@ namespace Hotel_Management_System
                         resultData.message = ex.Message;
                     }
                 }
-            } catch (HttpRequestException ex)
-            {
-                resultData.status= false;
-                resultData.message = ex.Message;
-            }
-            return resultData;
+                
+                return resultData;
+            }, "GetRoomList");
         }
 
         public async Task<HttpData> GetReservationList(string date = null)

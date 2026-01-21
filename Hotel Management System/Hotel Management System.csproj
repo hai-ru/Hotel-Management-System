@@ -127,6 +127,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CacheManager.cs" />
+    <Compile Include="OnityBackgroundWorker.cs" />
     <Compile Include="OnityConnection.cs" />
     <Compile Include="HttpConnection.cs" />
     <Compile Include="HotelManagementSystemDataSet.Designer.cs">

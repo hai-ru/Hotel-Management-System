@@ -20,6 +20,11 @@ namespace Hotel_Management_System.Controllers
 
         TipeKamar[] tipeKamars = new TipeKamar[] { };
         TipeKebersihan[] tipeKebersihans = new TipeKebersihan[] { };
+        
+        private bool isLoadingTipeKamar = false;
+        private bool isLoadingTipeKebersihan = false;
+        private bool isLoadingTable = false;
+        private CacheManager cache = CacheManager.Instance;
 
 
 
@@ -29,6 +34,9 @@ namespace Hotel_Management_System.Controllers
             //roomIdField.ReadOnly = false;
             //costField.ReadOnly = true;
             loadingText.Visible = false;
+            
+            // Optimasi: Jangan load semua data di constructor
+            // Biarkan form muncul dulu, baru load data
         }
 
         private void populateTable()
@@ -68,16 +76,58 @@ namespace Hotel_Management_System.Controllers
 
         private async void refreshTable(int brand_id = 0, string kebersihan = "")
         {
-            loadingText.Visible = true;
-            HttpData result = await conn.GetRoomList(false, brand_id, kebersihan);
-            if (!result.status)
+            // Prevent multiple simultaneous requests
+            if (isLoadingTable)
             {
-                loadingText.Visible = false;
-                MessageBox.Show(result.message);
                 return;
             }
+            
+            isLoadingTable = true;
+            loadingText.Visible = true;
+            loadingText.Text = "Loading rooms...";
+            roomsTable.Enabled = false; // Disable interaction saat loading
+            
+            try
+            {
+                // Cek cache dulu untuk kombinasi filter ini
+                string cacheKey = $"{CacheKeys.ROOM_LIST_PREFIX}{brand_id}_{kebersihan}";
+                DataTable cachedData = cache.Get<DataTable>(cacheKey);
+                
+                if (cachedData != null)
+                {
+                    // Gunakan data dari cache
+                    ProcessRoomData(cachedData);
+                    return;
+                }
+                
+                HttpData result = await conn.GetRoomList(false, brand_id, kebersihan);
+                if (!result.status)
+                {
+                    MessageBox.Show(result.message);
+                    return;
+                }
 
-            DataTable myTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
+                DataTable myTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
+                
+                // Simpan ke cache (expire 2 menit untuk room list karena sering berubah)
+                cache.Set(cacheKey, myTable, TimeSpan.FromMinutes(2));
+                
+                ProcessRoomData(myTable);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading rooms: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                isLoadingTable = false;
+                loadingText.Visible = false;
+                roomsTable.Enabled = true;
+            }
+        }
+        
+        private void ProcessRoomData(DataTable myTable)
+        {
 
             // Check if any row has a "KEBERSIHAN" value of "VCI" or "VD"
             bool canSort = myTable.AsEnumerable().Any(row =>
@@ -130,8 +180,9 @@ namespace Hotel_Management_System.Controllers
             }
             label3.Text = sb.ToString();
 
+            // Remove old event handler untuk prevent duplicate
+            roomsTable.CellFormatting -= roomsTable_CellFormatting;
             roomsTable.CellFormatting += roomsTable_CellFormatting;
-            loadingText.Visible = false;
         }
 
 
@@ -192,54 +243,127 @@ namespace Hotel_Management_System.Controllers
             }
         }
 
-        private void Rooms_Load(object sender, EventArgs e)
+        private async void Rooms_Load(object sender, EventArgs e)
         {
-            refreshTable();
-            getTipeRoom();
-            getTipeKebersihan();
+            // Lazy loading: Load essentials dulu, sisanya di background
+            // Ini membuat form muncul lebih cepat
+            
+            loadingText.Visible = true;
+            loadingText.Text = "Initializing...";
+            
+            try
+            {
+                // Load combo boxes dulu (ringan), table nanti
+                await Task.WhenAll(
+                    Task.Run(() => this.Invoke(new Action(() => getTipeRoom()))),
+                    Task.Run(() => this.Invoke(new Action(() => getTipeKebersihan())))
+                );
+                
+                // Baru load table data (berat)
+                await Task.Delay(100); // Small delay biar UI responsive
+                refreshTable();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error initializing: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                loadingText.Visible = false;
+            }
         }
 
         private async void getTipeRoom()
         {
-            HttpData result = await conn.GetTipeKamarList();
-            if (!result.status)
+            if (isLoadingTipeKamar) return;
+            
+            isLoadingTipeKamar = true;
+            tipeKamarCb.Enabled = false;
+            
+            try
             {
-                MessageBox.Show(result.message);
-                return;
+                // Cek cache dulu
+                tipeKamars = cache.Get<TipeKamar[]>(CacheKeys.TIPE_KAMAR);
+                
+                if (tipeKamars == null)
+                {
+                    // Cache miss, fetch from API
+                    HttpData result = await conn.GetTipeKamarList();
+                    if (!result.status)
+                    {
+                        MessageBox.Show(result.message);
+                        return;
+                    }
+
+                    tipeKamars = JsonConvert.DeserializeObject<TipeKamar[]>(result.data.ToString());
+                    
+                    // Cache selama 30 menit (jarang berubah)
+                    cache.Set(CacheKeys.TIPE_KAMAR, tipeKamars, TimeSpan.FromMinutes(30));
+                }
+                
+                tipeKamarCb.Items.Clear();
+                tipeKamarCb.DisplayMember = "name";
+
+                foreach (TipeKamar tipe in tipeKamars)
+                {
+                    tipeKamarCb.Items.Add(tipe);
+                }
             }
-
-            // Deserialize JSON string directly to OTA array
-            tipeKamars = JsonConvert.DeserializeObject<TipeKamar[]>(result.data.ToString());
-            tipeKamarCb.Items.Clear();
-
-            // Bind rooms to roomIdCMBox
-            tipeKamarCb.DisplayMember = "name"; // Set the DisplayMember to "text" property
-
-            foreach (TipeKamar tipe in tipeKamars)
+            catch (Exception ex)
             {
-                tipeKamarCb.Items.Add(tipe); // Add ota to combo box
+                MessageBox.Show($"Error loading room types: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                isLoadingTipeKamar = false;
+                tipeKamarCb.Enabled = true;
             }
         }
 
         private async void getTipeKebersihan()
         {
-            HttpData result = await conn.GetTipeKebersihan();
-            if (!result.status)
+            if (isLoadingTipeKebersihan) return;
+            
+            isLoadingTipeKebersihan = true;
+            kebersihanFilter.Enabled = false;
+            
+            try
             {
-                MessageBox.Show(result.message);
-                return;
+                // Cek cache dulu
+                tipeKebersihans = cache.Get<TipeKebersihan[]>(CacheKeys.TIPE_KEBERSIHAN);
+                
+                if (tipeKebersihans == null)
+                {
+                    // Cache miss, fetch from API
+                    HttpData result = await conn.GetTipeKebersihan();
+                    if (!result.status)
+                    {
+                        MessageBox.Show(result.message);
+                        return;
+                    }
+
+                    tipeKebersihans = JsonConvert.DeserializeObject<TipeKebersihan[]>(result.data.ToString());
+                    
+                    // Cache selama 30 menit (jarang berubah)
+                    cache.Set(CacheKeys.TIPE_KEBERSIHAN, tipeKebersihans, TimeSpan.FromMinutes(30));
+                }
+                
+                kebersihanFilter.Items.Clear();
+                kebersihanFilter.DisplayMember = "name";
+
+                foreach (TipeKebersihan tipe in tipeKebersihans)
+                {
+                    kebersihanFilter.Items.Add(tipe);
+                }
             }
-
-            // Deserialize JSON string directly to OTA array
-            tipeKebersihans = JsonConvert.DeserializeObject<TipeKebersihan[]>(result.data.ToString());
-            kebersihanFilter.Items.Clear();
-
-            // Bind rooms to roomIdCMBox
-            kebersihanFilter.DisplayMember = "name"; // Set the DisplayMember to "text" property
-
-            foreach (TipeKebersihan tipe in tipeKebersihans)
+            catch (Exception ex)
             {
-                kebersihanFilter.Items.Add(tipe); // Add ota to combo box
+                MessageBox.Show($"Error loading kebersihan types: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                isLoadingTipeKebersihan = false;
+                kebersihanFilter.Enabled = true;
             }
         }
 
