@@ -4,7 +4,7 @@
     <version>1.0.1.0</version>
     
     <!-- URL untuk download installer/update file -->
-    <url>https://github.com/hai-ru/Hotel-Management-System/releases/download/PMS/Hotel-Management-System-v1.0.1.zip</url>
+    <url>https://github.com/hai-ru/Hotel-Management-System/releases/download/PMS/Hotel-Management-System-v1.0.1.zip.zip</url>
     
     <!-- Changelog atau release notes -->
     <changelog>https://github.com/hai-ru/Hotel-Management-System/releases/tag/PMS</changelog>
