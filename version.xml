@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <item>
     <!-- Versi terbaru aplikasi (sesuaikan dengan versi di AssemblyInfo.cs) -->
-    <version>1.0.1.0</version>
+    <version>1.0.0.0</version>
     
     <!-- URL untuk download installer/update file -->
     <url>https://yourdomain.com/updates/KartikaHotelManagementSetup.exe</url>
