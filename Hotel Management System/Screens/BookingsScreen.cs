@@ -48,6 +48,52 @@ namespace Hotel_Management_System.Controllers
         private CacheManager cache = CacheManager.Instance;
         private System.Windows.Forms.Timer guestSearchTimer;
         private string lastGuestSearch = "";
+        
+        // Selected guest info - untuk menyimpan contact ID yang dipilih
+        private int selectedContactId = 0;
+        private string selectedContactName = "";
+        private System.Windows.Forms.Label contactIdLabel; // Label untuk menampilkan contact ID
+        private bool isSelectingGuest = false; // Flag untuk mencegah TextChanged clear selection
+        
+        // Helper method untuk convert dynamic data ke string dengan aman
+        private string SafeDataToString(dynamic data)
+        {
+            if (data == null) return "";
+            if (data is Newtonsoft.Json.Linq.JArray jArray) return jArray.ToString();
+            if (data is Newtonsoft.Json.Linq.JObject jObject) return jObject.ToString();
+            return data.ToString();
+        }
+        
+        // Method untuk set selected guest dan update label
+        private void SetSelectedGuest(int contactId, string contactName)
+        {
+            selectedContactId = contactId;
+            selectedContactName = contactName;
+            
+            if (contactIdLabel != null)
+            {
+                if (contactId > 0)
+                {
+                    contactIdLabel.Text = $"(ID: {contactId})";
+                    contactIdLabel.ForeColor = System.Drawing.Color.FromArgb(0, 128, 0); // Green
+                }
+                else
+                {
+                    contactIdLabel.Text = "";
+                }
+            }
+        }
+        
+        // Method untuk clear selected guest
+        private void ClearSelectedGuest()
+        {
+            selectedContactId = 0;
+            selectedContactName = "";
+            if (contactIdLabel != null)
+            {
+                contactIdLabel.Text = "";
+            }
+        }
 
         public BookingsScreen()
         {
@@ -58,7 +104,28 @@ namespace Hotel_Management_System.Controllers
             loadingText.Visible = false;
             kosongText.Visible = false;
             
+            // Buat label untuk menampilkan contact ID di bawah combobox
+            CreateContactIdLabel();
+            
             // Optimasi: Jangan load data di constructor
+        }
+        
+        private void CreateContactIdLabel()
+        {
+            contactIdLabel = new System.Windows.Forms.Label();
+            contactIdLabel.AutoSize = true;
+            contactIdLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            contactIdLabel.ForeColor = System.Drawing.Color.Green;
+            // Posisikan di samping label "Nama Tamu" (label4)
+            contactIdLabel.Location = new System.Drawing.Point(label4.Location.X + label4.Width + 5, label4.Location.Y);
+            contactIdLabel.Name = "contactIdLabel";
+            contactIdLabel.Text = "";
+            
+            // Tambahkan ke parent yang sama dengan guestIdCMBox
+            if (guestIdCMBox.Parent != null)
+            {
+                guestIdCMBox.Parent.Controls.Add(contactIdLabel);
+            }
         }
 
         private void checkIfEmployee()
@@ -98,10 +165,21 @@ namespace Hotel_Management_System.Controllers
             if (searchQuery.Length < 2) 
             {
                 guestIdCMBox.Items.Clear();
+                ClearSelectedGuest();
                 return; // Minimal 2 karakter untuk search
             }
             
             isLoadingGuests = true;
+            
+            // Tampilkan loading indicator
+            if (contactIdLabel != null)
+            {
+                contactIdLabel.Text = "🔍 Mencari...";
+                contactIdLabel.ForeColor = System.Drawing.Color.Gray;
+            }
+            
+            // Close dropdown dulu sebelum load data (fix overlap)
+            guestIdCMBox.DroppedDown = false;
             
             try
             {
@@ -110,30 +188,94 @@ namespace Hotel_Management_System.Controllers
                 if (!result.status)
                 {
                     guestIdCMBox.Items.Clear();
+                    ClearSelectedGuest();
+                    
+                    if (contactIdLabel != null)
+                    {
+                        contactIdLabel.Text = "⚠ " + (result.message ?? "Error");
+                        contactIdLabel.ForeColor = System.Drawing.Color.Red;
+                    }
                     return;
                 }
 
-                guests = JsonConvert.DeserializeObject<Guest[]>(result.data.ToString());
-                
-                guestIdCMBox.BeginUpdate();
-                guestIdCMBox.Items.Clear();
-                guestIdCMBox.DisplayMember = "text";
-
-                foreach (Guest guest in guests)
+                if (result.data == null || SafeDataToString(result.data) == "[]" || SafeDataToString(result.data) == "")
                 {
-                    guestIdCMBox.Items.Add(guest);
+                    guestIdCMBox.Items.Clear();
+                    ClearSelectedGuest();
+                    
+                    if (contactIdLabel != null)
+                    {
+                        contactIdLabel.Text = "Tidak ditemukan";
+                        contactIdLabel.ForeColor = System.Drawing.Color.Orange;
+                    }
+                    return;
                 }
-                guestIdCMBox.EndUpdate();
-                
-                // Auto open dropdown jika ada hasil
-                if (guestIdCMBox.Items.Count > 0 && guestIdCMBox.Focused)
+
+                try
                 {
-                    guestIdCMBox.DroppedDown = true;
+                    string jsonData = SafeDataToString(result.data);
+                    guests = JsonConvert.DeserializeObject<Guest[]>(jsonData);
+                    
+                    guestIdCMBox.BeginUpdate();
+                    guestIdCMBox.Items.Clear();
+
+                    if (guests == null || guests.Length == 0)
+                    {
+                        ClearSelectedGuest();
+                        if (contactIdLabel != null)
+                        {
+                            contactIdLabel.Text = "Tidak ditemukan";
+                            contactIdLabel.ForeColor = System.Drawing.Color.Orange;
+                        }
+                    }
+                    else
+                    {
+                        foreach (Guest guest in guests)
+                        {
+                            guestIdCMBox.Items.Add(guest);
+                        }
+                        
+                        if (contactIdLabel != null)
+                        {
+                            contactIdLabel.Text = $"Ditemukan {guests.Length} tamu";
+                            contactIdLabel.ForeColor = System.Drawing.Color.Blue;
+                        }
+                        
+                        // Auto open dropdown jika ada hasil dan masih fokus
+                        if (guestIdCMBox.Items.Count > 0 && guestIdCMBox.Focused)
+                        {
+                            // Delay sedikit untuk menghindari overlap
+                            await Task.Delay(100);
+                            if (guestIdCMBox.Focused) // Cek lagi setelah delay
+                            {
+                                guestIdCMBox.DroppedDown = true;
+                            }
+                        }
+                    }
+                    guestIdCMBox.EndUpdate();
+                }
+                catch (JsonException jsonEx)
+                {
+                    Console.WriteLine($"JSON Parse Error in SearchAndLoadGuests: {jsonEx.Message}");
+                    ClearSelectedGuest();
+                    
+                    if (contactIdLabel != null)
+                    {
+                        contactIdLabel.Text = "⚠ Error parsing data";
+                        contactIdLabel.ForeColor = System.Drawing.Color.Red;
+                    }
                 }
             }
             catch (Exception ex)
             {
-                // Silent fail untuk better UX
+                Console.WriteLine($"Error in SearchAndLoadGuests: {ex.Message}");
+                guestIdCMBox.BeginUpdate();
+                guestIdCMBox.Items.Clear();
+                guestIdCMBox.Items.Add(new Guest { 
+                    Name = $"⚠ Error: {ex.Message}",
+                    Id = 0
+                });
+                guestIdCMBox.EndUpdate();
             }
             finally
             {
@@ -150,6 +292,219 @@ namespace Hotel_Management_System.Controllers
                 guestSearchTimer.Stop();
                 SearchAndLoadGuests(lastGuestSearch);
             };
+        }
+        
+        private async Task LoadAllGuests()
+        {
+            if (isLoadingGuests) return;
+            
+            isLoadingGuests = true;
+            
+            try
+            {
+                // Load semua guest tanpa search query (kosong)
+                HttpData result = await conn.GetCustomerList("");
+                if (!result.status)
+                {
+                    guestIdCMBox.Items.Clear();
+                    
+                    if (!string.IsNullOrEmpty(result.message))
+                    {
+                        guestIdCMBox.BeginUpdate();
+                        guestIdCMBox.Items.Add(new Guest { 
+                            Name = "⚠ " + result.message,
+                            Id = 0
+                        });
+                        guestIdCMBox.EndUpdate();
+                    }
+                    return;
+                }
+
+                if (result.data == null)
+                {
+                    guestIdCMBox.Items.Clear();
+                    guestIdCMBox.BeginUpdate();
+                    guestIdCMBox.Items.Add(new Guest { 
+                        Name = "No guests available - Type to search",
+                        Id = 0
+                    });
+                    guestIdCMBox.EndUpdate();
+                    return;
+                }
+
+                string jsonData = SafeDataToString(result.data);
+                guests = JsonConvert.DeserializeObject<Guest[]>(jsonData);
+                
+                guestIdCMBox.BeginUpdate();
+                guestIdCMBox.Items.Clear();
+
+                if (guests == null || guests.Length == 0)
+                {
+                    guestIdCMBox.Items.Add(new Guest { 
+                        Name = "No guests available - Type to search",
+                        Id = 0
+                    });
+                }
+                else
+                {
+                    foreach (Guest guest in guests)
+                    {
+                        guestIdCMBox.Items.Add(guest);
+                    }
+                }
+                guestIdCMBox.EndUpdate();
+            }
+            catch (Exception ex)
+            {
+                guestIdCMBox.BeginUpdate();
+                guestIdCMBox.Items.Clear();
+                guestIdCMBox.Items.Add(new Guest { 
+                    Name = $"⚠ Error: {ex.Message}",
+                    Id = 0
+                });
+                guestIdCMBox.EndUpdate();
+            }
+            finally
+            {
+                isLoadingGuests = false;
+            }
+        }
+        
+        private async Task LoadGuestByNameAsync(string guestName)
+        {
+            try
+            {
+                // Coba search dengan nama guest
+                HttpData result = await conn.GetCustomerList(guestName);
+                
+                Console.WriteLine($"API Response Status: {result.status}");
+                Console.WriteLine($"API Response Data Type: {result.data?.GetType().Name ?? "null"}");
+                
+                if (result.status && result.data != null)
+                {
+                    try
+                    {
+                        string jsonData = SafeDataToString(result.data);
+                        // Cek apakah data adalah array kosong
+                        if (jsonData == "[]" || jsonData == "")
+                        {
+                            Console.WriteLine("Empty guest data returned");
+                            // Fallback ke load semua
+                            result = await conn.GetCustomerList("");
+                            if (!result.status || result.data == null)
+                            {
+                                return;
+                            }
+                            jsonData = SafeDataToString(result.data);
+                        }
+                        
+                        var foundGuests = JsonConvert.DeserializeObject<Guest[]>(jsonData);
+                        if (foundGuests != null && foundGuests.Length > 0)
+                        {
+                            // Update array guests
+                            guests = foundGuests;
+                            
+                            // Set combobox
+                            guestIdCMBox.BeginUpdate();
+                            guestIdCMBox.Items.Clear();
+                            foreach (Guest guest in foundGuests)
+                            {
+                                guestIdCMBox.Items.Add(guest);
+                            }
+                            guestIdCMBox.EndUpdate();
+                            
+                            // Select the first matching guest (case insensitive dan trim whitespace)
+                            var matchedGuest = foundGuests.FirstOrDefault((System.Func<Guest, bool>)(g => 
+                                g.Name.Trim().Equals(guestName.Trim(), StringComparison.OrdinalIgnoreCase)));
+                            
+                            if (matchedGuest != null)
+                            {
+                                guestIdCMBox.SelectedItem = matchedGuest;
+                            }
+                            else if (foundGuests.Length == 1)
+                            {
+                                // Jika hanya ada 1 hasil, pilih itu
+                                guestIdCMBox.SelectedItem = foundGuests[0];
+                            }
+                            else
+                            {
+                                // Pilih yang paling mirip (partial match)
+                                var partialMatch = foundGuests.FirstOrDefault((System.Func<Guest, bool>)(g => 
+                                    g.Name.IndexOf(guestName, StringComparison.OrdinalIgnoreCase) >= 0));
+                                if (partialMatch != null)
+                                {
+                                    guestIdCMBox.SelectedItem = partialMatch;
+                                }
+                            }
+                            return;
+                        }
+                    }
+                    catch (JsonException jsonEx)
+                    {
+                        Console.WriteLine($"JSON Parse Error: {jsonEx.Message}");
+                        Console.WriteLine($"Data received: {SafeDataToString(result.data)?.Substring(0, Math.Min(200, SafeDataToString(result.data).Length))}");
+                        MessageBox.Show($"Error parsing guest data. Please check the API response format.", "JSON Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+                
+                // Jika search gagal atau kosong, coba load semua guest
+                Console.WriteLine("Attempting to load all guests...");
+                result = await conn.GetCustomerList("");
+                if (result.status && result.data != null)
+                {
+                    try
+                    {
+                        string jsonData = SafeDataToString(result.data);
+                        var allGuests = JsonConvert.DeserializeObject<Guest[]>(jsonData);
+                        if (allGuests != null && allGuests.Length > 0)
+                        {
+                            guests = allGuests;
+                            
+                            guestIdCMBox.BeginUpdate();
+                            guestIdCMBox.Items.Clear();
+                            foreach (Guest guest in allGuests)
+                            {
+                                guestIdCMBox.Items.Add(guest);
+                            }
+                            guestIdCMBox.EndUpdate();
+                            
+                            // Cari yang cocok
+                            var matchedGuest = allGuests.FirstOrDefault((System.Func<Guest, bool>)(g => 
+                                g.Name.Trim().Equals(guestName.Trim(), StringComparison.OrdinalIgnoreCase)));
+                            
+                            if (matchedGuest != null)
+                            {
+                                guestIdCMBox.SelectedItem = matchedGuest;
+                            }
+                            else
+                            {
+                                // Cari partial match
+                                var partialMatch = allGuests.FirstOrDefault((System.Func<Guest, bool>)(g => 
+                                    g.Name.IndexOf(guestName, StringComparison.OrdinalIgnoreCase) >= 0));
+                                if (partialMatch != null)
+                                {
+                                    guestIdCMBox.SelectedItem = partialMatch;
+                                }
+                            }
+                        }
+                    }
+                    catch (JsonException jsonEx)
+                    {
+                        Console.WriteLine($"JSON Parse Error (all guests): {jsonEx.Message}");
+                        MessageBox.Show($"Unable to parse guest data from server.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to load guests: {result.message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception in LoadGuestByNameAsync: {ex.Message}");
+                MessageBox.Show($"Failed to load guest: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private async void populateReservasiComboBoxAsync()
@@ -357,9 +712,37 @@ namespace Hotel_Management_System.Controllers
             guestIdCMBox.AutoCompleteMode = AutoCompleteMode.None;
             guestIdCMBox.TextChanged += (s, ev) => 
             {
+                // Skip jika sedang proses pemilihan dari dropdown
+                if (isSelectingGuest) return;
+                
                 guestSearchTimer.Stop();
                 lastGuestSearch = guestIdCMBox.Text;
+                // Clear selected guest saat text berubah (user mengetik ulang)
+                ClearSelectedGuest();
                 guestSearchTimer.Start();
+            };
+            
+            // Set contact ID saat guest dipilih dari dropdown
+            guestIdCMBox.SelectedIndexChanged += (s, ev) =>
+            {
+                var selectedGuest = guestIdCMBox.SelectedItem as Guest;
+                if (selectedGuest != null && selectedGuest.Id > 0)
+                {
+                    isSelectingGuest = true; // Prevent TextChanged from clearing
+                    SetSelectedGuest(selectedGuest.Id, selectedGuest.Name);
+                    guestSearchTimer.Stop(); // Stop search timer
+                    isSelectingGuest = false;
+                }
+            };
+            
+            // Load guest saat dropdown diklik jika belum ada data
+            guestIdCMBox.DropDown += async (s, ev) =>
+            {
+                if (guestIdCMBox.Items.Count == 0 && !isLoadingGuests)
+                {
+                    // Load semua guest (tanpa filter)
+                    await LoadAllGuests();
+                }
             };
 
             // Optimasi: Load data secara parallel
@@ -371,22 +754,18 @@ namespace Hotel_Management_System.Controllers
             
             try
             {
-                // Load static data (OTA, Payment) parallel - cepat karena dari cache
-                await Task.WhenAll(
-                    Task.Run(() => this.Invoke(new System.Action(() => populateOTAComboBoxAsync()))),
-                    Task.Run(() => this.Invoke(new System.Action(() => populatePaymentMethodComboBoxAsync())))
-                );
+                // Load static data langsung (sudah async)
+                populateOTAComboBoxAsync();
+                populatePaymentMethodComboBoxAsync();
                 
-                // Delay kecil biar UI responsive
                 await Task.Delay(50);
                 
                 // Guest data - tidak perlu load di awal, akan load saat user ketik
-                // await Task.Run(() => this.Invoke(new System.Action(() => populateGuestComboBoxAsync())));
                 
-                await Task.Run(() => this.Invoke(new System.Action(() => populateRoomAsync())));
+                populateRoomAsync();
                 await Task.Delay(50);
                 
-                await Task.Run(() => this.Invoke(new System.Action(() => populateReservasiComboBoxAsync())));
+                populateReservasiComboBoxAsync();
                 await Task.Delay(50);
                 
                 // Load table terakhir (paling berat)
@@ -410,21 +789,51 @@ namespace Hotel_Management_System.Controllers
             loadingText.Visible = true;
             loadingText.Text = "Loading bookings...";
             bookingTable.Enabled = false;
+            kosongText.Visible = false;
             
             try
             {
                 HttpData result = await conn.GetCheckinList(date);
                 if (!result.status)
                 {
-                    MessageBox.Show(result.message);
+                    string errorMsg = string.IsNullOrEmpty(result.message) 
+                        ? "Failed to load check-in data. Please check your connection." 
+                        : result.message;
+                    MessageBox.Show(errorMsg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    kosongText.Visible = true;
+                    kosongText.Text = "No data available";
+                    bookingTable.DataSource = null;
                     return;
                 }
+                
+                if (result.data == null)
+                {
+                    kosongText.Visible = true;
+                    kosongText.Text = "No bookings found";
+                    bookingTable.DataSource = null;
+                    return;
+                }
+                
                 System.Data.DataTable MyTable = JsonConvert.DeserializeObject<System.Data.DataTable>(result.data.ToString());
-                bookingTable.DataSource = MyTable;
+                
+                if (MyTable == null || MyTable.Rows.Count == 0)
+                {
+                    kosongText.Visible = true;
+                    kosongText.Text = "No bookings found";
+                    bookingTable.DataSource = null;
+                }
+                else
+                {
+                    bookingTable.DataSource = MyTable;
+                    kosongText.Visible = false;
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading bookings: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                kosongText.Visible = true;
+                kosongText.Text = "Error loading data";
+                bookingTable.DataSource = null;
             }
             finally
             {
@@ -443,10 +852,61 @@ namespace Hotel_Management_System.Controllers
 
         private async void updateButton_Click(object sender, EventArgs e)
         {
-            if (
-                guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
-                NoKamarcomboBox.SelectedIndex != -1
-                )
+            // Ambil nama guest dari combobox text
+            string guestSearchName = guestIdCMBox.Text?.Trim();
+            if (string.IsNullOrEmpty(guestSearchName))
+            {
+                MessageBox.Show("Please enter or select a guest name.", "Guest Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                guestIdCMBox.Focus();
+                return;
+            }
+            
+            // Ambil bagian nama saja (sebelum " - " jika ada format "NAMA - NO HP")
+            if (guestSearchName.Contains(" - "))
+            {
+                guestSearchName = guestSearchName.Split(new[] { " - " }, StringSplitOptions.None)[0].Trim();
+            }
+            
+            // Cek dulu apakah sudah ada SelectedItem yang valid
+            Guest selectedGuest = guestIdCMBox.SelectedItem as Guest;
+            
+            // Jika tidak ada selected item atau ID = 0, query dari API
+            if (selectedGuest == null || selectedGuest.Id == 0)
+            {
+                loadingText.Visible = true;
+                loadingText.Text = "Loading guest data...";
+                HttpData guestResult = await conn.GetCustomerList(guestSearchName);
+                
+                if (guestResult.status && guestResult.data != null)
+                {
+                    try
+                    {
+                        string jsonData = SafeDataToString(guestResult.data);
+                        var guestResults = JsonConvert.DeserializeObject<Guest[]>(jsonData);
+                        
+                        if (guestResults != null && guestResults.Length > 0)
+                        {
+                            selectedGuest = guestResults.FirstOrDefault((System.Func<Guest, bool>)(g => 
+                                g.Name.Trim().Equals(guestSearchName, StringComparison.OrdinalIgnoreCase))) ?? guestResults[0];
+                        }
+                    }
+                    catch (JsonException)
+                    {
+                        // Ignore JSON error, will be caught below
+                    }
+                }
+                loadingText.Visible = false;
+            }
+            
+            if (selectedGuest == null || selectedGuest.Id == 0)
+            {
+                MessageBox.Show("Guest not found. Please select a valid guest.", "Invalid Guest", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                guestIdCMBox.Focus();
+                return;
+            }
+            
+            if (amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
+                NoKamarcomboBox.SelectedIndex != -1)
             {
                 // Extract values from form fields
                 string checkinId = bookingIdField.Text;
@@ -478,7 +938,7 @@ namespace Hotel_Management_System.Controllers
                     // Perform additional actions such as clearing fields, updating UI, etc.
                     clearFields();
                     // Guest combobox uses lazy loading - no need to clear/reload
-                    await Task.Run(() => this.Invoke(new System.Action(() => populateGuestComboBoxAsync())));
+                    populateGuestComboBoxAsync();
                     refreshTable();
 
                     // Create a new WebBrowser instance
@@ -515,6 +975,8 @@ namespace Hotel_Management_System.Controllers
         {
             bookingIdField.Text = "";
             guestIdCMBox.SelectedIndex = -1;
+            guestIdCMBox.Text = "";
+            ClearSelectedGuest(); // Clear contact ID
             checkinPicker.Text = "";
             checkoutPicker.Text = "";
             NoKamarcomboBox.SelectedIndex = -1;
@@ -565,48 +1027,127 @@ namespace Hotel_Management_System.Controllers
             }
         }
 
-        private void bookingTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private async void bookingTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            // Validasi: pastikan ada row yang dipilih
+            if (bookingTable.SelectedRows.Count == 0)
+            {
+                return;
+            }
+            
             try
             {
                 var row = bookingTable.SelectedRows[0];
-                bookingIdField.Text = row.Cells[0].Value.ToString();
-                depositTextBox1.Text = row.Cells[1].Value.ToString();
-                amountField.Text = row.Cells[2].Value.ToString();
-                depositField.Text = row.Cells[3].Value.ToString();
-                noteTextBox.Text = row.Cells[12].Value.ToString();
+                
+                // Safely get cell values with null checks
+                bookingIdField.Text = row.Cells[0].Value?.ToString() ?? "";
+                depositTextBox1.Text = row.Cells[1].Value?.ToString() ?? "0";
+                amountField.Text = row.Cells[2].Value?.ToString() ?? "0";
+                depositField.Text = row.Cells[3].Value?.ToString() ?? "0";
+                noteTextBox.Text = row.Cells.Count > 12 ? (row.Cells[12].Value?.ToString() ?? "") : "";
                 bookingIdTextBox.Text = "";
 
-                string guestName = row.Cells[10].Value.ToString();
-                string roomName = row.Cells[9].Value.ToString();
-                string methodName = row.Cells[5].Value.ToString();
-                string otaName = row.Cells[6].Value.ToString();
+                string guestName = row.Cells.Count > 10 ? (row.Cells[10].Value?.ToString() ?? "") : "";
+                string roomName = row.Cells.Count > 9 ? (row.Cells[9].Value?.ToString() ?? "") : "";
+                string methodName = row.Cells.Count > 5 ? (row.Cells[5].Value?.ToString() ?? "") : "";
+                string otaName = row.Cells.Count > 6 ? (row.Cells[6].Value?.ToString() ?? "") : "";
+                
+                // Debug: tampilkan nama guest yang diambil
+                Console.WriteLine($"Guest name from table: '{guestName}'");
+                Console.WriteLine($"Total cells in row: {row.Cells.Count}");
 
-                string checkinDateVal = row.Cells[7].Value.ToString(); // the format is dd/MM/yyyy
-                string checkoutDateVal = row.Cells[11].Value.ToString(); // the format is dd/MM/yyyy
+                string checkinDateVal = row.Cells.Count > 7 ? (row.Cells[7].Value?.ToString() ?? "") : "";
+                string checkoutDateVal = row.Cells.Count > 11 ? (row.Cells[11].Value?.ToString() ?? "") : "";
 
                 // Convert the date format from dd/MM/yyyy to DateTime
-                DateTime checkinDate = DateTime.ParseExact(checkinDateVal, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
-                DateTime checkoutDate = DateTime.ParseExact(checkoutDateVal, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
-
-                // Set the date pickers
-                checkinPicker.Value = checkinDate;
-                checkoutPicker.Value = checkoutDate;
-
-                // Find and select the guest
-                var selectedGuest = guests.FirstOrDefault(guest => guest.Name == guestName);
-                if (selectedGuest != null)
+                if (!string.IsNullOrEmpty(checkinDateVal) && !string.IsNullOrEmpty(checkoutDateVal))
                 {
-                    guestIdCMBox.SelectedItem = selectedGuest; // Assuming guestIdCMBox is data-bound to guest IDs
+                    try
+                    {
+                        DateTime checkinDate = DateTime.ParseExact(checkinDateVal, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                        DateTime checkoutDate = DateTime.ParseExact(checkoutDateVal, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+
+                        // Set the date pickers
+                        checkinPicker.Value = checkinDate;
+                        checkoutPicker.Value = checkoutDate;
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine($"Date parse error. Checkin: '{checkinDateVal}', Checkout: '{checkoutDateVal}'");
+                    }
+                }
+
+                // Find and select the guest from API
+                if (!string.IsNullOrWhiteSpace(guestName))
+                {
+                    loadingText.Visible = true;
+                    loadingText.Text = "Loading guest data...";
+                    
+                    // Langsung search dari API
+                    HttpData guestResult = await conn.GetCustomerList(guestName);
+                    
+                    if (guestResult.status && guestResult.data != null)
+                    {
+                        try
+                        {
+                            // Handle JArray properly using helper
+                            string jsonData = SafeDataToString(guestResult.data);
+                            
+                            var foundGuests = JsonConvert.DeserializeObject<Guest[]>(jsonData);
+                            if (foundGuests != null && foundGuests.Length > 0)
+                            {
+                                // Update array guests
+                                guests = foundGuests;
+                                
+                                // Set combobox
+                                guestIdCMBox.BeginUpdate();
+                                guestIdCMBox.Items.Clear();
+                                foreach (Guest guest in foundGuests)
+                                {
+                                    guestIdCMBox.Items.Add(guest);
+                                }
+                                guestIdCMBox.EndUpdate();
+                                
+                                // Cari exact match
+                                var matchedGuest = foundGuests.FirstOrDefault((System.Func<Guest, bool>)(g => 
+                                    g.Name.Trim().Equals(guestName.Trim(), StringComparison.OrdinalIgnoreCase)));
+                                
+                                if (matchedGuest != null)
+                                {
+                                    guestIdCMBox.SelectedItem = matchedGuest;
+                                    SetSelectedGuest(matchedGuest.Id, matchedGuest.Name);
+                                }
+                                else
+                                {
+                                    // Ambil yang pertama
+                                    guestIdCMBox.SelectedItem = foundGuests[0];
+                                    SetSelectedGuest(foundGuests[0].Id, foundGuests[0].Name);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine($"No guests found for: {guestName}");
+                            }
+                        }
+                        catch (JsonException jsonEx)
+                        {
+                            Console.WriteLine($"JSON Parse Error: {jsonEx.Message}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Failed to load guest from API: {guestResult.message}");
+                    }
+                    
+                    loadingText.Visible = false;
                 }
                 else
                 {
-                    // Handle the case where the guest is not found (optional)
-                    MessageBox.Show("Guest not found");
+                    MessageBox.Show("Guest name is empty in this booking record.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 // Find and select the room
-                var selectedRoom = rooms.FirstOrDefault(room => room.Name == roomName);
+                var selectedRoom = rooms.FirstOrDefault((System.Func<Room, bool>)(room => room.Name == roomName));
                 if (selectedRoom != null)
                 {
                     NoKamarcomboBox.SelectedItem = selectedRoom;
@@ -620,7 +1161,7 @@ namespace Hotel_Management_System.Controllers
                 }
 
                 // Find and select the payment method
-                var selectedMethod = paymentMethods.FirstOrDefault(payment => payment.label == methodName);
+                var selectedMethod = paymentMethods.FirstOrDefault((System.Func<PaymentMethod, bool>)(payment => payment.label == methodName));
                 if (selectedMethod != null)
                 {
                     paymentComboBox.SelectedItem = selectedMethod;
@@ -631,7 +1172,7 @@ namespace Hotel_Management_System.Controllers
                 }
 
                 // Find and select the OTA
-                var selectedOta = otas.FirstOrDefault(ota => ota.label == otaName);
+                var selectedOta = otas.FirstOrDefault((System.Func<Ota, bool>)(ota => ota.label == otaName));
                 if (selectedOta != null)
                 {
                     otaComboBox.SelectedItem = selectedOta;
@@ -645,22 +1186,105 @@ namespace Hotel_Management_System.Controllers
             }
             catch (FormatException ex)
             {
-                MessageBox.Show("Date format is incorrect. Please check the date format in the data source.");
-                Console.WriteLine(ex.Message);
+                MessageBox.Show($"Date format error: {ex.Message}", "Format Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Console.WriteLine($"FormatException: {ex.Message}");
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                MessageBox.Show($"Column index error: {ex.Message}", "Index Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Console.WriteLine($"ArgumentOutOfRangeException: {ex.Message}");
             }
             catch (Exception ex)
             {
-                MessageBox.Show("An error occurred while processing the data.");
-                Console.WriteLine(ex.Message);
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Console.WriteLine($"Exception: {ex.GetType().Name} - {ex.Message}");
+                Console.WriteLine($"Stack: {ex.StackTrace}");
             }
         }
 
+        private void bookingTable_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Ketika double-click row, trigger sama seperti CellContentClick
+            bookingTable_CellContentClick(sender, e);
+        }
 
         private async void addButton_Click(object sender, EventArgs e)
         {
             addButton.Enabled = false;
             loadingText.Visible = true;
-            if (guestIdCMBox.SelectedIndex != -1 && amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
+            loadingText.Text = "Processing...";
+            
+            // Cek apakah sudah ada contact ID yang dipilih
+            int contactId = selectedContactId;
+            string contactName = selectedContactName;
+            
+            // Jika belum ada, coba ambil dari SelectedItem combobox
+            if (contactId == 0)
+            {
+                var selectedGuest = guestIdCMBox.SelectedItem as Guest;
+                if (selectedGuest != null && selectedGuest.Id > 0)
+                {
+                    contactId = selectedGuest.Id;
+                    contactName = selectedGuest.Name;
+                }
+            }
+            
+            // Jika masih belum ada, query dari API berdasarkan text
+            if (contactId == 0)
+            {
+                string guestSearchName = guestIdCMBox.Text?.Trim();
+                if (string.IsNullOrEmpty(guestSearchName))
+                {
+                    MessageBox.Show("Silahkan pilih tamu terlebih dahulu.", "Tamu Diperlukan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    addButton.Enabled = true;
+                    loadingText.Visible = false;
+                    guestIdCMBox.Focus();
+                    return;
+                }
+                
+                // Ambil bagian nama saja (sebelum " - " jika ada format "NAMA - NO HP")
+                if (guestSearchName.Contains(" - "))
+                {
+                    guestSearchName = guestSearchName.Split(new[] { " - " }, StringSplitOptions.None)[0].Trim();
+                }
+                
+                loadingText.Text = "Mencari tamu...";
+                HttpData guestResult = await conn.GetCustomerList(guestSearchName);
+                
+                if (guestResult.status && guestResult.data != null)
+                {
+                    try
+                    {
+                        string jsonData = SafeDataToString(guestResult.data);
+                        var guestResults = JsonConvert.DeserializeObject<Guest[]>(jsonData);
+                        
+                        if (guestResults != null && guestResults.Length > 0)
+                        {
+                            var matchedGuest = guestResults.FirstOrDefault((System.Func<Guest, bool>)(g => 
+                                g.Name.Trim().Equals(guestSearchName, StringComparison.OrdinalIgnoreCase))) ?? guestResults[0];
+                            
+                            contactId = matchedGuest.Id;
+                            contactName = matchedGuest.Name;
+                            SetSelectedGuest(contactId, contactName);
+                        }
+                    }
+                    catch (JsonException) { }
+                }
+            }
+            
+            // Validasi final
+            if (contactId == 0)
+            {
+                MessageBox.Show("Tamu tidak ditemukan. Silahkan pilih tamu dari daftar.", "Tamu Tidak Valid", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                addButton.Enabled = true;
+                loadingText.Visible = false;
+                guestIdCMBox.Focus();
+                return;
+            }
+            
+            loadingText.Text = "Processing...";
+            
+            if (amountField.Text != "" && checkinPicker.Text != "" && checkoutPicker.Text != "" &&
                 NoKamarcomboBox.SelectedIndex != -1)
                 {
 
@@ -673,10 +1297,9 @@ namespace Hotel_Management_System.Controllers
                 //}
 
                 // Extract values from form fields
-                var selectedGuest = guestIdCMBox.SelectedItem as Guest; 
                 var selectedRoom = NoKamarcomboBox.SelectedItem as Room;
 
-                string contact_id = selectedGuest?.Id.ToString();
+                string contact_id = contactId.ToString();
 
                 string lamainap = durasi.ToString();
 
@@ -690,6 +1313,8 @@ namespace Hotel_Management_System.Controllers
                 if (paymentComboBox.SelectedItem == null)
                 {
                     MessageBox.Show("Silahkan pilih metode pembayaran yang di lakukan");
+                    addButton.Enabled = true;
+                    loadingText.Visible = false;
                     return;
                 }
 
@@ -714,12 +1339,9 @@ namespace Hotel_Management_System.Controllers
                     clearFields();
                     
                     // Reload data in background without blocking UI
-                    // Guest combobox uses lazy loading - will reload when user types
-                    _ = Task.Run(() => this.Invoke(new System.Action(() => {
-                        populateReservasiComboBoxAsync();
-                        populateRoomAsync();
-                        refreshTable();
-                    })));
+                    populateReservasiComboBoxAsync();
+                    populateRoomAsync();
+                    refreshTable();
                     
                     addButton.Enabled = true;
 
@@ -1318,16 +1940,105 @@ namespace Hotel_Management_System.Controllers
             {
                 room_id = "";
             }
-            var selectedGuest = guestIdCMBox.SelectedItem as Guest;
 
-            if (room_id == "" || selectedGuest == null)
+            if (room_id == "")
             {
-                MessageBox.Show("Silahkan pilih data yang valid pada tabel.");
+                MessageBox.Show("Room information is missing. Please select a valid row from the table.", "Room Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            
+            string contact_id = "";
+            string contact_name = "";
+            
+            // Prioritas 1: Gunakan selectedContactId jika sudah di-set
+            if (selectedContactId > 0)
+            {
+                contact_id = selectedContactId.ToString();
+                contact_name = selectedContactName;
+            }
+            // Prioritas 2: Gunakan SelectedItem dari combobox
+            else if (guestIdCMBox.SelectedItem is Guest selectedGuest && selectedGuest.Id > 0)
+            {
+                contact_id = selectedGuest.Id.ToString();
+                contact_name = selectedGuest.Name;
+                SetSelectedGuest(selectedGuest.Id, selectedGuest.Name);
+            }
+            // Prioritas 3: Query ke API berdasarkan text combobox
+            else
+            {
+                string guestSearchName = guestIdCMBox.Text?.Trim();
+                if (string.IsNullOrEmpty(guestSearchName))
+                {
+                    MessageBox.Show("Guest name is missing. Please enter or select a guest.", "Guest Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                
+                // Ambil bagian nama saja (sebelum " - " jika ada format "NAMA - NO HP")
+                if (guestSearchName.Contains(" - "))
+                {
+                    guestSearchName = guestSearchName.Split(new[] { " - " }, StringSplitOptions.None)[0].Trim();
+                }
+                
+                // Query ke API untuk mendapatkan data guest
+                loadingText.Visible = true;
+                loadingText.Text = "Loading guest data...";
+                
+                HttpData result = await conn.GetCustomerList(guestSearchName);
+                
+                if (!result.status || result.data == null)
+                {
+                    loadingText.Visible = false;
+                    MessageBox.Show("Failed to load guest data from server. " + (result.message ?? ""), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                
+                Guest[] guestResults;
+                try
+                {
+                    string jsonData = SafeDataToString(result.data);
+                    guestResults = JsonConvert.DeserializeObject<Guest[]>(jsonData);
+                }
+                catch (JsonException ex)
+                {
+                    loadingText.Visible = false;
+                    MessageBox.Show("Failed to parse guest data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                
+                if (guestResults == null || guestResults.Length == 0)
+                {
+                    loadingText.Visible = false;
+                    MessageBox.Show("Guest not found in database.", "Guest Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                
+                var matchedGuest = guestResults.FirstOrDefault((System.Func<Guest, bool>)(g => 
+                    g.Name.Trim().Equals(guestSearchName, StringComparison.OrdinalIgnoreCase)));
+                
+                if (matchedGuest == null)
+                {
+                    matchedGuest = guestResults[0];
+                }
+                
+                loadingText.Visible = false;
+                
+                if (matchedGuest.Id == 0)
+                {
+                    MessageBox.Show("Invalid guest data from API.", "Invalid Guest", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                
+                contact_id = matchedGuest.Id.ToString();
+                contact_name = matchedGuest.Name;
+                SetSelectedGuest(matchedGuest.Id, matchedGuest.Name);
+            }
+            
+            if (string.IsNullOrEmpty(contact_id) || contact_id == "0")
+            {
+                MessageBox.Show("Guest ID is invalid. Please select a valid guest.", "Invalid Guest", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            string contact_id = selectedGuest.Id.ToString();
-            string contact_name = selectedGuest.Name.ToString();
             string checkin = checkinPicker.Text;
             string checkout = checkoutPicker.Text;
             //string room_product_id = room_id;
@@ -1350,12 +2061,9 @@ namespace Hotel_Management_System.Controllers
                     clearFields();
                     
                     // Reload data in background without blocking UI
-                    // Guest combobox uses lazy loading - will reload when user types
-                    _ = Task.Run(() => this.Invoke(new System.Action(() => {
-                        populateReservasiComboBoxAsync();
-                        populateRoomAsync();
-                        refreshTable();
-                    })));
+                    populateReservasiComboBoxAsync();
+                    populateRoomAsync();
+                    refreshTable();
                     
                     addButton.Enabled = true;
                 }
@@ -1455,7 +2163,7 @@ namespace Hotel_Management_System.Controllers
                     amountField.ReadOnly = false;
 
                     // Find and select the guest
-                    var selectedGuest = guests.FirstOrDefault(guest => selectedReservasi.Contact_id == guest.Id);
+                    var selectedGuest = guests.FirstOrDefault((System.Func<Guest, bool>)(guest => selectedReservasi.Contact_id == guest.Id));
                     if (selectedGuest != null)
                     {
                         guestIdCMBox.SelectedItem = selectedGuest; // Assuming guestIdCMBox is data-bound to guest IDs
@@ -1470,7 +2178,7 @@ namespace Hotel_Management_System.Controllers
                     checkoutPicker.Value = DateTime.Parse(selectedReservasi.Checkout);
 
                     // Find and select the guest
-                    var otaSelected = otas.FirstOrDefault(ota => selectedReservasi.Ota == ota.label);
+                    var otaSelected = otas.FirstOrDefault((System.Func<Ota, bool>)(ota => selectedReservasi.Ota == ota.label));
                     if (otaSelected != null)
                     {
                         otaComboBox.SelectedItem = otaSelected; // Assuming guestIdCMBox is data-bound to guest IDs
@@ -1486,7 +2194,7 @@ namespace Hotel_Management_System.Controllers
                     depositTextBox1.Text = selectedReservasi.deposit.ToString();
 
                     // Find and select the guest
-                    var paymentSelected = paymentMethods.FirstOrDefault(data => selectedReservasi.metode_pembayaran == data.label);
+                    var paymentSelected = paymentMethods.FirstOrDefault((System.Func<PaymentMethod, bool>)(data => selectedReservasi.metode_pembayaran == data.label));
                     if (paymentSelected != null)
                     {
                         paymentComboBox.SelectedItem = paymentSelected; // Assuming guestIdCMBox is data-bound to guest IDs

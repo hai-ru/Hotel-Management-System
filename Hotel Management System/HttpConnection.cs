@@ -478,47 +478,61 @@ namespace Hotel_Management_System
 
         public async Task<HttpData> GetCustomerList(string search = "")
         {
-
-            HttpData resultData = new HttpData();
-
-            resultData.status = false;
-            resultData.message = "";
-
-            try
+            return await ExecuteWithRetry(async () =>
             {
-                string token = Properties.Settings.Default.Token;
-                sharedClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-                var valContent = new Dictionary<string, string>();
-                valContent.Add("hotel", "1");
-                valContent.Add("q", search);
-
-                var content = new FormUrlEncodedContent(valContent);
-
-                HttpResponseMessage response = await sharedClient.PostAsync(BaseUrl + "/customers", content);
-
-                var responseContent = await response.Content.ReadAsStringAsync();
-                try
-                {
-
-                    dynamic data = JsonConvert.DeserializeObject(responseContent);
-                    resultData.status = data.status;
-                    resultData.data = data.data;
-
-                }
-                catch (Newtonsoft.Json.JsonException ex)
-                {
-                    resultData.status = false;
-                    resultData.message = ex.Message;
-                }
-            }
-            catch (HttpRequestException ex)
-            {
+                HttpData resultData = new HttpData();
                 resultData.status = false;
-                resultData.message = ex.Message;
-            }
+                resultData.message = "";
 
-            return resultData;
+                string token = Properties.Settings.Default.Token;
+                
+                using (var request = new HttpRequestMessage(HttpMethod.Post, BaseUrl + "/customers"))
+                {
+                    request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    var valContent = new Dictionary<string, string>();
+                    valContent.Add("hotel", "1");
+                    // Default search minimal "a" agar selalu ada hasil
+                    valContent.Add("q", string.IsNullOrEmpty(search) ? "a" : search);
+
+                    request.Content = new FormUrlEncodedContent(valContent);
+
+                    HttpResponseMessage response = await sharedClient.SendAsync(request);
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    
+                    // Debug logging
+                    Console.WriteLine($"GetCustomerList Response (first 500 chars): {responseContent.Substring(0, Math.Min(500, responseContent.Length))}");
+                    
+                    try
+                    {
+                        dynamic data = JsonConvert.DeserializeObject(responseContent);
+                        resultData.status = data.status;
+                        resultData.data = data.data;
+                        
+                        // Log data type
+                        if (resultData.data != null)
+                        {
+                            Console.WriteLine($"Data type: {resultData.data.GetType().Name}");
+                            string dataStr = resultData.data.ToString();
+                            Console.WriteLine($"Data content (first 200 chars): {dataStr.Substring(0, Math.Min(200, dataStr.Length))}");
+                        }
+                        
+                        if (!resultData.status && data.message != null)
+                        {
+                            resultData.message = data.message;
+                        }
+                    }
+                    catch (Newtonsoft.Json.JsonException ex)
+                    {
+                        resultData.status = false;
+                        resultData.message = $"JSON parse error: {ex.Message}";
+                        Console.WriteLine($"JSON Error in GetCustomerList: {ex.Message}");
+                        Console.WriteLine($"Response was: {responseContent}");
+                    }
+                }
+
+                return resultData;
+            }, "GetCustomerList");
         }
 
         public async Task<HttpData> StoreCustomer(
@@ -1076,57 +1090,56 @@ namespace Hotel_Management_System
         }
         public async Task<HttpData> GetCheckinList(string date = null,string status = null)
         {
-
-            HttpData resultData = new HttpData();
-
-            resultData.status = false;
-            resultData.message = "";
-
-            try
+            return await ExecuteWithRetry(async () =>
             {
-                using (HttpClient client = new HttpClient())
+                HttpData resultData = new HttpData();
+                resultData.status = false;
+                resultData.message = "";
+
+                string token = Properties.Settings.Default.Token;
+                
+                using (var request = new HttpRequestMessage(HttpMethod.Post, BaseUrl + "/checkin/list"))
                 {
-                    string token = Properties.Settings.Default.Token;
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    dynamic content = null;
-
-                    if (date != null && date != "")
+                    // Selalu kirim content, bahkan jika kosong
+                    var valContent = new Dictionary<string, string>();
+                    
+                    if (!string.IsNullOrEmpty(date))
                     {
-                        var valContent = new Dictionary<string, string>();
                         valContent.Add("date", date);
-                        if(status != null)
-                        {
-                            valContent.Add("status", status);
-                        }
-                        content = new FormUrlEncodedContent(valContent);
                     }
+                    
+                    if (!string.IsNullOrEmpty(status))
+                    {
+                        valContent.Add("status", status);
+                    }
+                    
+                    request.Content = new FormUrlEncodedContent(valContent);
 
-                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/checkin/list", content);
-
+                    HttpResponseMessage response = await sharedClient.SendAsync(request);
                     var responseContent = await response.Content.ReadAsStringAsync();
+                    
                     try
                     {
-
                         dynamic data = JsonConvert.DeserializeObject(responseContent);
                         resultData.status = data.status;
                         resultData.data = data.data;
-
+                        
+                        if (!resultData.status && data.message != null)
+                        {
+                            resultData.message = data.message;
+                        }
                     }
                     catch (Newtonsoft.Json.JsonException ex)
                     {
                         resultData.status = false;
-                        resultData.message = ex.Message;
+                        resultData.message = $"JSON parse error: {ex.Message}";
                     }
                 }
-            }
-            catch (HttpRequestException ex)
-            {
-                resultData.status = false;
-                resultData.message = ex.Message;
-            }
 
-            return resultData;
+                return resultData;
+            }, "GetCheckinList");
         }
 
 

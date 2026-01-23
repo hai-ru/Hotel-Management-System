@@ -114,22 +114,44 @@ namespace Hotel_Management_System.Controllers
                 HttpData result = await conn.GetCheckinList(date);
                 if (!result.status)
                 {
-                    MessageBox.Show(result.message);
+                    string errorMsg = string.IsNullOrEmpty(result.message) 
+                        ? "Failed to load checkout data. Please check your connection." 
+                        : result.message;
+                    MessageBox.Show(errorMsg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    loadingText.Text = "No data available";
+                    checkoutTable.DataSource = null;
+                    return;
+                }
+                
+                if (result.data == null)
+                {
+                    loadingText.Text = "No checkout data found";
+                    checkoutTable.DataSource = null;
                     return;
                 }
 
                 DataTable MyTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
-                checkoutTable.DataSource = MyTable;
-
-                checkoutTable.CellFormatting += Table_CellFormatting;
+                
+                if (MyTable == null || MyTable.Rows.Count == 0)
+                {
+                    loadingText.Text = "No checkout data found";
+                    checkoutTable.DataSource = null;
+                }
+                else
+                {
+                    checkoutTable.DataSource = MyTable;
+                    checkoutTable.CellFormatting += Table_CellFormatting;
+                    loadingText.Visible = false;
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error loading checkout data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                loadingText.Text = "Error loading data";
+                checkoutTable.DataSource = null;
             }
             finally
             {
-                loadingText.Visible = false;
                 checkoutTable.Enabled = true;
             }
         }

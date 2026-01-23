@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <item>
     <!-- Versi terbaru aplikasi (sesuaikan dengan versi di AssemblyInfo.cs) -->
-    <version>1.0.1.0</version>
+    <version>1.0.2.0</version>
     
     <!-- URL untuk download installer/update file -->
     <url>https://github.com/hai-ru/Hotel-Management-System/releases/download/PMS/Hotel-Management-System.zip</url>
