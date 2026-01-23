@@ -183,29 +183,40 @@ namespace Hotel_Management_System
         /// </summary>
         private string EvaluateQuality(long pingTime, double downloadSpeed)
         {
-            // Ping time thresholds (ms)
-            // Download speed thresholds (KB/s)
-
-            if (pingTime <= 50 && downloadSpeed >= 500)
+            // Prioritas utama: Ping time (lebih penting untuk aplikasi real-time)
+            // Download speed sebagai faktor sekunder
+            
+            // Excellent: Ping < 50ms
+            if (pingTime < 50)
             {
-                return "Excellent"; // < 50ms, > 500 KB/s
+                if (downloadSpeed >= 500) return "Excellent";
+                if (downloadSpeed >= 100) return "Good";
+                return "Good"; // Ping bagus sudah cukup untuk Good
             }
-            else if (pingTime <= 100 && downloadSpeed >= 200)
+            
+            // Good: Ping 50-100ms
+            if (pingTime < 100)
             {
-                return "Good"; // < 100ms, > 200 KB/s
+                if (downloadSpeed >= 200) return "Good";
+                if (downloadSpeed >= 50) return "Fair";
+                return "Fair"; // Ping masih OK
             }
-            else if (pingTime <= 200 && downloadSpeed >= 100)
+            
+            // Fair: Ping 100-200ms
+            if (pingTime < 200)
             {
-                return "Fair"; // < 200ms, > 100 KB/s
+                if (downloadSpeed >= 100) return "Fair";
+                return "Poor"; // Ping mulai lambat
             }
-            else if (pingTime <= 500 && downloadSpeed >= 50)
+            
+            // Poor: Ping 200-500ms
+            if (pingTime < 500)
             {
-                return "Poor"; // < 500ms, > 50 KB/s
+                return "Poor";
             }
-            else
-            {
-                return "Very Poor"; // > 500ms or < 50 KB/s
-            }
+            
+            // Very Poor: Ping > 500ms
+            return "Very Poor";
         }
 
         /// <summary>

@@ -148,6 +148,7 @@
     <Compile Include="NetworkMonitor.cs" />
     <Compile Include="OnityConnection.cs" />
     <Compile Include="HttpConnection.cs" />
+    <Compile Include="UpdaterManager.cs" />
     <Compile Include="HotelManagementSystemDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

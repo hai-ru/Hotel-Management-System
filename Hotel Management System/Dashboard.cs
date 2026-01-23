@@ -14,6 +14,9 @@ namespace Hotel_Management_System
 {
     public partial class Dashboard : Form
     {
+        private NetworkMonitor networkMonitor = new NetworkMonitor();
+        private bool isCheckingNetwork = false;
+
         public Dashboard()
         {
             InitializeComponent();
@@ -86,7 +89,13 @@ namespace Hotel_Management_System
             this.Text = $"Kartika Hotel Management System - {version} (Updated: {lastUpdate})";
             
             // Load the RoomsScreen by default when the dashboard starts.
-            loadForm(new RoomsScreen());
+            loadForm(new RoomsScreen());            
+            // Start network status monitoring
+            networkStatusTimer.Start();
+            CheckNetworkStatus(); // Check immediately on load            
+            // Start network status monitoring
+            networkStatusTimer.Start();
+            CheckNetworkStatus(); // Check immediately on load
         }
 
         private void guna2CircleButton2_Click(object sender, EventArgs e)
@@ -125,6 +134,67 @@ namespace Hotel_Management_System
         private void networkDiagnosticsButton_Click(object sender, EventArgs e)
         {
             // Open Network Diagnostics as popup/modal
+            NetworkDiagnosticsScreen networkScreen = new NetworkDiagnosticsScreen();
+            networkScreen.ShowDialog(this);
+        }
+
+        private async void CheckNetworkStatus()
+        {
+            if (isCheckingNetwork) return; // Prevent multiple simultaneous checks
+            
+            isCheckingNetwork = true;
+            lblNetworkStatus.Text = "🔄 Checking...";
+            lblNetworkStatus.ForeColor = Color.Gray;
+            
+            try
+            {
+                var status = await networkMonitor.TestConnection();
+                
+                if (status.IsConnected)
+                {
+                    if (status.PingTime < 100)
+                    {
+                        lblNetworkStatus.Text = $"✅ Online ({status.PingTime}ms)";
+                        lblNetworkStatus.ForeColor = Color.Green;
+                    }
+                    else if (status.PingTime < 300)
+                    {
+                        lblNetworkStatus.Text = $"⚠️ Slow ({status.PingTime}ms)";
+                        lblNetworkStatus.ForeColor = Color.Orange;
+                    }
+                    else
+                    {
+                        lblNetworkStatus.Text = $"⚠️ Poor ({status.PingTime}ms)";
+                        lblNetworkStatus.ForeColor = Color.DarkOrange;
+                    }
+                }
+                else
+                {
+                    lblNetworkStatus.Text = "❌ Offline";
+                    lblNetworkStatus.ForeColor = Color.Red;
+                }
+            }
+            catch (Exception ex)
+            {
+                lblNetworkStatus.Text = "❌ Error";
+                lblNetworkStatus.ForeColor = Color.Red;
+                Console.WriteLine($"Network check error: {ex.Message}");
+            }
+            finally
+            {
+                isCheckingNetwork = false;
+            }
+        }
+
+        private void networkStatusTimer_Tick(object sender, EventArgs e)
+        {
+            // Check network status every 30 seconds
+            CheckNetworkStatus();
+        }
+
+        private void lblNetworkStatus_Click(object sender, EventArgs e)
+        {
+            // Open Network Diagnostics when clicking on network status
             NetworkDiagnosticsScreen networkScreen = new NetworkDiagnosticsScreen();
             networkScreen.ShowDialog(this);
         }

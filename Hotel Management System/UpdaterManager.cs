@@ -26,7 +26,7 @@ namespace Hotel_Management_System
                 
                 // Kustomisasi tampilan (opsional)
                 AutoUpdater.AppTitle = "Kartika Hotel Management System";
-                AutoUpdater.Icon = Properties.Resources.Icon; // Gunakan icon aplikasi
+                // AutoUpdater.Icon = Properties.Resources.Icon; // Uncomment jika sudah ada icon resource
                 
                 // Jika true, akan tampilkan pesan "No update available"
                 AutoUpdater.ReportErrors = showNoUpdateAvailable;
@@ -133,7 +133,8 @@ namespace Hotel_Management_System
         /// </summary>
         public static void ClearUpdaterSettings()
         {
-            AutoUpdater.ClearAppDirectory();
+            // AutoUpdater.ClearAppDirectory tidak tersedia di versi ini
+            // Bisa dihapus manual di: %TEMP%\AutoUpdater
         }
     }
 }

@@ -6,6 +6,8 @@
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
+        private System.Windows.Forms.Label lblNetworkStatus;
+        private System.Windows.Forms.Timer networkStatusTimer;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -13,9 +15,17 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing)
             {
-                components.Dispose();
+                if (networkStatusTimer != null)
+                {
+                    networkStatusTimer.Stop();
+                    networkStatusTimer.Dispose();
+                }
+                if (components != null)
+                {
+                    components.Dispose();
+                }
             }
             base.Dispose(disposing);
         }
@@ -28,8 +38,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
             this.guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
+            this.lblNetworkStatus = new System.Windows.Forms.Label();
+            this.networkStatusTimer = new System.Windows.Forms.Timer(this.components);
             this.guna2Button7 = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Button2 = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Button1 = new Guna.UI2.WinForms.Guna2Button();
@@ -237,6 +250,25 @@
             this.guna2ImageRadioButton1.TabIndex = 1;
             this.guna2ImageRadioButton1.CheckedChanged += new System.EventHandler(this.guna2ImageRadioButton1_CheckedChanged);
             // 
+            // lblNetworkStatus
+            // 
+            this.lblNetworkStatus.AutoSize = true;
+            this.lblNetworkStatus.BackColor = System.Drawing.Color.Transparent;
+            this.lblNetworkStatus.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblNetworkStatus.ForeColor = System.Drawing.Color.Gray;
+            this.lblNetworkStatus.Location = new System.Drawing.Point(1200, 28);
+            this.lblNetworkStatus.Name = "lblNetworkStatus";
+            this.lblNetworkStatus.Size = new System.Drawing.Size(90, 15);
+            this.lblNetworkStatus.TabIndex = 4;
+            this.lblNetworkStatus.Text = "🔄 Checking...";
+            this.lblNetworkStatus.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblNetworkStatus.Click += new System.EventHandler(this.lblNetworkStatus_Click);
+            // 
+            // networkStatusTimer
+            // 
+            this.networkStatusTimer.Interval = 30000;
+            this.networkStatusTimer.Tick += new System.EventHandler(this.networkStatusTimer_Tick);
+            // 
             // mainPanel
             // 
             this.mainPanel.BackColor = System.Drawing.Color.Gainsboro;
@@ -259,6 +291,7 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(255)))), ((int)(((byte)(220)))));
             this.BackgroundImage = global::Hotel_Management_System.Properties.Resources.kartika_hotel;
             this.ClientSize = new System.Drawing.Size(1370, 749);
+            this.Controls.Add(this.lblNetworkStatus);
             this.Controls.Add(this.guna2CircleButton2);
             this.Controls.Add(this.guna2CircleButton1);
             this.Controls.Add(this.guna2ImageRadioButton1);
