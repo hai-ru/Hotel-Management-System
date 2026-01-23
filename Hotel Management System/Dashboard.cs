@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -83,10 +84,16 @@ namespace Hotel_Management_System
 
         private void Dashboard_Load(object sender, EventArgs e)
         {
+            // Get version from Assembly
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
+            string versionString = $"v{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+            
+            // Set version label
+            lblVersionNumber.Text = versionString;
+            
             // Set version and last update in title
-            string version = "v2.1.0";
             string lastUpdate = "21 Jan 2026";
-            this.Text = $"Kartika Hotel Management System - {version} (Updated: {lastUpdate})";
+            this.Text = $"Kartika Hotel Management System - {versionString} (Updated: {lastUpdate})";
             
             // Load the RoomsScreen by default when the dashboard starts.
             loadForm(new RoomsScreen());            

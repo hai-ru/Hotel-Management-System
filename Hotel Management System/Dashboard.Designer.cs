@@ -7,6 +7,7 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
         private System.Windows.Forms.Label lblNetworkStatus;
+        private System.Windows.Forms.Label lblVersionNumber;
         private System.Windows.Forms.Timer networkStatusTimer;
 
         /// <summary>
@@ -42,6 +43,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
             this.guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
             this.lblNetworkStatus = new System.Windows.Forms.Label();
+            this.lblVersionNumber = new System.Windows.Forms.Label();
             this.networkStatusTimer = new System.Windows.Forms.Timer(this.components);
             this.guna2Button7 = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Button2 = new Guna.UI2.WinForms.Guna2Button();
@@ -264,6 +266,18 @@
             this.lblNetworkStatus.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblNetworkStatus.Click += new System.EventHandler(this.lblNetworkStatus_Click);
             // 
+            // lblVersionNumber
+            // 
+            this.lblVersionNumber.AutoSize = true;
+            this.lblVersionNumber.BackColor = System.Drawing.Color.Transparent;
+            this.lblVersionNumber.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular);
+            this.lblVersionNumber.ForeColor = System.Drawing.Color.DarkGray;
+            this.lblVersionNumber.Location = new System.Drawing.Point(1200, 48);
+            this.lblVersionNumber.Name = "lblVersionNumber";
+            this.lblVersionNumber.Size = new System.Drawing.Size(50, 13);
+            this.lblVersionNumber.TabIndex = 5;
+            this.lblVersionNumber.Text = "v1.0.0.0";
+            // 
             // networkStatusTimer
             // 
             this.networkStatusTimer.Interval = 30000;
@@ -291,6 +305,7 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(255)))), ((int)(((byte)(220)))));
             this.BackgroundImage = global::Hotel_Management_System.Properties.Resources.kartika_hotel;
             this.ClientSize = new System.Drawing.Size(1370, 749);
+            this.Controls.Add(this.lblVersionNumber);
             this.Controls.Add(this.lblNetworkStatus);
             this.Controls.Add(this.guna2CircleButton2);
             this.Controls.Add(this.guna2CircleButton1);
