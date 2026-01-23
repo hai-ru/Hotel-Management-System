@@ -46,6 +46,8 @@ namespace Hotel_Management_System.Controllers
         private bool isLoadingReservation = false;
         private bool isLoadingTable = false;
         private CacheManager cache = CacheManager.Instance;
+        private System.Windows.Forms.Timer guestSearchTimer;
+        private string lastGuestSearch = "";
 
         public BookingsScreen()
         {
@@ -86,31 +88,34 @@ namespace Hotel_Management_System.Controllers
         }
         private async void populateGuestComboBoxAsync()
         {
+            // Method kosong - sekarang pake search-based loading
+            // Combobox akan load otomatis saat user ketik
+        }
+        
+        private async void SearchAndLoadGuests(string searchQuery)
+        {
             if (isLoadingGuests) return;
+            if (searchQuery.Length < 2) 
+            {
+                guestIdCMBox.Items.Clear();
+                return; // Minimal 2 karakter untuk search
+            }
             
             isLoadingGuests = true;
-            guestIdCMBox.Enabled = false;
             
             try
             {
-                // Cek cache
-                guests = cache.Get<Guest[]>(CacheKeys.CUSTOMER_LIST);
-                
-                if (guests == null)
+                // Search dengan parameter query
+                HttpData result = await conn.GetCustomerList(searchQuery);
+                if (!result.status)
                 {
-                    HttpData result = await conn.GetCustomerList();
-                    if (!result.status)
-                    {
-                        MessageBox.Show(result.message);
-                        return;
-                    }
-
-                    guests = JsonConvert.DeserializeObject<Guest[]>(result.data.ToString());
-                    
-                    // Cache 5 menit (bisa berubah sering)
-                    cache.Set(CacheKeys.CUSTOMER_LIST, guests, TimeSpan.FromMinutes(5));
+                    guestIdCMBox.Items.Clear();
+                    return;
                 }
+
+                guests = JsonConvert.DeserializeObject<Guest[]>(result.data.ToString());
                 
+                guestIdCMBox.BeginUpdate();
                 guestIdCMBox.Items.Clear();
                 guestIdCMBox.DisplayMember = "text";
 
@@ -118,16 +123,33 @@ namespace Hotel_Management_System.Controllers
                 {
                     guestIdCMBox.Items.Add(guest);
                 }
+                guestIdCMBox.EndUpdate();
+                
+                // Auto open dropdown jika ada hasil
+                if (guestIdCMBox.Items.Count > 0 && guestIdCMBox.Focused)
+                {
+                    guestIdCMBox.DroppedDown = true;
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading guests: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Silent fail untuk better UX
             }
             finally
             {
                 isLoadingGuests = false;
-                guestIdCMBox.Enabled = true;
             }
+        }
+        
+        private void InitializeGuestSearchTimer()
+        {
+            guestSearchTimer = new System.Windows.Forms.Timer();
+            guestSearchTimer.Interval = 500; // 500ms debounce
+            guestSearchTimer.Tick += (sender, e) =>
+            {
+                guestSearchTimer.Stop();
+                SearchAndLoadGuests(lastGuestSearch);
+            };
         }
 
         private async void populateReservasiComboBoxAsync()
@@ -327,6 +349,18 @@ namespace Hotel_Management_System.Controllers
 
             checkinPicker.Value = DateTime.Today;
             checkoutPicker.Value = DateTime.Today.AddDays(1);
+            
+            // Initialize guest search timer
+            InitializeGuestSearchTimer();
+            
+            // Setup guest combobox untuk lazy loading
+            guestIdCMBox.AutoCompleteMode = AutoCompleteMode.None;
+            guestIdCMBox.TextChanged += (s, ev) => 
+            {
+                guestSearchTimer.Stop();
+                lastGuestSearch = guestIdCMBox.Text;
+                guestSearchTimer.Start();
+            };
 
             // Optimasi: Load data secara parallel
             // Group 1: Static data yang bisa di-cache (parallel)
@@ -339,21 +373,20 @@ namespace Hotel_Management_System.Controllers
             {
                 // Load static data (OTA, Payment) parallel - cepat karena dari cache
                 await Task.WhenAll(
-                    Task.Run(() => this.Invoke(new Action(() => populateOTAComboBoxAsync()))),
-                    Task.Run(() => this.Invoke(new Action(() => populatePaymentMethodComboBoxAsync())))
+                    Task.Run(() => this.Invoke(new System.Action(() => populateOTAComboBoxAsync()))),
+                    Task.Run(() => this.Invoke(new System.Action(() => populatePaymentMethodComboBoxAsync())))
                 );
                 
                 // Delay kecil biar UI responsive
                 await Task.Delay(50);
                 
-                // Load dynamic data sequential
-                await Task.Run(() => this.Invoke(new Action(() => populateGuestComboBoxAsync())));
+                // Guest data - tidak perlu load di awal, akan load saat user ketik
+                // await Task.Run(() => this.Invoke(new System.Action(() => populateGuestComboBoxAsync())));
+                
+                await Task.Run(() => this.Invoke(new System.Action(() => populateRoomAsync())));
                 await Task.Delay(50);
                 
-                await Task.Run(() => this.Invoke(new Action(() => populateRoomAsync())));
-                await Task.Delay(50);
-                
-                await Task.Run(() => this.Invoke(new Action(() => populateReservasiComboBoxAsync())));
+                await Task.Run(() => this.Invoke(new System.Action(() => populateReservasiComboBoxAsync())));
                 await Task.Delay(50);
                 
                 // Load table terakhir (paling berat)
@@ -444,8 +477,8 @@ namespace Hotel_Management_System.Controllers
                     MessageBox.Show("Booking updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     // Perform additional actions such as clearing fields, updating UI, etc.
                     clearFields();
-                    guestIdCMBox.Items.Clear();
-                    populateGuestComboBoxAsync();
+                    // Guest combobox uses lazy loading - no need to clear/reload
+                    await Task.Run(() => this.Invoke(new System.Action(() => populateGuestComboBoxAsync())));
                     refreshTable();
 
                     // Create a new WebBrowser instance
@@ -679,12 +712,16 @@ namespace Hotel_Management_System.Controllers
                     MessageBox.Show("Booking inserted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     // Perform additional actions such as clearing fields, updating UI, etc.
                     clearFields();
-                    guestIdCMBox.Items.Clear();
-                    populateGuestComboBoxAsync();
-                    refreshTable();
+                    
+                    // Reload data in background without blocking UI
+                    // Guest combobox uses lazy loading - will reload when user types
+                    _ = Task.Run(() => this.Invoke(new System.Action(() => {
+                        populateReservasiComboBoxAsync();
+                        populateRoomAsync();
+                        refreshTable();
+                    })));
+                    
                     addButton.Enabled = true;
-                    populateReservasiComboBoxAsync();
-                    populateRoomAsync();
 
                     //// Create a new WebBrowser instance
                     //WebBrowser myWebBrowser = new WebBrowser();
@@ -1311,12 +1348,16 @@ namespace Hotel_Management_System.Controllers
                 {
                     MessageBox.Show("Card written successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     clearFields();
-                    guestIdCMBox.Items.Clear();
-                    populateGuestComboBoxAsync();
-                    refreshTable();
+                    
+                    // Reload data in background without blocking UI
+                    // Guest combobox uses lazy loading - will reload when user types
+                    _ = Task.Run(() => this.Invoke(new System.Action(() => {
+                        populateReservasiComboBoxAsync();
+                        populateRoomAsync();
+                        refreshTable();
+                    })));
+                    
                     addButton.Enabled = true;
-                    populateReservasiComboBoxAsync();
-                    populateRoomAsync();
                 }
                 else
                 {

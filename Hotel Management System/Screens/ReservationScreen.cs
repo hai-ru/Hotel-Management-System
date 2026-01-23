@@ -32,6 +32,10 @@ namespace Hotel_Management_System.Screens
         TipeKamar[] tipeKamars = new TipeKamar[] { };
 
         private int durasi_menginap = 1;
+        private System.Windows.Forms.Timer guestSearchTimer;
+        private string lastGuestSearch = "";
+        private bool isLoadingGuests = false;
+        
         public ReservationScreen()
         {
             InitializeComponent();
@@ -40,24 +44,62 @@ namespace Hotel_Management_System.Screens
 
         private async void populateGuestComboBoxAsync()
         {
-            HttpData result = await conn.GetCustomerList();
-            if (!result.status)
+            // Method kosong - sekarang pake search-based loading
+        }
+        
+        private async void SearchAndLoadGuests(string searchQuery)
+        {
+            if (isLoadingGuests) return;
+            if (searchQuery.Length < 2) 
             {
-                MessageBox.Show(result.message);
+                guestSelect.Items.Clear();
                 return;
             }
-
-            // Deserialize JSON string directly to Guest array
-            guests = JsonConvert.DeserializeObject<Guest[]>(result.data.ToString());
-            guestSelect.Items.Clear();
-
-            // Bind rooms to roomIdCMBox
-            guestSelect.DisplayMember = "text"; // Set the DisplayMember to "text" property
-
-            foreach (Guest guest in guests)
+            
+            isLoadingGuests = true;
+            
+            try
             {
-                guestSelect.Items.Add(guest); // Add guest to combo box
+                HttpData result = await conn.GetCustomerList(searchQuery);
+                if (!result.status)
+                {
+                    guestSelect.Items.Clear();
+                    return;
+                }
+
+                guests = JsonConvert.DeserializeObject<Guest[]>(result.data.ToString());
+                
+                guestSelect.BeginUpdate();
+                guestSelect.Items.Clear();
+                guestSelect.DisplayMember = "text";
+
+                foreach (Guest guest in guests)
+                {
+                    guestSelect.Items.Add(guest);
+                }
+                guestSelect.EndUpdate();
+                
+                if (guestSelect.Items.Count > 0 && guestSelect.Focused)
+                {
+                    guestSelect.DroppedDown = true;
+                }
             }
+            catch { }
+            finally
+            {
+                isLoadingGuests = false;
+            }
+        }
+        
+        private void InitializeGuestSearchTimer()
+        {
+            guestSearchTimer = new System.Windows.Forms.Timer();
+            guestSearchTimer.Interval = 500;
+            guestSearchTimer.Tick += (sender, e) =>
+            {
+                guestSearchTimer.Stop();
+                SearchAndLoadGuests(lastGuestSearch);
+            };
         }
 
         private void clearFields()
@@ -156,16 +198,25 @@ namespace Hotel_Management_System.Screens
             FilterTableCheckinDate.Value = DateTime.Today;
             checkinPicker.Value = DateTime.Today;
             checkoutPicker.Value = DateTime.Today.AddDays(1);
+            
+            // Initialize guest search
+            InitializeGuestSearchTimer();
+            guestSelect.AutoCompleteMode = AutoCompleteMode.None;
+            guestSelect.TextChanged += (s, ev) => 
+            {
+                guestSearchTimer.Stop();
+                lastGuestSearch = guestSelect.Text;
+                guestSearchTimer.Start();
+            };
 
-
-
-            populateGuestComboBoxAsync();
+            // Load static data parallel
+            _ = Task.Run(() => this.Invoke(new System.Action(() => {
+                populateOTAComboBoxAsync();
+                populatePaymentMethodComboBoxAsync();
+                populateTipeKamarComboBoxAsync();
+            })));
+            
             refreshTable();
-
-            populateOTAComboBoxAsync();
-
-            populatePaymentMethodComboBoxAsync();
-            populateTipeKamarComboBoxAsync();
         }
 
 

@@ -22,10 +22,10 @@ namespace Hotel_Management_System.Screens
             autoRefreshTimer.Tick += AutoRefreshTimer_Tick;
         }
 
-        private void NetworkDiagnosticsScreen_Load(object sender, EventArgs e)
+        private async void NetworkDiagnosticsScreen_Load(object sender, EventArgs e)
         {
             // Run initial test
-            RunConnectionTest();
+            await RunConnectionTest();
         }
 
         private async void testButton_Click(object sender, EventArgs e)

@@ -80,6 +80,11 @@ namespace Hotel_Management_System
 
         private void Dashboard_Load(object sender, EventArgs e)
         {
+            // Set version and last update in title
+            string version = "v2.1.0";
+            string lastUpdate = "21 Jan 2026";
+            this.Text = $"Kartika Hotel Management System - {version} (Updated: {lastUpdate})";
+            
             // Load the RoomsScreen by default when the dashboard starts.
             loadForm(new RoomsScreen());
         }

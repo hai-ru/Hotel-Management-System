@@ -147,36 +147,33 @@ namespace Hotel_Management_System
                 resultData.status = false;
                 resultData.message = "";
 
-                using (HttpClient client = sharedClient)
+                var content = new FormUrlEncodedContent(new[]
                 {
-                    var content = new FormUrlEncodedContent(new[]
+                    new KeyValuePair<string, string>("username", username),
+                    new KeyValuePair<string, string>("password", password)
+                });
+
+                HttpResponseMessage response = await sharedClient.PostAsync(BaseUrl+"/login", content);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    dynamic data = JsonConvert.DeserializeObject(responseContent);
+
+                    resultData.data = data;
+                    resultData.status = data.status;
+                    if (resultData.status)
                     {
-                        new KeyValuePair<string, string>("username", username),
-                        new KeyValuePair<string, string>("password", password)
-                    });
-
-                    HttpResponseMessage response = await client.PostAsync(BaseUrl+"/login", content);
-
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    try
+                        resultData.message = data.data.token;
+                    } else
                     {
-                        dynamic data = JsonConvert.DeserializeObject(responseContent);
-
-                        resultData.data = data;
-                        resultData.status = data.status;
-                        if (resultData.status)
-                        {
-                            resultData.message = data.data.token;
-                        } else
-                        {
-                            resultData.message = data.message;
-                        }
+                        resultData.message = data.message;
                     }
-                    catch (Newtonsoft.Json.JsonException ex)
-                    {
-                        resultData.status = false;
-                        resultData.message = ex.Message;
-                    }
+                }
+                catch (Newtonsoft.Json.JsonException ex)
+                {
+                    resultData.status = false;
+                    resultData.message = ex.Message;
                 }
 
                 return resultData;
@@ -489,33 +486,30 @@ namespace Hotel_Management_System
 
             try
             {
-                using (HttpClient client = new HttpClient())
+                string token = Properties.Settings.Default.Token;
+                sharedClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var valContent = new Dictionary<string, string>();
+                valContent.Add("hotel", "1");
+                valContent.Add("q", search);
+
+                var content = new FormUrlEncodedContent(valContent);
+
+                HttpResponseMessage response = await sharedClient.PostAsync(BaseUrl + "/customers", content);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                try
                 {
-                    string token = Properties.Settings.Default.Token;
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    var valContent = new Dictionary<string, string>();
-                    valContent.Add("hotel", "1");
-                    valContent.Add("q", search);
+                    dynamic data = JsonConvert.DeserializeObject(responseContent);
+                    resultData.status = data.status;
+                    resultData.data = data.data;
 
-                    var content = new FormUrlEncodedContent(valContent);
-
-                    HttpResponseMessage response = await client.PostAsync(BaseUrl + "/customers", content);
-
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    try
-                    {
-
-                        dynamic data = JsonConvert.DeserializeObject(responseContent);
-                        resultData.status = data.status;
-                        resultData.data = data.data;
-
-                    }
-                    catch (Newtonsoft.Json.JsonException ex)
-                    {
-                        resultData.status = false;
-                        resultData.message = ex.Message;
-                    }
+                }
+                catch (Newtonsoft.Json.JsonException ex)
+                {
+                    resultData.status = false;
+                    resultData.message = ex.Message;
                 }
             }
             catch (HttpRequestException ex)

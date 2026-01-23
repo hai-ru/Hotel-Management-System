@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Hotel_Management_System.Controllers
 {
@@ -255,8 +256,8 @@ namespace Hotel_Management_System.Controllers
             {
                 // Load combo boxes dulu (ringan), table nanti
                 await Task.WhenAll(
-                    Task.Run(() => this.Invoke(new Action(() => getTipeRoom()))),
-                    Task.Run(() => this.Invoke(new Action(() => getTipeKebersihan())))
+                    Task.Run(() => this.Invoke(new System.Action(() => getTipeRoom()))),
+                    Task.Run(() => this.Invoke(new System.Action(() => getTipeKebersihan())))
                 );
                 
                 // Baru load table data (berat)

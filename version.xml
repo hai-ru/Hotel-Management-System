@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<item>
+    <!-- Versi terbaru aplikasi (sesuaikan dengan versi di AssemblyInfo.cs) -->
+    <version>1.0.1.0</version>
+    
+    <!-- URL untuk download installer/update file -->
+    <url>https://yourdomain.com/updates/KartikaHotelManagementSetup.exe</url>
+    
+    <!-- Changelog atau release notes -->
+    <changelog>https://yourdomain.com/updates/changelog.html</changelog>
+    
+    <!-- Set mandatory ke true jika update wajib -->
+    <mandatory>false</mandatory>
+    
+    <!-- Mode update: 0 = Normal, 1 = Forced, 2 = ForcedDownload -->
+    <mode>0</mode>
+    
+    <!-- Checksum untuk validasi file (MD5) - opsional -->
+    <!-- <checksum algorithm="MD5">AB3F5D8C123456789</checksum> -->
+    
+    <!-- Minimum required version (jika versi lebih lama dari ini, harus update) -->
+    <!-- <minVersion>1.0.0.0</minVersion> -->
+</item>

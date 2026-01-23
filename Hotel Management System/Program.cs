@@ -18,6 +18,19 @@ namespace Hotel_Management_System
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            
+            // Check for updates saat startup (silent mode)
+            // User akan melihat dialog hanya jika ada update tersedia
+            try
+            {
+                UpdaterManager.CheckForUpdates(showNoUpdateAvailable: false);
+            }
+            catch (Exception ex)
+            {
+                // Jangan ganggu startup jika update check gagal
+                Console.WriteLine($"Auto update check failed: {ex.Message}");
+            }
+            
             Application.Run(new SplashScreen());
 
         }

@@ -97,25 +97,41 @@ namespace Hotel_Management_System.Controllers
         {
             //DateTime today = DateTime.Today;
             //FilterTableCheckoutDate.Value = today;
-            refreshTable(null);
+            
+            // Load async untuk prevent freeze
+            _ = Task.Run(() => this.Invoke(new System.Action(() => refreshTable(null))));
         }
 
         private async void refreshTable(string date = null)
         {
             loadingText.Visible = true;
-            //string date = filterDate.ToString("yyyy-MM-dd");
-            HttpData result = await conn.GetCheckinList(date);
-            if (!result.status)
+            loadingText.Text = "Loading checkout data...";
+            checkoutTable.Enabled = false;
+            
+            try
             {
-                MessageBox.Show(result.message);
-                return;
+                //string date = filterDate.ToString("yyyy-MM-dd");
+                HttpData result = await conn.GetCheckinList(date);
+                if (!result.status)
+                {
+                    MessageBox.Show(result.message);
+                    return;
+                }
+
+                DataTable MyTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
+                checkoutTable.DataSource = MyTable;
+
+                checkoutTable.CellFormatting += Table_CellFormatting;
             }
-
-            DataTable MyTable = JsonConvert.DeserializeObject<DataTable>(result.data.ToString());
-            checkoutTable.DataSource = MyTable;
-
-            checkoutTable.CellFormatting += Table_CellFormatting;
-            loadingText.Visible = false;
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading checkout data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                loadingText.Visible = false;
+                checkoutTable.Enabled = true;
+            }
         }
 
         private void Table_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
