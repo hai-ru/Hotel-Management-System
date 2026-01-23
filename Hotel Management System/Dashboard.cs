@@ -21,6 +21,13 @@ namespace Hotel_Management_System
         public Dashboard()
         {
             InitializeComponent();
+            this.FormClosing += Dashboard_FormClosing;
+        }
+
+        private void Dashboard_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Ensure application exits when Dashboard form is closed
+            Application.Exit();
         }
 
         private void guna2ImageRadioButton1_CheckedChanged(object sender, EventArgs e)
