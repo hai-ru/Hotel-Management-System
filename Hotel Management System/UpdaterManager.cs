@@ -10,7 +10,7 @@ namespace Hotel_Management_System
     public static class UpdaterManager
     {
         // URL tempat file version.xml di-host (ganti dengan URL server Anda)
-        private const string UPDATE_XML_URL = "https://yourdomain.com/updates/version.xml";
+        private const string UPDATE_XML_URL = "https://raw.githubusercontent.com/hai-ru/Hotel-Management-System/refs/heads/master/version.xml";
 
         /// <summary>
         /// Initialize dan check for updates
