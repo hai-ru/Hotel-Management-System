@@ -2,6 +2,7 @@
 using Hotel_Management_System.Screens;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 using System.Net.Http;
@@ -75,8 +76,35 @@ namespace Hotel_Management_System
                 string token = data.message;
 
                 // Store the token securely
-                Properties.Settings.Default.Token = token;
-                Properties.Settings.Default.Save();
+                try
+                {
+                    Properties.Settings.Default.Token = token;
+                    Properties.Settings.Default.Save();
+                }
+                catch (ConfigurationErrorsException ex)
+                {
+                    if (ConfigurationRepair.TryRepairCorruptConfig(ex))
+                    {
+                        Properties.Settings.Default.Token = token;
+                        Properties.Settings.Default.Save();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                catch (TypeInitializationException ex) when (ex.InnerException is ConfigurationErrorsException inner)
+                {
+                    if (ConfigurationRepair.TryRepairCorruptConfig(inner))
+                    {
+                        Properties.Settings.Default.Token = token;
+                        Properties.Settings.Default.Save();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
 
                 this.Hide();
                 Dashboard db = new Dashboard();

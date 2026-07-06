@@ -2,6 +2,7 @@
 using Hotel_Management_System.Screens;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -18,6 +19,16 @@ namespace Hotel_Management_System
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            try
+            {
+                ConfigurationRepair.EnsureSettingsConfigValid();
+            }
+            catch (ConfigurationErrorsException ex)
+            {
+                MessageBox.Show("Pengaturan aplikasi rusak. File konfigurasi pengguna yang rusak telah dihapus. Silakan jalankan ulang aplikasi.", "Kesalahan Konfigurasi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Console.WriteLine($"Configuration repair failed: {ex.Message}");
+            }
             
             // Check for updates saat startup (silent mode)
             // User akan melihat dialog hanya jika ada update tersedia
