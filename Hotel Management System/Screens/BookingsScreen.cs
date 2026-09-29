@@ -25,7 +25,7 @@ namespace Hotel_Management_System.Controllers
         String query;
 
         HttpConnection conn = new HttpConnection();
-        OnityConnection onity = new OnityConnection();
+        DoorLockConnection onity = new DoorLockConnection();
 
         Guest[] guests = new Guest[] { };
         Reservation[] reservasi = new Reservation[] { };
@@ -33,7 +33,9 @@ namespace Hotel_Management_System.Controllers
         Ota[] otas = new Ota[] { };
         PaymentMethod[] paymentMethods = new PaymentMethod[] { };
 
+#pragma warning disable CS0414
         private int durasi_menginap = 1;
+#pragma warning restore CS0414
 
 
         private int roomId;
@@ -2077,6 +2079,10 @@ namespace Hotel_Management_System.Controllers
             else
             {
                 //MessageBox.Show("Periksa Koneksi Onity encoder IP dan Port.");
+                if (onity.LastError != "")
+                {
+                    MessageBox.Show("Gagal menulis kartu.\n" + onity.LastError, "Door Lock", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 

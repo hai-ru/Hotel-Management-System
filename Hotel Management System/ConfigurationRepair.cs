@@ -23,6 +23,10 @@ namespace Hotel_Management_System
             {
                 HandleCorruptConfig(ex);
             }
+            catch (System.Xml.XmlException ex)
+            {
+                HandleCorruptConfig(ex);
+            }
         }
 
         public static bool TryRepairCorruptConfig(ConfigurationErrorsException ex)
@@ -33,7 +37,7 @@ namespace Hotel_Management_System
             }
 
             string filename = ex.Filename;
-            if (string.IsNullOrWhiteSpace(filename) || !filename.EndsWith("user.config", StringComparison.OrdinalIgnoreCase))
+            if (string.IsNullOrWhiteSpace(filename))
             {
                 return false;
             }
@@ -54,7 +58,51 @@ namespace Hotel_Management_System
             return true;
         }
 
+        public static bool TryRepairCorruptConfig(System.Xml.XmlException ex)
+        {
+            if (ex == null)
+            {
+                return false;
+            }
+
+            string filename = ex.SourceUri;
+            if (string.IsNullOrWhiteSpace(filename))
+            {
+                return false;
+            }
+
+            if (filename.StartsWith("file://", StringComparison.OrdinalIgnoreCase))
+            {
+                filename = new Uri(filename).LocalPath;
+            }
+
+            try
+            {
+                if (File.Exists(filename))
+                {
+                    File.Delete(filename);
+                }
+            }
+            catch
+            {
+                // Ignore any cleanup failure.
+            }
+
+            ResetSettingsInstance();
+            return true;
+        }
+
         private static void HandleCorruptConfig(ConfigurationErrorsException ex)
+        {
+            if (TryRepairCorruptConfig(ex))
+            {
+                return;
+            }
+
+            throw new ConfigurationErrorsException("Unable to repair application configuration.", ex);
+        }
+
+        private static void HandleCorruptConfig(System.Xml.XmlException ex)
         {
             if (TryRepairCorruptConfig(ex))
             {

@@ -19,5 +19,14 @@
     <Setting Name="OnityPort" Type="System.String" Scope="User">
       <Value Profile="(Default)">6669</Value>
     </Setting>
+    <Setting Name="ProUsbHotelId" Type="System.String" Scope="User">
+      <Value Profile="(Default)">9839330</Value>
+    </Setting>
+    <Setting Name="ProUsbDai" Type="System.String" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="ProUsbSettingDai" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

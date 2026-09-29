@@ -13,7 +13,7 @@ namespace Hotel_Management_System.Screens
         String query;
 
         HttpConnection conn = new HttpConnection();
-        OnityConnection onity = new OnityConnection();
+        DoorLockConnection onity = new DoorLockConnection();
 
         Guest[] guests = new Guest[] { };
         Room[] rooms = new Room[] { };

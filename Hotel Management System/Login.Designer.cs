@@ -38,6 +38,7 @@ namespace Hotel_Management_System
             this.guna2Button1 = new Guna.UI2.WinForms.Guna2Button();
             this.guna2ImageRadioButton1 = new Guna.UI2.WinForms.Guna2ImageRadioButton();
             this.errorLabel = new System.Windows.Forms.Label();
+            this.versionLabel = new System.Windows.Forms.Label();
             this.passwordTextField = new Guna.UI2.WinForms.Guna2TextBox();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.guna2CirclePictureBox2 = new Guna.UI2.WinForms.Guna2CirclePictureBox();
@@ -141,6 +142,19 @@ namespace Hotel_Management_System
             this.errorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.errorLabel.Visible = false;
             // 
+            // versionLabel
+            // 
+            this.versionLabel.AutoSize = true;
+            this.versionLabel.BackColor = System.Drawing.Color.Transparent;
+            this.versionLabel.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.versionLabel.ForeColor = System.Drawing.Color.White;
+            this.versionLabel.Location = new System.Drawing.Point(12, 430);
+            this.versionLabel.Name = "versionLabel";
+            this.versionLabel.Size = new System.Drawing.Size(73, 13);
+            this.versionLabel.TabIndex = 10;
+            this.versionLabel.Text = "Version 0.0.0.0";
+            this.versionLabel.Visible = false;
+            // 
             // passwordTextField
             // 
             this.passwordTextField.BackColor = System.Drawing.SystemColors.ControlLightLight;
@@ -196,6 +210,7 @@ namespace Hotel_Management_System
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.guna2CirclePictureBox2);
             this.Controls.Add(this.passwordTextField);
+            this.Controls.Add(this.versionLabel);
             this.Controls.Add(this.errorLabel);
             this.Controls.Add(this.guna2ImageRadioButton1);
             this.Controls.Add(this.guna2Button1);
@@ -221,6 +236,7 @@ namespace Hotel_Management_System
         private Guna.UI2.WinForms.Guna2Button guna2Button1;
         private Guna.UI2.WinForms.Guna2ImageRadioButton guna2ImageRadioButton1;
         private System.Windows.Forms.Label errorLabel;
+        private System.Windows.Forms.Label versionLabel;
         private Guna.UI2.WinForms.Guna2TextBox passwordTextField;
         private System.Windows.Forms.ImageList imageList1;
         private Guna.UI2.WinForms.Guna2CirclePictureBox guna2CirclePictureBox2;

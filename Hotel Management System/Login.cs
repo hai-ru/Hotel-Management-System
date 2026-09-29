@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Reflection;
 using System.Windows.Forms;
 using System.Net.Http;
 using System.Text.Json;
@@ -171,7 +172,19 @@ namespace Hotel_Management_System
 
         private void Login_Load(object sender, EventArgs e)
         {
-
+            try
+            {
+                Version version = Assembly.GetExecutingAssembly().GetName().Version;
+                if (version != null)
+                {
+                    versionLabel.Text = $"Version {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+                    versionLabel.Visible = true;
+                }
+            }
+            catch
+            {
+                versionLabel.Visible = false;
+            }
         }
 
         private void guna2CirclePictureBox1_Click(object sender, EventArgs e)

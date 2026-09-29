@@ -18,6 +18,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>true</Prefer32Bit>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -28,6 +29,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>true</Prefer32Bit>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -144,9 +146,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheManager.cs" />
+    <Compile Include="ConfigurationRepair.cs" />
     <Compile Include="OnityBackgroundWorker.cs" />
     <Compile Include="NetworkMonitor.cs" />
     <Compile Include="OnityConnection.cs" />
+    <Compile Include="ProUsbConnection.cs" />
+    <Compile Include="DoorLockConnection.cs" />
     <Compile Include="HttpConnection.cs" />
     <Compile Include="UpdaterManager.cs" />
     <Compile Include="HotelManagementSystemDataSet.Designer.cs">
@@ -396,7 +401,26 @@
       <DependentUpon>HotelManagementSystemDataSet.xsd</DependentUpon>
     </None>
     <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
+    <None Include="ProUSB DLL\proRFL.dll" Condition="Exists('ProUSB DLL\proRFL.dll')">
+      <Link>proRFL.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ProUSB DLL\d12c.dll" Condition="Exists('ProUSB DLL\d12c.dll')">
+      <Link>d12c.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ProUSB DLL\d12.dll" Condition="Exists('ProUSB DLL\d12.dll')">
+      <Link>d12.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ProUSB DLL\MFC42D.DLL" Condition="Exists('ProUSB DLL\MFC42D.DLL')">
+      <Link>MFC42D.DLL</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ProUSB DLL\MSVCRTD.DLL" Condition="Exists('ProUSB DLL\MSVCRTD.DLL')">
+      <Link>MSVCRTD.DLL</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>    <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>

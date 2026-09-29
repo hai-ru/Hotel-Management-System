@@ -1,0 +1,14 @@
+# MODE DUMMY door lock HMS (untuk uji coba sebelum backend di-deploy)
+#
+# Cara pakai: copy file ini ke folder exe HMS (sebelah "Kartika Hotel Management System.exe")
+# dan rename jadi: doorlock_dummy.txt
+# Selama file itu ada, HMS TIDAK membaca setting door lock dari backend.
+# HAPUS doorlock_dummy.txt setelah selesai uji coba.
+#
+# Format per baris:
+#   kamar=onity
+#   kamar=prousb,LockNo    LockNo 8 digit = kolom "Lock No." di CardLock > Rooms Definition
+# Kamar yang tidak ditulis di sini dianggap Onity.
+
+201=prousb,01010199
+202=prousb,01010299

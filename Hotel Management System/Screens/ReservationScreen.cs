@@ -23,7 +23,7 @@ namespace Hotel_Management_System.Screens
         String query;
 
         HttpConnection conn = new HttpConnection();
-        OnityConnection onity = new OnityConnection();
+        DoorLockConnection onity = new DoorLockConnection();
 
         Guest[] guests = new Guest[] { };
         Room[] rooms = new Room[] { };
@@ -42,12 +42,12 @@ namespace Hotel_Management_System.Screens
             loadingText.Visible = false;
         }
 
-        private async void populateGuestComboBoxAsync()
+        private void populateGuestComboBoxAsync()
         {
             // Method kosong - sekarang pake search-based loading
         }
         
-        private async void SearchAndLoadGuests(string searchQuery)
+        private async Task SearchAndLoadGuests(string searchQuery)
         {
             if (isLoadingGuests) return;
             if (searchQuery.Length < 2) 
@@ -95,10 +95,10 @@ namespace Hotel_Management_System.Screens
         {
             guestSearchTimer = new System.Windows.Forms.Timer();
             guestSearchTimer.Interval = 500;
-            guestSearchTimer.Tick += (sender, e) =>
+            guestSearchTimer.Tick += async (sender, e) =>
             {
                 guestSearchTimer.Stop();
-                SearchAndLoadGuests(lastGuestSearch);
+                await SearchAndLoadGuests(lastGuestSearch);
             };
         }
 
@@ -113,7 +113,7 @@ namespace Hotel_Management_System.Screens
             this.otaCb.SelectedIndex = -1;
         }
 
-        private async void refreshTable(string date = "")
+        private async Task refreshTable(string date = "")
         {
             loadingText.Visible = true;
             HttpData result = await conn.GetReservationList(date);
@@ -127,7 +127,7 @@ namespace Hotel_Management_System.Screens
             loadingText.Visible = false;
         }
 
-        private async void populateOTAComboBoxAsync()
+        private async Task populateOTAComboBoxAsync()
         {
             HttpData result = await conn.GetOTAList();
             if (!result.status)
@@ -149,7 +149,7 @@ namespace Hotel_Management_System.Screens
             }
         }
 
-        private async void populateTipeKamarComboBoxAsync()
+        private async Task populateTipeKamarComboBoxAsync()
         {
             HttpData result = await conn.GetTipeKamarList();
             if (!result.status)
@@ -171,7 +171,7 @@ namespace Hotel_Management_System.Screens
             }
         }
 
-        private async void populatePaymentMethodComboBoxAsync()
+        private async Task populatePaymentMethodComboBoxAsync()
         {
             HttpData result = await conn.GetPaymentList();
             if (!result.status)
@@ -193,7 +193,7 @@ namespace Hotel_Management_System.Screens
             }
         }
 
-        private void ReservationScreen_Load(object sender, EventArgs e)
+        private async void ReservationScreen_Load(object sender, EventArgs e)
         {
             FilterTableCheckinDate.Value = DateTime.Today;
             checkinPicker.Value = DateTime.Today;
@@ -210,13 +210,13 @@ namespace Hotel_Management_System.Screens
             };
 
             // Load static data parallel
-            _ = Task.Run(() => this.Invoke(new System.Action(() => {
-                populateOTAComboBoxAsync();
-                populatePaymentMethodComboBoxAsync();
-                populateTipeKamarComboBoxAsync();
-            })));
+            await Task.WhenAll(
+                populateOTAComboBoxAsync(),
+                populatePaymentMethodComboBoxAsync(),
+                populateTipeKamarComboBoxAsync()
+            );
             
-            refreshTable();
+            await refreshTable();
         }
 
 
@@ -297,7 +297,7 @@ namespace Hotel_Management_System.Screens
                     clearFields();
                     guestSelect.Items.Clear();
                     populateGuestComboBoxAsync();
-                    refreshTable();
+                    await refreshTable();
                     addButton.Enabled = true;
                     //// Create a new WebBrowser instance
                     //WebBrowser myWebBrowser = new WebBrowser();
@@ -435,7 +435,7 @@ namespace Hotel_Management_System.Screens
                     clearFields();
                     guestSelect.Items.Clear();
                     populateGuestComboBoxAsync();
-                    refreshTable();
+                    await refreshTable();
 
                     // Create a new WebBrowser instance
                     WebBrowser myWebBrowser = new WebBrowser();
@@ -468,14 +468,14 @@ namespace Hotel_Management_System.Screens
 
         }
 
-        private void FilterTableCheckinDate_ValueChanged(object sender, EventArgs e)
+        private async void FilterTableCheckinDate_ValueChanged(object sender, EventArgs e)
         {
-            refreshTable(FilterTableCheckinDate.Value.ToString("yyyy-MM-dd"));
+            await refreshTable(FilterTableCheckinDate.Value.ToString("yyyy-MM-dd"));
         }
 
-        private void guna2Button1_Click(object sender, EventArgs e)
+        private async void guna2Button1_Click(object sender, EventArgs e)
         {
-            refreshTable();
+            await refreshTable();
         }
 
         private void guna2Button2_Click(object sender, EventArgs e)

@@ -12,7 +12,7 @@ namespace Hotel_Management_System
     internal class OnityBackgroundWorker
     {
         private BackgroundWorker worker;
-        private OnityConnection onityConn;
+        private DoorLockConnection onityConn;
         
         public delegate void OnityOperationCompleted(bool success, string message);
         public event OnityOperationCompleted OperationCompleted;
@@ -22,7 +22,7 @@ namespace Hotel_Management_System
 
         public OnityBackgroundWorker()
         {
-            onityConn = new OnityConnection();
+            onityConn = new DoorLockConnection();
             InitializeWorker();
         }
 

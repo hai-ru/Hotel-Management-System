@@ -69,5 +69,41 @@ namespace Hotel_Management_System.Properties {
                 this["OnityPort"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("9839330")]
+        public string ProUsbHotelId {
+            get {
+                return ((string)(this["ProUsbHotelId"]));
+            }
+            set {
+                this["ProUsbHotelId"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public string ProUsbDai {
+            get {
+                return ((string)(this["ProUsbDai"]));
+            }
+            set {
+                this["ProUsbDai"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public string ProUsbSettingDai {
+            get {
+                return ((string)(this["ProUsbSettingDai"]));
+            }
+            set {
+                this["ProUsbSettingDai"] = value;
+            }
+        }
     }
 }
